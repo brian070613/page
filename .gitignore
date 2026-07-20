@@ -3,3 +3,6 @@
 dist/
 compress.ps1
 server.js
+originals/
+*.lock
+package.json
