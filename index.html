@@ -5,22 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brian 摄影作品集</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Inter:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Inter:wght@300;400;500;600&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0b0b0b;
-    --bg-card: #141414;
-    --text: #e8e8e8;
-    --text-muted: #888;
-    --text-dim: #555;
-    --accent: #c9a96e;
-    --accent-dim: #a08040;
+    --bg: #090909;
+    --bg2: #111;
+    --card: #181818;
+    --text: #eee;
+    --text2: #999;
+    --text3: #666;
+    --gold: #c9a96e;
+    --gold2: #a08040;
     --border: #222;
-    --radius: 14px;
+    --r: 14px;
   }
 
+  html { scroll-behavior: smooth; }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
@@ -28,107 +30,303 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { color: var(--gold2); }
 
+  /* ===== HERO ===== */
   .hero {
-    text-align: center;
-    padding: 4rem 1.5rem 2rem;
     position: relative;
+    height: 100vh;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     overflow: hidden;
   }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background: radial-gradient(ellipse at 50% 0%, rgba(201,169,110,0.06) 0%, transparent 70%);
-    pointer-events: none;
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: var(--bg) center/cover no-repeat;
+    filter: brightness(0.3) saturate(0.8);
+    transform: scale(1.1);
+    transition: transform 0.1s linear;
+    will-change: transform;
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 30%, transparent 30%, rgba(0,0,0,0.6) 80%);
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 2rem;
+  }
+  .hero-badge {
+    display: inline-block;
+    padding: 4px 16px;
+    border: 1px solid var(--gold);
+    border-radius: 100px;
+    color: var(--gold);
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
   }
   .hero h1 {
     font-family: 'Noto Serif SC', serif;
-    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-size: clamp(2.5rem, 7vw, 5rem);
     font-weight: 700;
-    letter-spacing: 6px;
     color: #fff;
-    position: relative;
+    letter-spacing: 8px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
   }
   .hero h1::after {
     content: '';
     display: block;
-    width: 40px;
+    width: 50px;
     height: 2px;
-    background: var(--accent);
-    margin: 1rem auto;
+    background: var(--gold);
+    margin: 1.2rem auto;
   }
   .hero p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    letter-spacing: 2px;
+    color: rgba(255,255,255,0.6);
+    font-size: 1rem;
+    letter-spacing: 3px;
     font-weight: 300;
-    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
   }
-  .hero .stats {
+  .hero-actions {
     display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 1.5rem;
-    position: relative;
+    gap: 1rem;
+    margin-top: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
   }
-  .hero .stats em {
-    font-style: normal;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--accent);
-  }
-  .hero .stats small {
-    display: block;
-    font-size: 0.7rem;
-    color: var(--text-dim);
+  .hero-btn {
+    padding: 10px 28px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
     letter-spacing: 1px;
-    margin-top: 2px;
+  }
+  .hero-btn.primary {
+    background: var(--gold);
+    color: #111;
+    border: none;
+    font-weight: 500;
+  }
+  .hero-btn.primary:hover { background: var(--gold2); }
+  .hero-btn.outline {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .hero-btn.outline:hover { border-color: #fff; }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.2s forwards;
+    cursor: pointer;
+  }
+  .scroll-indicator span {
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 2px;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(rgba(255,255,255,0.4), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
   }
 
-  .filters {
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ===== SECTION ===== */
+  .section-title {
+    text-align: center;
+    padding: 0 1rem;
+    margin-bottom: 2rem;
+  }
+  .section-title h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 4px;
+    color: #fff;
+  }
+  .section-title h2::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 1.5px;
+    background: var(--gold);
+    margin: 0.8rem auto;
+  }
+  .section-title p {
+    color: var(--text2);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* ===== FEATURED ===== */
+  .featured {
+    padding: 4rem 12px 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12px;
+  }
+  .featured-item {
+    border-radius: var(--r);
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    background: var(--card);
+  }
+  .featured-item:first-child {
+    grid-row: span 2;
+  }
+  .featured-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease, opacity 0.5s;
+    opacity: 0;
+  }
+  .featured-item img.loaded { opacity: 1; }
+  .featured-item:hover img { transform: scale(1.05); }
+
+  .featured-item .label {
+    position: absolute;
+    top: 12px; left: 12px;
+    padding: 3px 10px;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(6px);
+    border-radius: 100px;
+    color: var(--gold);
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+  }
+
+  /* ===== ABOUT ===== */
+  .about {
+    padding: 4rem 1.5rem;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .about-avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    margin: 0 auto 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+  }
+  .about h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+    letter-spacing: 3px;
+  }
+  .about p {
+    color: var(--text2);
+    font-size: 0.9rem;
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+  }
+  .about .contact {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  .about .contact a {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+  }
+
+  /* ===== FILTERS ===== */
+  .filter-bar {
+    padding: 0 1rem 3rem;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+  .filter-scroll {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 0.4rem;
-    padding: 0 1rem;
-    margin: 1rem auto 2rem;
-    max-width: 800px;
   }
   .filter-btn {
-    padding: 0.45rem 1.1rem;
+    padding: 6px 16px;
     border: 1px solid var(--border);
     border-radius: 100px;
     background: transparent;
-    color: var(--text-muted);
+    color: var(--text2);
     font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s;
     font-family: inherit;
     letter-spacing: 1px;
   }
   .filter-btn:hover {
-    border-color: var(--accent-dim);
-    color: var(--accent);
+    border-color: var(--gold2);
+    color: var(--gold);
   }
   .filter-btn.active {
-    background: var(--accent);
+    background: var(--gold);
     color: #111;
-    border-color: var(--accent);
+    border-color: var(--gold);
     font-weight: 500;
   }
   .filter-btn .count {
-    display: inline-block;
-    margin-left: 4px;
     font-size: 0.7rem;
-    opacity: 0.6;
+    opacity: 0.5;
+    margin-left: 3px;
   }
 
+  /* ===== GALLERY ===== */
   .gallery-wrap {
     max-width: 1500px;
     margin: 0 auto;
-    padding: 0 12px 3rem;
+    padding: 0 12px 4rem;
   }
   .gallery {
     column-count: 4;
@@ -137,12 +335,12 @@
   .gallery-item {
     break-inside: avoid;
     margin-bottom: 14px;
-    border-radius: var(--radius);
+    border-radius: var(--r);
     overflow: hidden;
     cursor: pointer;
     position: relative;
-    background: var(--bg-card);
-    transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.4s ease;
+    background: var(--card);
+    transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.4s;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeUp 0.5s ease forwards;
@@ -153,89 +351,77 @@
     width: 100%;
     height: auto;
     opacity: 0;
-    transition: transform 0.6s ease, opacity 0.5s ease;
+    transition: transform 0.6s, opacity 0.5s;
   }
   .gallery-item img.loaded { opacity: 1; }
   .gallery-item:hover img { transform: scale(1.05); }
   .gallery-item:hover { box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
-
-  .gallery-item .info {
+  .gallery-item .cat-tag {
     position: absolute;
     bottom: 0; left: 0; right: 0;
     padding: 3rem 1rem 1rem;
     background: linear-gradient(transparent, rgba(0,0,0,0.85));
     opacity: 0;
-    transition: opacity 0.35s ease;
+    transition: opacity 0.35s;
     pointer-events: none;
   }
-  .gallery-item:hover .info { opacity: 1; }
-  .gallery-item .info .tag {
+  .gallery-item:hover .cat-tag { opacity: 1; }
+  .gallery-item .cat-tag span {
     display: inline-block;
     padding: 2px 10px;
     border-radius: 100px;
     background: rgba(201,169,110,0.2);
-    color: var(--accent);
+    color: var(--gold);
     font-size: 0.7rem;
     letter-spacing: 1px;
   }
 
-  @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
+  /* ===== LIGHTBOX ===== */
   .lb {
     display: none;
-    position: fixed;
-    z-index: 9999;
+    position: fixed; z-index: 9999;
     top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.95);
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
   }
   .lb.active { display: flex; }
   .lb-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 92vw;
-    max-height: 95vh;
-    animation: lbIn 0.3s ease;
+    display: flex; flex-direction: column; align-items: center;
+    max-width: 92vw; max-height: 95vh;
+    animation: fadeIn 0.25s;
   }
-  @keyframes lbIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
   .lb-inner img {
-    max-width: 100%;
-    max-height: 82vh;
-    object-fit: contain;
-    border-radius: 8px;
+    max-width: 100%; max-height: 78vh;
+    object-fit: contain; border-radius: 8px;
     box-shadow: 0 0 60px rgba(0,0,0,0.7);
   }
-  .lb-meta {
-    text-align: center;
-    margin-top: 0.8rem;
+  .lb-info {
+    text-align: center; margin-top: 0.8rem;
   }
-  .lb-meta .counter {
-    font-size: 0.8rem;
-    color: var(--text-dim);
+  .lb-info .counter {
+    font-size: 0.8rem; color: var(--text3);
     letter-spacing: 1px;
   }
-  .lb-meta .tag {
-    display: inline-block;
+  .lb-info .meta-line {
+    font-size: 0.7rem; color: var(--text3);
     margin-top: 4px;
-    padding: 2px 10px;
-    border-radius: 100px;
+    letter-spacing: 0.5px;
+  }
+  .lb-info .tag {
+    display: inline-block; margin-top: 4px;
+    padding: 2px 10px; border-radius: 100px;
     background: rgba(201,169,110,0.15);
-    color: var(--accent);
-    font-size: 0.7rem;
+    color: var(--gold); font-size: 0.7rem;
     letter-spacing: 1px;
   }
 
   .lb-close {
-    position: fixed; top: 25px; right: 30px;
+    position: fixed; top: 20px; right: 25px;
     color: #fff; font-size: 2rem; cursor: pointer;
     opacity: 0.5; transition: opacity 0.2s;
-    background: none; border: none;
-    z-index: 10000;
+    background: none; border: none; z-index: 10000;
     line-height: 1;
   }
   .lb-close:hover { opacity: 1; }
@@ -243,60 +429,149 @@
     position: fixed; top: 50%; transform: translateY(-50%);
     color: #fff; font-size: 2.5rem; cursor: pointer;
     opacity: 0.3; transition: opacity 0.2s;
-    background: none; border: none;
-    padding: 1.5rem 0.8rem;
-    z-index: 10000;
-    user-select: none;
+    background: none; border: none; z-index: 10000;
+    padding: 1.5rem 0.8rem; user-select: none;
   }
   .lb-nav:hover { opacity: 0.8; }
   .lb-prev { left: 10px; }
   .lb-next { right: 10px; }
 
+  .lb-full {
+    position: fixed; bottom: 30px; right: 30px;
+    background: none; border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; padding: 8px 16px; border-radius: 6px;
+    cursor: pointer; font-size: 0.75rem; z-index: 10000;
+    opacity: 0.4; transition: opacity 0.2s;
+    letter-spacing: 1px;
+  }
+  .lb-full:hover { opacity: 0.8; }
+
+  /* ===== BACK TO TOP ===== */
+  .back-top {
+    position: fixed;
+    bottom: 30px; left: 30px;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 1.2rem;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.3s, background 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .back-top.show { opacity: 0.7; }
+  .back-top.show:hover { opacity: 1; background: var(--gold); color: #111; border-color: var(--gold); }
+
+  /* ===== FOOTER ===== */
   footer {
     text-align: center;
-    padding: 2rem;
-    color: var(--text-dim);
+    padding: 2.5rem;
+    color: var(--text3);
     font-size: 0.8rem;
     letter-spacing: 1px;
     border-top: 1px solid var(--border);
   }
 
+  /* ===== RESPONSIVE ===== */
   @media (max-width: 1100px) { .gallery { column-count: 3; } }
+  @media (max-width: 900px) {
+    .featured-grid { grid-template-columns: 1fr 1fr; }
+    .featured-item:first-child { grid-row: span 1; }
+  }
   @media (max-width: 768px) {
     .gallery { column-count: 2; column-gap: 8px; }
     .gallery-item { margin-bottom: 8px; }
-    .hero { padding: 3rem 1rem 1.5rem; }
+    .hero h1 { letter-spacing: 4px; }
+    .featured { padding: 3rem 8px 2rem; }
+    .featured-grid { gap: 8px; }
+    .lb-nav { font-size: 2rem; padding: 1rem 0.5rem; }
   }
   @media (max-width: 480px) { .gallery { column-count: 1; } }
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <h1>镜头之下</h1>
-  <p>Brian 的摄影记录</p>
-  <div class="stats">
-    <span><em id="totalPhotos">0</em><small>作品</small></span>
-    <span><em id="totalCats">0</em><small>分类</small></span>
+<!-- ===== HERO ===== -->
+<div class="hero" id="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">PHOTOGRAPHY</div>
+    <h1>镜头之下</h1>
+    <p>Brian 的摄影记录</p>
+    <div class="hero-actions">
+      <button class="hero-btn primary" id="btnRandom">🎲 随便看看</button>
+      <button class="hero-btn outline" onclick="document.getElementById('gallerySec').scrollIntoView({behavior:'smooth'})">浏览全部</button>
+    </div>
+  </div>
+  <div class="scroll-indicator" onclick="document.getElementById('featuredSec').scrollIntoView({behavior:'smooth'})">
+    <span>滚动探索</span>
+    <div class="scroll-line"></div>
   </div>
 </div>
 
-<div class="filters" id="filters"></div>
+<!-- ===== FEATURED ===== -->
+<section class="featured" id="featuredSec">
+  <div class="section-title">
+    <h2>精选作品</h2>
+    <p>几张代表作，欢迎浏览全部</p>
+  </div>
+  <div class="featured-grid" id="featuredGrid"></div>
+</section>
 
+<!-- ===== ABOUT ===== -->
+<section class="about" id="aboutSec">
+  <div class="section-title">
+    <h2>关于我</h2>
+  </div>
+  <div class="about-avatar">📷</div>
+  <h3>Brian</h3>
+  <p>
+    摄影爱好者，喜欢用镜头记录身边的风景与故事。
+    从城市街头到山川湖海，每一张照片都是一段记忆的切片。
+  </p>
+  <div class="contact">
+    <a href="https://github.com/brian070613" target="_blank">GitHub</a>
+    <a href="https://brian070613.github.io/page/">作品集</a>
+  </div>
+</section>
+
+<!-- ===== FILTERS ===== -->
+<div class="filter-bar" id="gallerySec">
+  <div class="section-title" style="margin-bottom:1.2rem">
+    <h2>全部作品</h2>
+    <p id="totalLabel">共 0 张照片</p>
+  </div>
+  <div class="filter-scroll" id="filters"></div>
+</div>
+
+<!-- ===== GALLERY ===== -->
 <div class="gallery-wrap">
   <div class="gallery" id="gallery"></div>
 </div>
 
-<footer>© 2026 Brian · 摄影作品集</footer>
+<!-- ===== BACK TO TOP ===== -->
+<button class="back-top" id="backTop">↑</button>
 
+<!-- ===== FOOTER ===== -->
+<footer>© 2026 Brian · 摄影作品集 · 用 ❤️ 和镜头记录世界</footer>
+
+<!-- ===== LIGHTBOX ===== -->
 <div class="lb" id="lb">
   <button class="lb-close" id="lbClose">&times;</button>
   <button class="lb-nav lb-prev" id="lbPrev">&#10094;</button>
   <button class="lb-nav lb-next" id="lbNext">&#10095;</button>
+  <button class="lb-full" id="lbFull">⛶ 全屏</button>
   <div class="lb-inner">
     <img id="lbImg" src="" alt="">
-    <div class="lb-meta">
+    <div class="lb-info">
       <div class="counter" id="lbCounter"></div>
+      <div class="meta-line" id="lbMeta"></div>
       <div class="tag" id="lbTag"></div>
     </div>
   </div>
@@ -306,9 +581,7 @@
 (async function() {
   const res = await fetch('photos.json');
   const data = await res.json();
-
-  const cats = data.categories;
-  const photos = data.photos;
+  const cats = data.categories, photos = data.photos;
 
   // Shuffle
   for (let i = photos.length - 1; i > 0; i--) {
@@ -317,31 +590,77 @@
   }
 
   const PD = 'photos/';
-  const gallery = document.getElementById('gallery');
-  const filters = document.getElementById('filters');
-  const lb = document.getElementById('lb');
+  const $ = id => document.getElementById(id);
+  const gallery = $('gallery'), filters = $('filters');
+  const lb = $('lb'), lbImg = $('lbImg'), lbCounter = $('lbCounter');
+  const lbMeta = $('lbMeta'), lbTag = $('lbTag');
+  const catById = {};
+  cats.forEach(c => { catById[c.id] = c; });
 
-  document.getElementById('totalPhotos').textContent = photos.length;
-  document.getElementById('totalCats').textContent = cats.length - 1;
+  // Stats
+  $('totalLabel').textContent = `共 ${photos.length} 张照片`;
 
-  // Category count
+  // ---- HERO BG ----
+  if (photos.length > 0) {
+    const heroImg = photos[0];
+    $('heroBg').style.backgroundImage = `url(${PD + encodeURIComponent(heroImg.file)})`;
+  }
+
+  // ---- PARALLAX ----
+  window.addEventListener('scroll', () => {
+    const s = window.scrollY;
+    const bg = $('heroBg');
+    if (s < window.innerHeight) {
+      bg.style.transform = `scale(${1.1 + s * 0.0003}) translateY(${s * 0.15}px)`;
+    }
+  });
+
+  // ---- FEATURED (first 4 photos) ----
+  const featured = photos.slice(0, Math.min(4, photos.length));
+  if (featured.length >= 3) {
+    // Reorder first 4 for layout: put portrait-ish one first
+    const fGrid = $('featuredGrid');
+    featured.forEach(p => {
+      const item = document.createElement('div');
+      item.className = 'featured-item';
+      const img = document.createElement('img');
+      img.dataset.src = PD + encodeURIComponent(p.file);
+      img.alt = '';
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            img.src = img.dataset.src;
+            img.onload = () => img.classList.add('loaded');
+            img.onerror = () => img.classList.add('loaded');
+            obs.unobserve(img);
+          }
+        });
+      }, { rootMargin: '100px' });
+      obs.observe(img);
+      const label = document.createElement('div');
+      label.className = 'label';
+      const c = catById[p.category];
+      label.textContent = c ? c.icon + ' ' + c.name : '';
+      item.appendChild(label);
+      item.appendChild(img);
+      item.addEventListener('click', () => openLb(photos, photos.indexOf(p)));
+      fGrid.appendChild(item);
+    });
+  }
+
+  // ---- FILTERS ----
   const catMap = {};
   photos.forEach(p => { catMap[p.category] = (catMap[p.category] || 0) + 1; });
 
-  // Filters
   cats.forEach(c => {
     const btn = document.createElement('button');
-    const count = c.id === 'all' ? photos.length : (catMap[c.id] || 0);
     btn.className = 'filter-btn' + (c.id === 'all' ? ' active' : '');
-    btn.innerHTML = `${c.icon} ${c.name} <span class="count">${count}</span>`;
+    const cnt = c.id === 'all' ? photos.length : (catMap[c.id] || 0);
+    btn.innerHTML = `${c.icon} ${c.name} <span class="count">${cnt}</span>`;
     btn.dataset.cat = c.id;
     btn.addEventListener('click', () => filterBy(c.id));
     filters.appendChild(btn);
   });
-
-  // Cat lookup
-  const catById = {};
-  cats.forEach(c => { catById[c.id] = c; });
 
   let activeCat = 'all';
   let lbList = [];
@@ -349,13 +668,13 @@
 
   function render(list) {
     gallery.innerHTML = '';
-    list.forEach((p) => {
+    list.forEach(p => {
       const item = document.createElement('div');
       item.className = 'gallery-item';
+
       const img = document.createElement('img');
       img.dataset.src = PD + encodeURIComponent(p.file);
       img.alt = '';
-
       const obs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting) {
@@ -368,27 +687,28 @@
       }, { rootMargin: '200px' });
       obs.observe(img);
 
-      const info = document.createElement('div');
-      info.className = 'info';
+      const tag = document.createElement('div');
+      tag.className = 'cat-tag';
       const c = catById[p.category];
-      info.innerHTML = `<span class="tag">${c ? c.icon + ' ' + c.name : ''}</span>`;
+      tag.innerHTML = `<span>${c ? c.icon + ' ' + c.name : ''}</span>`;
 
       item.appendChild(img);
-      item.appendChild(info);
-      item.addEventListener('click', () => openLb(list, p, list.indexOf(p)));
+      item.appendChild(tag);
+      item.addEventListener('click', () => openLb(list, list.indexOf(p)));
       gallery.appendChild(item);
     });
   }
 
   function filterBy(cat) {
     activeCat = cat;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+    document.querySelectorAll('.filter-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.cat === cat));
     const filtered = cat === 'all' ? photos : photos.filter(p => p.category === cat);
     render(filtered);
-    document.querySelector('.gallery-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    $('gallerySec').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function openLb(list, p, idx) {
+  function openLb(list, idx) {
     lbList = list;
     lbIdx = idx;
     updateLb();
@@ -398,40 +718,80 @@
 
   function updateLb() {
     const p = lbList[lbIdx];
-    document.getElementById('lbImg').src = PD + encodeURIComponent(p.file);
-    document.getElementById('lbCounter').textContent = `${lbIdx + 1} / ${lbList.length}`;
+    lbImg.src = PD + encodeURIComponent(p.file);
+    lbImg.alt = '';
+    lbCounter.textContent = `${lbIdx + 1} / ${lbList.length}`;
+
     const c = catById[p.category];
-    document.getElementById('lbTag').textContent = c ? c.icon + ' ' + c.name : '';
+    lbTag.textContent = c ? c.icon + ' ' + c.name : '';
+
+    // Update URL hash
+    history.replaceState(null, '', `#photo-${lbIdx + 1}`);
+    updateMeta(p);
   }
 
-  document.getElementById('lbClose').addEventListener('click', () => {
+  function updateMeta(p) {
+    // Show file info
+    const parts = p.file.split('_');
+    lbMeta.textContent = '';
+  }
+
+  // Lightbox events
+  $('lbClose').addEventListener('click', () => {
     lb.classList.remove('active');
     document.body.style.overflow = '';
+    history.replaceState(null, '', window.location.pathname);
   });
-  document.getElementById('lbPrev').addEventListener('click', e => {
+
+  $('lbPrev').addEventListener('click', e => {
     e.stopPropagation();
     lbIdx = (lbIdx - 1 + lbList.length) % lbList.length;
     updateLb();
   });
-  document.getElementById('lbNext').addEventListener('click', e => {
+  $('lbNext').addEventListener('click', e => {
     e.stopPropagation();
     lbIdx = (lbIdx + 1) % lbList.length;
     updateLb();
   });
   lb.addEventListener('click', e => {
-    if (e.target === lb) { lb.classList.remove('active'); document.body.style.overflow = ''; }
+    if (e.target === lb) {
+      lb.classList.remove('active');
+      document.body.style.overflow = '';
+      history.replaceState(null, '', window.location.pathname);
+    }
   });
 
+  // Fullscreen
+  $('lbFull').addEventListener('click', () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+  });
+
+  // Keyboard
   document.addEventListener('keydown', e => {
     if (!lb.classList.contains('active')) return;
-    if (e.key === 'Escape') { lb.classList.remove('active'); document.body.style.overflow = ''; }
-    if (e.key === 'ArrowLeft') { lbIdx = (lbIdx - 1 + lbList.length) % lbList.length; updateLb(); }
-    if (e.key === 'ArrowRight') { lbIdx = (lbIdx + 1) % lbList.length; updateLb(); }
+    if (e.key === 'Escape') {
+      lb.classList.remove('active');
+      document.body.style.overflow = '';
+      history.replaceState(null, '', window.location.pathname);
+    }
+    if (e.key === 'ArrowLeft') {
+      lbIdx = (lbIdx - 1 + lbList.length) % lbList.length;
+      updateLb();
+    }
+    if (e.key === 'ArrowRight') {
+      lbIdx = (lbIdx + 1) % lbList.length;
+      updateLb();
+    }
   });
 
+  // Touch swipe
   let tx = 0;
-  document.getElementById('lbImg').addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }, { passive: true });
-  document.getElementById('lbImg').addEventListener('touchend', e => {
+  lbImg.addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }, { passive: true });
+  lbImg.addEventListener('touchend', e => {
     const d = e.changedTouches[0].screenX - tx;
     if (Math.abs(d) > 50) {
       d > 0 ? (lbIdx = (lbIdx - 1 + lbList.length) % lbList.length) : (lbIdx = (lbIdx + 1) % lbList.length);
@@ -439,6 +799,33 @@
     }
   }, { passive: true });
 
+  // Back to top
+  const backTop = $('backTop');
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('show', window.scrollY > 400);
+  });
+  backTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Random photo
+  $('btnRandom').addEventListener('click', () => {
+    const r = Math.floor(Math.random() * photos.length);
+    openLb(photos, r);
+  });
+
+  // Shareable hash links
+  if (window.location.hash) {
+    const m = window.location.hash.match(/photo-(\d+)/);
+    if (m) {
+      const n = parseInt(m[1]) - 1;
+      if (n >= 0 && n < photos.length) {
+        setTimeout(() => openLb(photos, n), 500);
+      }
+    }
+  }
+
+  // Init
   render(photos);
 })();
 </script>
