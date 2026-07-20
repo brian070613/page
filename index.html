@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brian 摄影作品集</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Inter:wght@300;400;500&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
     --bg: #0b0b0b;
     --bg-card: #141414;
-    --bg-hover: #1c1c1c;
     --text: #e8e8e8;
     --text-muted: #888;
     --text-dim: #555;
@@ -20,11 +19,8 @@
     --accent-dim: #a08040;
     --border: #222;
     --radius: 14px;
-    --radius-sm: 8px;
-    --shadow: 0 4px 20px rgba(0,0,0,0.5);
   }
 
-  html { scroll-behavior: smooth; }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
@@ -33,11 +29,10 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ===== Hero ===== */
   .hero {
-    position: relative;
     text-align: center;
-    padding: 5rem 1.5rem 3rem;
+    padding: 4rem 1.5rem 2rem;
+    position: relative;
     overflow: hidden;
   }
   .hero::before {
@@ -50,7 +45,7 @@
   }
   .hero h1 {
     font-family: 'Noto Serif SC', serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(2rem, 5vw, 3.2rem);
     font-weight: 700;
     letter-spacing: 6px;
     color: #fff;
@@ -62,11 +57,11 @@
     width: 40px;
     height: 2px;
     background: var(--accent);
-    margin: 1.2rem auto 1rem;
+    margin: 1rem auto;
   }
   .hero p {
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     letter-spacing: 2px;
     font-weight: 300;
     position: relative;
@@ -74,40 +69,35 @@
   .hero .stats {
     display: flex;
     justify-content: center;
-    gap: 2.5rem;
-    margin-top: 2rem;
+    gap: 2rem;
+    margin-top: 1.5rem;
     position: relative;
-  }
-  .hero .stats span {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
   .hero .stats em {
     font-style: normal;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: var(--accent);
   }
   .hero .stats small {
-    font-size: 0.75rem;
+    display: block;
+    font-size: 0.7rem;
     color: var(--text-dim);
     letter-spacing: 1px;
     margin-top: 2px;
   }
 
-  /* ===== Filters ===== */
   .filters {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.4rem;
     padding: 0 1rem;
     margin: 1rem auto 2rem;
     max-width: 800px;
   }
   .filter-btn {
-    padding: 0.5rem 1.2rem;
+    padding: 0.45rem 1.1rem;
     border: 1px solid var(--border);
     border-radius: 100px;
     background: transparent;
@@ -135,7 +125,6 @@
     opacity: 0.6;
   }
 
-  /* ===== Gallery ===== */
   .gallery-wrap {
     max-width: 1500px;
     margin: 0 auto;
@@ -158,49 +147,30 @@
     transform: translateY(20px);
     animation: fadeUp 0.5s ease forwards;
   }
-  .gallery-item.hidden {
-    display: none;
-  }
+  .gallery-item.hidden { display: none; }
   .gallery-item img {
     display: block;
     width: 100%;
     height: auto;
-    transition: transform 0.6s ease;
+    opacity: 0;
+    transition: transform 0.6s ease, opacity 0.5s ease;
   }
-  .gallery-item:hover img {
-    transform: scale(1.05);
-  }
-  .gallery-item:hover {
-    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-  }
+  .gallery-item img.loaded { opacity: 1; }
+  .gallery-item:hover img { transform: scale(1.05); }
+  .gallery-item:hover { box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
 
-  /* Info overlay on hover */
   .gallery-item .info {
     position: absolute;
     bottom: 0; left: 0; right: 0;
-    padding: 3rem 1.2rem 1.2rem;
+    padding: 3rem 1rem 1rem;
     background: linear-gradient(transparent, rgba(0,0,0,0.85));
     opacity: 0;
     transition: opacity 0.35s ease;
     pointer-events: none;
   }
   .gallery-item:hover .info { opacity: 1; }
-  .gallery-item .info .title {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #fff;
-    letter-spacing: 2px;
-  }
-  .gallery-item .info .desc {
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.6);
-    margin-top: 4px;
-    letter-spacing: 1px;
-  }
-  .gallery-item .info .cat-tag {
+  .gallery-item .info .tag {
     display: inline-block;
-    margin-top: 6px;
     padding: 2px 10px;
     border-radius: 100px;
     background: rgba(201,169,110,0.2);
@@ -209,20 +179,10 @@
     letter-spacing: 1px;
   }
 
-  /* Image loading */
-  .gallery-item img { opacity: 0; transition: opacity 0.6s ease; }
-  .gallery-item img.loaded { opacity: 1; }
-
   @keyframes fadeUp {
     to { opacity: 1; transform: translateY(0); }
   }
-  .gallery-item:nth-child(1) { animation-delay: 0.02s; }
-  .gallery-item:nth-child(2) { animation-delay: 0.04s; }
-  .gallery-item:nth-child(3) { animation-delay: 0.06s; }
-  .gallery-item:nth-child(4) { animation-delay: 0.08s; }
-  .gallery-item:nth-child(5) { animation-delay: 0.10s; }
 
-  /* ===== Lightbox ===== */
   .lb {
     display: none;
     position: fixed;
@@ -238,55 +198,53 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 90vw;
+    max-width: 92vw;
     max-height: 95vh;
     animation: lbIn 0.3s ease;
   }
   @keyframes lbIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
   .lb-inner img {
     max-width: 100%;
-    max-height: 80vh;
+    max-height: 82vh;
     object-fit: contain;
-    border-radius: var(--radius-sm);
+    border-radius: 8px;
     box-shadow: 0 0 60px rgba(0,0,0,0.7);
   }
   .lb-meta {
     text-align: center;
-    margin-top: 1rem;
-    max-width: 600px;
-  }
-  .lb-meta .title {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 1.2rem;
-    color: #fff;
-    letter-spacing: 2px;
-  }
-  .lb-meta .desc {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 4px;
-    letter-spacing: 1px;
+    margin-top: 0.8rem;
   }
   .lb-meta .counter {
     font-size: 0.8rem;
     color: var(--text-dim);
-    margin-top: 8px;
     letter-spacing: 1px;
   }
+  .lb-meta .tag {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 2px 10px;
+    border-radius: 100px;
+    background: rgba(201,169,110,0.15);
+    color: var(--accent);
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+  }
+
   .lb-close {
     position: fixed; top: 25px; right: 30px;
-    color: #fff; font-size: 2.2rem; cursor: pointer;
+    color: #fff; font-size: 2rem; cursor: pointer;
     opacity: 0.5; transition: opacity 0.2s;
     background: none; border: none;
     z-index: 10000;
+    line-height: 1;
   }
   .lb-close:hover { opacity: 1; }
   .lb-nav {
     position: fixed; top: 50%; transform: translateY(-50%);
-    color: #fff; font-size: 2.8rem; cursor: pointer;
+    color: #fff; font-size: 2.5rem; cursor: pointer;
     opacity: 0.3; transition: opacity 0.2s;
     background: none; border: none;
-    padding: 1.5rem 1rem;
+    padding: 1.5rem 0.8rem;
     z-index: 10000;
     user-select: none;
   }
@@ -294,24 +252,20 @@
   .lb-prev { left: 10px; }
   .lb-next { right: 10px; }
 
-  /* ===== Footer ===== */
   footer {
     text-align: center;
-    padding: 2.5rem;
+    padding: 2rem;
     color: var(--text-dim);
     font-size: 0.8rem;
     letter-spacing: 1px;
     border-top: 1px solid var(--border);
   }
 
-  /* ===== Responsive ===== */
   @media (max-width: 1100px) { .gallery { column-count: 3; } }
   @media (max-width: 768px) {
     .gallery { column-count: 2; column-gap: 8px; }
     .gallery-item { margin-bottom: 8px; }
-    .hero { padding: 3rem 1rem 2rem; }
-    .hero .stats { gap: 1.5rem; }
-    .lb-nav { font-size: 2rem; padding: 1rem 0.5rem; }
+    .hero { padding: 3rem 1rem 1.5rem; }
   }
   @media (max-width: 480px) { .gallery { column-count: 1; } }
 </style>
@@ -321,7 +275,7 @@
 <div class="hero">
   <h1>镜头之下</h1>
   <p>Brian 的摄影记录</p>
-  <div class="stats" id="stats">
+  <div class="stats">
     <span><em id="totalPhotos">0</em><small>作品</small></span>
     <span><em id="totalCats">0</em><small>分类</small></span>
   </div>
@@ -342,16 +296,14 @@
   <div class="lb-inner">
     <img id="lbImg" src="" alt="">
     <div class="lb-meta">
-      <div class="title" id="lbTitle"></div>
-      <div class="desc" id="lbDesc"></div>
       <div class="counter" id="lbCounter"></div>
+      <div class="tag" id="lbTag"></div>
     </div>
   </div>
 </div>
 
 <script>
 (async function() {
-  // Load data
   const res = await fetch('photos.json');
   const data = await res.json();
 
@@ -364,53 +316,47 @@
     [photos[i], photos[j]] = [photos[j], photos[i]];
   }
 
-  const PHOTO_DIR = 'photos/';
-  const $ = id => document.getElementById(id);
-  const gallery = $('gallery');
-  const filters = $('filters');
-  const lb = $('lb');
-  const lbImg = $('lbImg');
-  const lbTitle = $('lbTitle');
-  const lbDesc = $('lbDesc');
-  const lbCounter = $('lbCounter');
-  let currentIdx = 0;
-  let activeCat = 'all';
+  const PD = 'photos/';
+  const gallery = document.getElementById('gallery');
+  const filters = document.getElementById('filters');
+  const lb = document.getElementById('lb');
 
-  // Stats
-  $('totalPhotos').textContent = photos.length;
-  $('totalCats').textContent = cats.length - 1;
+  document.getElementById('totalPhotos').textContent = photos.length;
+  document.getElementById('totalCats').textContent = cats.length - 1;
 
-  // Build category map
+  // Category count
   const catMap = {};
-  photos.forEach(p => {
-    catMap[p.category] = (catMap[p.category] || 0) + 1;
-  });
+  photos.forEach(p => { catMap[p.category] = (catMap[p.category] || 0) + 1; });
 
-  // Render filters
+  // Filters
   cats.forEach(c => {
     const btn = document.createElement('button');
-    btn.className = 'filter-btn' + (c.id === 'all' ? ' active' : '');
     const count = c.id === 'all' ? photos.length : (catMap[c.id] || 0);
+    btn.className = 'filter-btn' + (c.id === 'all' ? ' active' : '');
     btn.innerHTML = `${c.icon} ${c.name} <span class="count">${count}</span>`;
     btn.dataset.cat = c.id;
-    btn.addEventListener('click', () => filterPhotos(c.id));
+    btn.addEventListener('click', () => filterBy(c.id));
     filters.appendChild(btn);
   });
 
-  // Render gallery
-  function renderGallery(list) {
+  // Cat lookup
+  const catById = {};
+  cats.forEach(c => { catById[c.id] = c; });
+
+  let activeCat = 'all';
+  let lbList = [];
+  let lbIdx = 0;
+
+  function render(list) {
     gallery.innerHTML = '';
-    list.forEach((p, i) => {
+    list.forEach((p) => {
       const item = document.createElement('div');
       item.className = 'gallery-item';
-      item.dataset.cat = p.category;
-
       const img = document.createElement('img');
-      img.dataset.src = PHOTO_DIR + encodeURIComponent(p.file);
-      img.alt = p.title;
-      img.loading = 'lazy';
+      img.dataset.src = PD + encodeURIComponent(p.file);
+      img.alt = '';
 
-      const obs = new IntersectionObserver((entries) => {
+      const obs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting) {
             img.src = img.dataset.src;
@@ -424,83 +370,76 @@
 
       const info = document.createElement('div');
       info.className = 'info';
-      const cat = cats.find(c => c.id === p.category);
-      info.innerHTML = `
-        <div class="title">${p.title}</div>
-        <div class="desc">${p.desc}</div>
-        <div class="cat-tag">${cat ? cat.icon + ' ' + cat.name : ''}</div>
-      `;
+      const c = catById[p.category];
+      info.innerHTML = `<span class="tag">${c ? c.icon + ' ' + c.name : ''}</span>`;
 
       item.appendChild(img);
       item.appendChild(info);
-      item.addEventListener('click', () => openLb(p.file, list, i));
+      item.addEventListener('click', () => openLb(list, p, list.indexOf(p)));
       gallery.appendChild(item);
     });
   }
 
-  function filterPhotos(cat) {
+  function filterBy(cat) {
     activeCat = cat;
-    document.querySelectorAll('.filter-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.cat === cat);
-    });
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
     const filtered = cat === 'all' ? photos : photos.filter(p => p.category === cat);
-    renderGallery(filtered);
-    // Smooth scroll to gallery
+    render(filtered);
     document.querySelector('.gallery-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  // Lightbox (operates on filtered list)
-  let lbList = [];
-
-  function openLb(file, list, idx) {
+  function openLb(list, p, idx) {
     lbList = list;
-    currentIdx = idx;
+    lbIdx = idx;
     updateLb();
     lb.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
 
   function updateLb() {
-    const p = lbList[currentIdx];
-    lbImg.src = PHOTO_DIR + encodeURIComponent(p.file);
-    lbImg.alt = p.title;
-    lbTitle.textContent = p.title;
-    lbDesc.textContent = p.desc;
-    lbCounter.textContent = `${currentIdx + 1} / ${lbList.length}`;
+    const p = lbList[lbIdx];
+    document.getElementById('lbImg').src = PD + encodeURIComponent(p.file);
+    document.getElementById('lbCounter').textContent = `${lbIdx + 1} / ${lbList.length}`;
+    const c = catById[p.category];
+    document.getElementById('lbTag').textContent = c ? c.icon + ' ' + c.name : '';
   }
 
-  function lbPrev() {
-    currentIdx = (currentIdx - 1 + lbList.length) % lbList.length;
+  document.getElementById('lbClose').addEventListener('click', () => {
+    lb.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+  document.getElementById('lbPrev').addEventListener('click', e => {
+    e.stopPropagation();
+    lbIdx = (lbIdx - 1 + lbList.length) % lbList.length;
     updateLb();
-  }
-  function lbNext() {
-    currentIdx = (currentIdx + 1) % lbList.length;
+  });
+  document.getElementById('lbNext').addEventListener('click', e => {
+    e.stopPropagation();
+    lbIdx = (lbIdx + 1) % lbList.length;
     updateLb();
-  }
-
-  // Events
-  $('lbClose').addEventListener('click', () => { lb.classList.remove('active'); document.body.style.overflow = ''; });
-  $('lbPrev').addEventListener('click', e => { e.stopPropagation(); lbPrev(); });
-  $('lbNext').addEventListener('click', e => { e.stopPropagation(); lbNext(); });
-  lb.addEventListener('click', e => { if (e.target === lb) { lb.classList.remove('active'); document.body.style.overflow = ''; } });
+  });
+  lb.addEventListener('click', e => {
+    if (e.target === lb) { lb.classList.remove('active'); document.body.style.overflow = ''; }
+  });
 
   document.addEventListener('keydown', e => {
     if (!lb.classList.contains('active')) return;
     if (e.key === 'Escape') { lb.classList.remove('active'); document.body.style.overflow = ''; }
-    if (e.key === 'ArrowLeft') lbPrev();
-    if (e.key === 'ArrowRight') lbNext();
+    if (e.key === 'ArrowLeft') { lbIdx = (lbIdx - 1 + lbList.length) % lbList.length; updateLb(); }
+    if (e.key === 'ArrowRight') { lbIdx = (lbIdx + 1) % lbList.length; updateLb(); }
   });
 
-  // Touch swipe
   let tx = 0;
-  lbImg.addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }, { passive: true });
-  lbImg.addEventListener('touchend', e => {
+  document.getElementById('lbImg').addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }, { passive: true });
+  document.getElementById('lbImg').addEventListener('touchend', e => {
     const d = e.changedTouches[0].screenX - tx;
-    if (Math.abs(d) > 50) d > 0 ? lbPrev() : lbNext();
+    if (Math.abs(d) > 50) {
+      d > 0 ? (lbIdx = (lbIdx - 1 + lbList.length) % lbList.length) : (lbIdx = (lbIdx + 1) % lbList.length);
+      updateLb();
+    }
   }, { passive: true });
 
-  // Init: show all
-  renderGallery(photos);
+  render(photos);
 })();
 </script>
 </body>
