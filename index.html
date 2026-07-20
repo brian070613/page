@@ -396,7 +396,9 @@
     max-width: 100%; max-height: 78vh;
     object-fit: contain; border-radius: 8px;
     box-shadow: 0 0 60px rgba(0,0,0,0.7);
+    transition: opacity 0.2s ease;
   }
+  .lb-inner img[src=""] { opacity: 0; }
   .lb-info {
     text-align: center; margin-top: 0.8rem;
   }
@@ -721,9 +723,14 @@
 
   function updateLb() {
     const p = lbList[lbIdx];
-    lbImg.src = imgSrc(p.file);
+    // 先清空再加载，避免切换时还卡着旧图
+    lbImg.src = '';
     lbImg.dataset.fallback = p.file;
     lbImg.onerror = function() { imgFallback(this, this.dataset.fallback); };
+    // 下一帧再设置新图片
+    requestAnimationFrame(() => {
+      lbImg.src = imgSrc(p.file);
+    });
     lbImg.alt = '';
     lbCounter.textContent = `${lbIdx + 1} / ${lbList.length}`;
 
