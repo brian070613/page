@@ -5,118 +5,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brian 摄影作品集</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Inter:wght@300;400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #090909; --bg2: #111; --card: #181818;
-    --text: #eee; --text2: #999; --text3: #666;
-    --gold: #c9a96e; --gold2: #a08040;
-    --border: #222; --r: 14px;
+    --bg: #0a0a0a;
+    --text: #eee;
+    --text2: #999;
+    --gold: #c9a96e;
+    --r: 12px;
   }
 
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg); color: var(--text);
-    min-height: 100vh; -webkit-font-smoothing: antialiased;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
-  /* Header */
+  /* HEADER - minimal */
   .header {
     text-align: center;
-    padding: 3rem 1rem 1.5rem;
+    padding: 3rem 1rem 0.5rem;
   }
   .header h1 {
     font-family: 'Noto Serif SC', serif;
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
-    font-weight: 700;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 600;
     letter-spacing: 6px;
     color: #fff;
   }
   .header h1::after {
     content: '';
     display: block;
-    width: 30px; height: 2px;
+    width: 28px; height: 1.5px;
     background: var(--gold);
-    margin: 0.8rem auto;
+    margin: 0.7rem auto;
   }
   .header p {
     color: var(--text2);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     letter-spacing: 2px;
     font-weight: 300;
-    margin-top: 0.3rem;
-  }
-  .header .stats {
-    display: flex; justify-content: center; gap: 2rem;
-    margin-top: 1rem;
-  }
-  .header .stats em {
-    font-style: normal; font-size: 1.3rem;
-    font-weight: 600; color: var(--gold);
-  }
-  .header .stats small {
-    display: block; font-size: 0.65rem;
-    color: var(--text3); letter-spacing: 1px;
   }
 
-  /* About */
-  .about {
-    text-align: center;
-    padding: 1rem 1.5rem 2rem;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  .about p {
-    color: var(--text2);
-    font-size: 0.85rem;
-    line-height: 1.7;
-    letter-spacing: 0.5px;
-  }
-  .about .links {
-    display: flex; justify-content: center; gap: 1.2rem;
-    margin-top: 0.5rem;
-  }
-  .about .links a {
-    color: var(--gold); font-size: 0.8rem;
-    letter-spacing: 1px;
-  }
-  .about .links a:hover { color: var(--gold2); }
-
-  /* Filters */
-  .filters {
-    display: flex; justify-content: center;
-    flex-wrap: wrap; gap: 0.4rem;
-    padding: 0 1rem;
-    max-width: 800px; margin: 0 auto 1.5rem;
-  }
-  .filter-btn {
-    padding: 5px 14px;
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    background: transparent;
-    color: var(--text2);
-    font-size: 0.82rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-family: inherit;
-    letter-spacing: 1px;
-  }
-  .filter-btn:hover { border-color: var(--gold2); color: var(--gold); }
-  .filter-btn.active { background: var(--gold); color: #111; border-color: var(--gold); font-weight: 500; }
-  .filter-btn .count { font-size: 0.65rem; opacity: 0.5; margin-left: 3px; }
-
-  /* Gallery */
+  /* GALLERY - fluid waterfall */
   .gallery-wrap {
     max-width: 1500px;
     margin: 0 auto;
-    padding: 0 12px 3rem;
+    padding: 2rem 12px 3rem;
   }
   .gallery {
     column-count: 4;
     column-gap: 14px;
   }
+
   .gallery-item {
     break-inside: avoid;
     margin-bottom: 14px;
@@ -124,70 +70,77 @@
     overflow: hidden;
     cursor: pointer;
     position: relative;
-    background: var(--card);
+    background: #141414;
     transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.4s;
-    opacity: 0; transform: translateY(20px);
-    animation: fadeUp 0.5s ease forwards;
+    opacity: 0;
+    transform: translateY(30px);
   }
-  .gallery-item.hidden { display: none; }
+  .gallery-item.show {
+    animation: flowIn 0.7s ease forwards;
+  }
+  .gallery-item:hover {
+    transform: scale(1.02) !important;
+    box-shadow: 0 12px 50px rgba(0,0,0,0.6);
+  }
   .gallery-item img {
-    display: block; width: 100%; height: auto;
-    opacity: 0; transition: transform 0.6s, opacity 0.5s;
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.6s ease;
   }
   .gallery-item img.loaded { opacity: 1; }
-  .gallery-item:hover img { transform: scale(1.05); }
-  .gallery-item:hover { box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
-  .gallery-item .cat-tag {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 3rem 1rem 1rem;
-    background: linear-gradient(transparent, rgba(0,0,0,0.85));
-    opacity: 0; transition: opacity 0.35s;
-    pointer-events: none;
+
+  /* Number badge */
+  .gallery-item .num {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+    color: rgba(255,255,255,0.6);
+    font-size: 0.65rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0;
+    font-weight: 400;
+    transition: opacity 0.3s;
   }
-  .gallery-item:hover .cat-tag { opacity: 1; }
-  .gallery-item .cat-tag span {
-    display: inline-block;
-    padding: 2px 10px;
-    border-radius: 100px;
-    background: rgba(201,169,110,0.2);
-    color: var(--gold);
-    font-size: 0.7rem;
-    letter-spacing: 1px;
+  .gallery-item:hover .num { opacity: 0.3; }
+
+  @keyframes flowIn {
+    0% { opacity: 0; transform: translateY(30px) scale(0.97); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Lightbox */
+  /* LIGHTBOX */
   .lb {
     display: none;
     position: fixed; z-index: 9999;
     top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.95);
     justify-content: center; align-items: center;
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(15px);
   }
   .lb.active { display: flex; }
   .lb-inner {
     display: flex; flex-direction: column; align-items: center;
     max-width: 92vw; max-height: 95vh;
-    animation: fadeIn 0.25s;
+    animation: fadeIn 0.25s ease;
   }
   .lb-inner img {
-    max-width: 100%; max-height: 78vh;
+    max-width: 100%; max-height: 80vh;
     object-fit: contain; border-radius: 8px;
     box-shadow: 0 0 60px rgba(0,0,0,0.7);
     transition: opacity 0.2s ease;
   }
   .lb-inner img[src=""] { opacity: 0; }
   .lb-info { text-align: center; margin-top: 0.8rem; }
-  .lb-info .counter { font-size: 0.8rem; color: var(--text3); letter-spacing: 1px; }
-  .lb-info .tag {
-    display: inline-block; margin-top: 4px;
-    padding: 2px 10px; border-radius: 100px;
-    background: rgba(201,169,110,0.15);
-    color: var(--gold); font-size: 0.7rem; letter-spacing: 1px;
+  .lb-info .counter {
+    font-size: 0.8rem; color: #555;
+    letter-spacing: 1px;
   }
 
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -195,48 +148,48 @@
   .lb-close {
     position: fixed; top: 20px; right: 25px;
     color: #fff; font-size: 2rem; cursor: pointer;
-    opacity: 0.5; transition: opacity 0.2s;
+    opacity: 0.4; transition: opacity 0.2s;
     background: none; border: none; z-index: 10000; line-height: 1;
   }
   .lb-close:hover { opacity: 1; }
   .lb-nav {
     position: fixed; top: 50%; transform: translateY(-50%);
     color: #fff; font-size: 2.5rem; cursor: pointer;
-    opacity: 0.3; transition: opacity 0.2s;
+    opacity: 0.2; transition: opacity 0.2s;
     background: none; border: none; z-index: 10000;
     padding: 1.5rem 0.8rem; user-select: none;
   }
-  .lb-nav:hover { opacity: 0.8; }
+  .lb-nav:hover { opacity: 0.7; }
   .lb-prev { left: 10px; }
   .lb-next { right: 10px; }
 
   .back-top {
-    position: fixed; bottom: 30px; left: 30px;
-    width: 40px; height: 40px;
+    position: fixed; bottom: 25px; left: 25px;
+    width: 38px; height: 38px;
     border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--text2);
-    cursor: pointer; font-size: 1.1rem;
+    border: 1px solid #222;
+    background: #141414;
+    color: #666;
+    cursor: pointer; font-size: 1rem;
     z-index: 100;
     opacity: 0; transition: opacity 0.3s;
     display: flex; align-items: center; justify-content: center;
   }
-  .back-top.show { opacity: 0.6; }
+  .back-top.show { opacity: 0.5; }
   .back-top.show:hover { opacity: 1; background: var(--gold); color: #111; border-color: var(--gold); }
 
   footer {
     text-align: center; padding: 2rem;
-    color: var(--text3); font-size: 0.8rem;
-    letter-spacing: 1px; border-top: 1px solid var(--border);
+    color: #444; font-size: 0.78rem;
+    letter-spacing: 1px;
   }
 
   @media (max-width: 1100px) { .gallery { column-count: 3; } }
   @media (max-width: 768px) {
-    .gallery { column-count: 2; column-gap: 8px; }
-    .gallery-item { margin-bottom: 8px; }
-    .header { padding: 2rem 1rem 1rem; }
-    .lb-nav { font-size: 2rem; padding: 1rem 0.5rem; }
+    .gallery { column-count: 2; column-gap: 10px; }
+    .gallery-item { margin-bottom: 10px; }
+    .header { padding: 2rem 1rem 0.5rem; }
+    .lb-nav { font-size: 2rem; padding: 1rem 0.3rem; }
   }
   @media (max-width: 480px) { .gallery { column-count: 1; } }
 </style>
@@ -245,22 +198,8 @@
 
 <div class="header">
   <h1>镜头之下</h1>
-  <p>Brian 的摄影记录</p>
-  <div class="stats">
-    <span><em id="totalPhotos">0</em><small>作品</small></span>
-    <span><em id="totalCats">0</em><small>分类</small></span>
-  </div>
+  <p>Brian · <span id="totalPhotos">0</span> 张作品</p>
 </div>
-
-<div class="about">
-  <p>摄影爱好者，喜欢用镜头记录身边的风景与故事。</p>
-  <div class="links">
-    <a href="https://github.com/brian070613" target="_blank">GitHub</a>
-    <a href="https://brian070613.github.io/page/">作品集</a>
-  </div>
-</div>
-
-<div class="filters" id="filters"></div>
 
 <div class="gallery-wrap">
   <div class="gallery" id="gallery"></div>
@@ -268,7 +207,7 @@
 
 <button class="back-top" id="backTop">↑</button>
 
-<footer>© 2026 Brian · 摄影作品集</footer>
+<footer>© 2026 Brian</footer>
 
 <div class="lb" id="lb">
   <button class="lb-close" id="lbClose">&times;</button>
@@ -278,130 +217,116 @@
     <img id="lbImg" src="" alt="">
     <div class="lb-info">
       <div class="counter" id="lbCounter"></div>
-      <div class="tag" id="lbTag"></div>
     </div>
   </div>
 </div>
 
 <script>
 (function() {
-  // Inline data
-  var DATA = {"categories":[{"id":"all","name":"\u5168\u90e8","icon":"\ud83d\udcf8"},{"id":"cat1","name":"\u98ce\u5149","icon":"\ud83c\udf04"},{"id":"cat2","name":"\u57ce\u5e02","icon":"\ud83c\udfd9\ufe0f"},{"id":"cat3","name":"\u4eba\u50cf","icon":"\ud83d\udc64"},{"id":"cat4","name":"\u968f\u62cd","icon":"\u2615"}],"photos":[{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105037_335_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105152_336_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105259_337_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105336_338_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105341_339_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105421_340_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105451_341_3(1).jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105456_342_3(1).jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105531_343_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105616_344_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105623_345_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105627_346_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105629_347_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105737_348_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105815_349_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105834_350_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105915_351_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105941_352_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720110018_353_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720110125_355_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184633_357_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184718_358_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184719_359_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184720_360_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184721_361_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184722_362_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184723_363_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184724_364_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184725_365_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184726_366_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184727_367_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184728_368_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184729_369_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184730_370_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184731_371_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184732_372_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184733_373_3.jpg","category":"cat1"}]};
-
-  var cats = DATA.categories, photos = DATA.photos;
-  var PD = 'https://cdn.jsdelivr.net/gh/brian070613/page@main/photos/';
-  var PD_FALLBACK = 'photos/';
-
-  function imgSrc(f) { return PD + encodeURIComponent(f); }
-  function imgFallback(el, f) { el.onerror = null; el.src = PD_FALLBACK + encodeURIComponent(f); }
+  var PHOTOS = ["\u5fae\u4fe1\u56fe\u7247_20260720105037_335_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105152_336_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105259_337_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105336_338_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105341_339_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105421_340_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105451_341_3(1).jpg","\u5fae\u4fe1\u56fe\u7247_20260720105456_342_3(1).jpg","\u5fae\u4fe1\u56fe\u7247_20260720105531_343_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105616_344_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105623_345_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105627_346_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105629_347_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105737_348_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105815_349_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105834_350_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105915_351_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720105941_352_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720110018_353_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720110125_355_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184633_357_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184718_358_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184719_359_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184720_360_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184721_361_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184722_362_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184723_363_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184724_364_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184725_365_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184726_366_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184727_367_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184728_368_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184729_369_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184730_370_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184731_371_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184732_372_3.jpg","\u5fae\u4fe1\u56fe\u7247_20260720184733_373_3.jpg"];
 
   // Shuffle
-  for (var i = photos.length - 1; i > 0; i--) {
+  for (var i = PHOTOS.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
-    var t = photos[i]; photos[i] = photos[j]; photos[j] = t;
+    var t = PHOTOS[i]; PHOTOS[i] = PHOTOS[j]; PHOTOS[j] = t;
   }
 
-  var $ = function(id) { return document.getElementById(id); };
-  var gallery = $('gallery'), filters = $('filters'), lb = $('lb');
-  var catById = {};
-  cats.forEach(function(c) { catById[c.id] = c; });
+  document.getElementById('totalPhotos').textContent = PHOTOS.length;
 
-  // Stats
-  $('totalPhotos').textContent = photos.length;
-  $('totalCats').textContent = cats.length - 1;
+  var CDN = 'https://cdn.jsdelivr.net/gh/brian070613/page@main/photos/';
+  var FALLBACK = 'photos/';
 
-  // Category counts
-  var catMap = {};
-  photos.forEach(function(p) { catMap[p.category] = (catMap[p.category] || 0) + 1; });
+  function photoUrl(f) { return CDN + encodeURIComponent(f); }
+  function fallback(el, f) { el.onerror = null; el.src = FALLBACK + encodeURIComponent(f); }
 
-  // Filters
-  cats.forEach(function(c) {
-    var btn = document.createElement('button');
-    btn.className = 'filter-btn' + (c.id === 'all' ? ' active' : '');
-    var cnt = c.id === 'all' ? photos.length : (catMap[c.id] || 0);
-    btn.innerHTML = c.icon + ' ' + c.name + ' <span class="count">' + cnt + '</span>';
-    btn.dataset.cat = c.id;
-    btn.addEventListener('click', function() { filterBy(c.id); });
-    filters.appendChild(btn);
+  var gallery = document.getElementById('gallery');
+  var lb = document.getElementById('lb');
+  var lbImg = document.getElementById('lbImg');
+  var lbCounter = document.getElementById('lbCounter');
+  var currentIdx = 0;
+  var renderedPhotos = [];
+
+  // Render each photo with staggered flow-in
+  PHOTOS.forEach(function(file, index) {
+    var item = document.createElement('div');
+    item.className = 'gallery-item';
+
+    var img = document.createElement('img');
+    img.dataset.src = photoUrl(file);
+    img.dataset.fallback = file;
+
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          img.src = img.dataset.src;
+          img.onload = function() { img.classList.add('loaded'); };
+          img.onerror = function() { img.classList.add('loaded'); fallback(this, this.dataset.fallback); };
+          obs.unobserve(img);
+        }
+      });
+    }, { rootMargin: '200px' });
+    obs.observe(img);
+
+    // Number badge
+    var num = document.createElement('div');
+    num.className = 'num';
+    num.textContent = index + 1;
+
+    item.appendChild(img);
+    item.appendChild(num);
+
+    // Staggered flow-in animation
+    var delay = Math.random() * 300;
+    setTimeout(function() {
+      item.classList.add('show');
+    }, delay);
+
+    item.addEventListener('click', function() {
+      openLb(index);
+    });
+
+    gallery.appendChild(item);
+    renderedPhotos.push(item);
   });
 
-  var activeCat = 'all';
-  var lbList = [], lbIdx = 0;
-
-  // RENDER
-  function render(list) {
-    gallery.innerHTML = '';
-    list.forEach(function(p) {
-      var item = document.createElement('div');
-      item.className = 'gallery-item';
-      var img = document.createElement('img');
-      img.dataset.src = imgSrc(p.file);
-      img.dataset.fallback = p.file;
-      var obs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-          if (e.isIntersecting) {
-            img.src = img.dataset.src;
-            img.onload = function() { img.classList.add('loaded'); };
-            img.onerror = function() { img.classList.add('loaded'); imgFallback(this, this.dataset.fallback); };
-            obs.unobserve(img);
-          }
-        });
-      }, { rootMargin: '200px' });
-      obs.observe(img);
-      var tag = document.createElement('div');
-      tag.className = 'cat-tag';
-      var c = catById[p.category];
-      tag.innerHTML = '<span>' + (c ? c.icon + ' ' + c.name : '') + '</span>';
-      item.appendChild(img);
-      item.appendChild(tag);
-      item.addEventListener('click', function() { openLb(list, list.indexOf(p)); });
-      gallery.appendChild(item);
-    });
-  }
-
-  function filterBy(cat) {
-    activeCat = cat;
-    document.querySelectorAll('.filter-btn').forEach(function(b) {
-      b.classList.toggle('active', b.dataset.cat === cat);
-    });
-    render(cat === 'all' ? photos : photos.filter(function(p) { return p.category === cat; }));
-  }
-
   // LIGHTBOX
-  function openLb(list, idx) {
-    lbList = list; lbIdx = idx;
+  function openLb(idx) {
+    currentIdx = idx;
     updateLb();
     lb.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
+
   function updateLb() {
-    var p = lbList[lbIdx];
-    var img = $('lbImg');
-    img.src = '';
-    img.dataset.fallback = p.file;
-    img.onerror = function() { imgFallback(this, this.dataset.fallback); };
-    requestAnimationFrame(function() { img.src = imgSrc(p.file); });
-    $('lbCounter').textContent = (lbIdx + 1) + ' / ' + lbList.length;
-    var c = catById[p.category];
-    $('lbTag').textContent = c ? c.icon + ' ' + c.name : '';
-    history.replaceState(null, '', '#photo-' + (lbIdx + 1));
+    var file = PHOTOS[currentIdx];
+    lbImg.src = '';
+    lbImg.dataset.fallback = file;
+    lbImg.onerror = function() { fallback(this, this.dataset.fallback); };
+    requestAnimationFrame(function() {
+      lbImg.src = photoUrl(file);
+    });
+    lbCounter.textContent = (currentIdx + 1) + ' / ' + PHOTOS.length;
+    history.replaceState(null, '', '#photo-' + (currentIdx + 1));
   }
 
-  $('lbClose').addEventListener('click', function() {
+  document.getElementById('lbClose').addEventListener('click', function() {
     lb.classList.remove('active');
     document.body.style.overflow = '';
     history.replaceState(null, '', window.location.pathname);
   });
-  $('lbPrev').addEventListener('click', function(e) {
+
+  document.getElementById('lbPrev').addEventListener('click', function(e) {
     e.stopPropagation();
-    lbIdx = (lbIdx - 1 + lbList.length) % lbList.length;
+    currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length;
     updateLb();
   });
-  $('lbNext').addEventListener('click', function(e) {
+
+  document.getElementById('lbNext').addEventListener('click', function(e) {
     e.stopPropagation();
-    lbIdx = (lbIdx + 1) % lbList.length;
+    currentIdx = (currentIdx + 1) % PHOTOS.length;
     updateLb();
   });
+
   lb.addEventListener('click', function(e) {
     if (e.target === lb) {
       lb.classList.remove('active');
@@ -418,27 +343,27 @@
       history.replaceState(null, '', window.location.pathname);
     }
     if (e.key === 'ArrowLeft') {
-      lbIdx = (lbIdx - 1 + lbList.length) % lbList.length;
+      currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length;
       updateLb();
     }
     if (e.key === 'ArrowRight') {
-      lbIdx = (lbIdx + 1) % lbList.length;
+      currentIdx = (currentIdx + 1) % PHOTOS.length;
       updateLb();
     }
   });
 
   var tx = 0;
-  $('lbImg').addEventListener('touchstart', function(e) { tx = e.changedTouches[0].screenX; }, { passive: true });
-  $('lbImg').addEventListener('touchend', function(e) {
+  lbImg.addEventListener('touchstart', function(e) { tx = e.changedTouches[0].screenX; }, { passive: true });
+  lbImg.addEventListener('touchend', function(e) {
     var d = e.changedTouches[0].screenX - tx;
     if (Math.abs(d) > 50) {
-      d > 0 ? (lbIdx = (lbIdx - 1 + lbList.length) % lbList.length) : (lbIdx = (lbIdx + 1) % lbList.length);
+      d > 0 ? (currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length) : (currentIdx = (currentIdx + 1) % PHOTOS.length);
       updateLb();
     }
   }, { passive: true });
 
   // Back to top
-  var backTop = $('backTop');
+  var backTop = document.getElementById('backTop');
   window.addEventListener('scroll', function() {
     backTop.classList.toggle('show', window.scrollY > 400);
   });
@@ -451,14 +376,11 @@
     var m = window.location.hash.match(/photo-(\d+)/);
     if (m) {
       var n = parseInt(m[1]) - 1;
-      if (n >= 0 && n < photos.length) {
-        setTimeout(function() { openLb(photos, n); }, 300);
+      if (n >= 0 && n < PHOTOS.length) {
+        setTimeout(function() { openLb(n); }, 500);
       }
     }
   }
-
-  // Init
-  render(photos);
 })();
 </script>
 </body>
