@@ -1,205 +1,252 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brian 摄影作品集</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0a0a0a;
+    --bg: #080808;
+    --card: #111;
+    --card-hover: #1a1a1a;
     --text: #eee;
     --text2: #999;
-    --gold: #c9a96e;
-    --r: 12px;
+    --text3: #555;
+    --gold: #d4a853;
+    --gold-dim: #a08030;
+    --border: #1a1a1a;
+    --radius: 16px;
+    --radius-sm: 8px;
   }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
   }
 
-  /* HEADER - minimal */
-  .header {
+  /* ===== CUSTOM SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #222; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #333; }
+
+  /* ===== HEADER ===== */
+  header {
     text-align: center;
-    padding: 3rem 1rem 0.5rem;
+    padding: 4rem 1rem 0.5rem;
+    position: relative;
   }
-  .header h1 {
-    font-family: 'Noto Serif SC', serif;
-    font-size: clamp(1.6rem, 4vw, 2.2rem);
-    font-weight: 600;
-    letter-spacing: 6px;
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 300;
+    letter-spacing: 8px;
     color: #fff;
   }
-  .header h1::after {
+  header h1::after {
     content: '';
     display: block;
-    width: 28px; height: 1.5px;
+    width: 24px; height: 1px;
     background: var(--gold);
-    margin: 0.7rem auto;
+    margin: 1rem auto;
+    opacity: 0.6;
   }
-  .header p {
-    color: var(--text2);
-    font-size: 0.82rem;
-    letter-spacing: 2px;
+  header p {
+    color: var(--text3);
+    font-size: 0.78rem;
+    letter-spacing: 3px;
     font-weight: 300;
+    text-transform: uppercase;
   }
 
-  /* GALLERY - fluid waterfall */
+  /* ===== GALLERY ===== */
   .gallery-wrap {
-    max-width: 1500px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 2rem 12px 3rem;
+    padding: 2.5rem 16px 4rem;
   }
   .gallery {
     column-count: 4;
-    column-gap: 14px;
+    column-gap: 16px;
   }
 
   .gallery-item {
     break-inside: avoid;
-    margin-bottom: 14px;
-    border-radius: var(--r);
+    margin-bottom: 16px;
+    border-radius: var(--radius);
     overflow: hidden;
     cursor: pointer;
     position: relative;
-    background: #141414;
-    transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.4s;
+    background: var(--card);
+    transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.5s;
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(24px) scale(0.98);
   }
   .gallery-item.show {
-    animation: flowIn 0.7s ease forwards;
+    animation: cardIn 0.6s ease forwards;
   }
   .gallery-item:hover {
     transform: scale(1.02) !important;
-    box-shadow: 0 12px 50px rgba(0,0,0,0.6);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   }
   .gallery-item img {
     display: block;
     width: 100%;
     height: auto;
     opacity: 0;
-    transition: opacity 0.6s ease;
+    transition: opacity 0.6s ease, transform 0.6s ease;
   }
   .gallery-item img.loaded { opacity: 1; }
+  .gallery-item:hover img { transform: scale(1.05); }
 
-  /* Number badge */
-  .gallery-item .num {
+  /* Index badge */
+  .gallery-item .badge {
     position: absolute;
-    top: 10px; right: 10px;
-    width: 26px; height: 26px;
+    top: 12px; right: 12px;
+    width: 28px; height: 28px;
     border-radius: 50%;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(4px);
-    color: rgba(255,255,255,0.6);
-    font-size: 0.65rem;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.5);
+    font-size: 0.6rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    letter-spacing: 0;
     font-weight: 400;
-    transition: opacity 0.3s;
+    transition: all 0.3s;
   }
-  .gallery-item:hover .num { opacity: 0.3; }
+  .gallery-item:hover .badge {
+    background: rgba(0,0,0,0.5);
+    color: var(--gold);
+    border-color: rgba(212,168,83,0.3);
+  }
 
-  @keyframes flowIn {
-    0% { opacity: 0; transform: translateY(30px) scale(0.97); }
+  @keyframes cardIn {
+    0% { opacity: 0; transform: translateY(24px) scale(0.98); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  /* LIGHTBOX */
+  /* ===== LIGHTBOX ===== */
   .lb {
     display: none;
     position: fixed; z-index: 9999;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95);
+    background: rgba(0,0,0,0.92);
     justify-content: center; align-items: center;
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
   .lb.active { display: flex; }
-  .lb-inner {
+  .lb-img-wrap {
     display: flex; flex-direction: column; align-items: center;
-    max-width: 92vw; max-height: 95vh;
-    animation: fadeIn 0.25s ease;
+    max-width: 90vw; max-height: 92vh;
+    animation: lbEntry 0.3s ease;
   }
-  .lb-inner img {
-    max-width: 100%; max-height: 80vh;
-    object-fit: contain; border-radius: 8px;
-    box-shadow: 0 0 60px rgba(0,0,0,0.7);
+  @keyframes lbEntry {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .lb-img-wrap img {
+    max-width: 100%; max-height: 83vh;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 0 80px rgba(0,0,0,0.6);
     transition: opacity 0.2s ease;
   }
-  .lb-inner img[src=""] { opacity: 0; }
-  .lb-info { text-align: center; margin-top: 0.8rem; }
-  .lb-info .counter {
-    font-size: 0.8rem; color: #555;
+  .lb-img-wrap img[src=""] { opacity: 0; }
+  .lb-counter {
+    margin-top: 0.8rem;
+    font-size: 0.75rem;
+    color: var(--text3);
     letter-spacing: 1px;
   }
 
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
   .lb-close {
-    position: fixed; top: 20px; right: 25px;
-    color: #fff; font-size: 2rem; cursor: pointer;
-    opacity: 0.4; transition: opacity 0.2s;
-    background: none; border: none; z-index: 10000; line-height: 1;
+    position: fixed; top: 24px; right: 28px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff; font-size: 1.2rem;
+    cursor: pointer; background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    line-height: 1;
   }
-  .lb-close:hover { opacity: 1; }
+  .lb-close:hover { background: rgba(255,255,255,0.1); }
+
   .lb-nav {
     position: fixed; top: 50%; transform: translateY(-50%);
-    color: #fff; font-size: 2.5rem; cursor: pointer;
-    opacity: 0.2; transition: opacity 0.2s;
-    background: none; border: none; z-index: 10000;
-    padding: 1.5rem 0.8rem; user-select: none;
-  }
-  .lb-nav:hover { opacity: 0.7; }
-  .lb-prev { left: 10px; }
-  .lb-next { right: 10px; }
-
-  .back-top {
-    position: fixed; bottom: 25px; left: 25px;
-    width: 38px; height: 38px;
+    width: 44px; height: 44px;
     border-radius: 50%;
-    border: 1px solid #222;
-    background: #141414;
-    color: #666;
+    border: 1px solid rgba(255,255,255,0.06);
+    color: #fff; font-size: 1.2rem;
+    cursor: pointer; background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    opacity: 0.3;
+    user-select: none;
+  }
+  .lb-nav:hover { opacity: 0.8; background: rgba(255,255,255,0.08); }
+  .lb-prev { left: 20px; }
+  .lb-next { right: 20px; }
+
+  /* ===== BACK TO TOP ===== */
+  .back-top {
+    position: fixed; bottom: 28px; left: 28px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text3);
     cursor: pointer; font-size: 1rem;
     z-index: 100;
-    opacity: 0; transition: opacity 0.3s;
+    opacity: 0; transition: all 0.3s;
     display: flex; align-items: center; justify-content: center;
   }
   .back-top.show { opacity: 0.5; }
   .back-top.show:hover { opacity: 1; background: var(--gold); color: #111; border-color: var(--gold); }
 
+  /* ===== FOOTER ===== */
   footer {
-    text-align: center; padding: 2rem;
-    color: #444; font-size: 0.78rem;
-    letter-spacing: 1px;
+    text-align: center; padding: 2.5rem;
+    color: var(--text3); font-size: 0.75rem;
+    letter-spacing: 2px;
+    border-top: 1px solid var(--border);
   }
 
-  @media (max-width: 1100px) { .gallery { column-count: 3; } }
-  @media (max-width: 768px) {
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1200px) { .gallery { column-count: 3; } }
+  @media (max-width: 800px) {
     .gallery { column-count: 2; column-gap: 10px; }
     .gallery-item { margin-bottom: 10px; }
-    .header { padding: 2rem 1rem 0.5rem; }
-    .lb-nav { font-size: 2rem; padding: 1rem 0.3rem; }
+    .gallery-wrap { padding: 1.5rem 10px 3rem; }
+    header { padding: 2.5rem 1rem 0.5rem; }
+    .lb-nav { width: 36px; height: 36px; font-size: 1rem; }
+    .lb-prev { left: 10px; }
+    .lb-next { right: 10px; }
+    .lb-close { top: 16px; right: 16px; width: 36px; height: 36px; font-size: 1rem; }
   }
-  @media (max-width: 480px) { .gallery { column-count: 1; } }
+  @media (max-width: 500px) { .gallery { column-count: 1; } }
 </style>
 </head>
 <body>
 
-<div class="header">
+<header>
   <h1>镜头之下</h1>
-  <p>Brian · <span id="totalPhotos">0</span> 张作品</p>
-</div>
+  <p><span id="totalPhotos">0</span> 张作品</p>
+</header>
 
 <div class="gallery-wrap">
   <div class="gallery" id="gallery"></div>
@@ -207,100 +254,22 @@
 
 <button class="back-top" id="backTop">↑</button>
 
-<footer>© 2026 Brian</footer>
+<footer>&copy; 2026 Brian</footer>
 
 <div class="lb" id="lb">
-  <button class="lb-close" id="lbClose">&times;</button>
-  <button class="lb-nav lb-prev" id="lbPrev">&#10094;</button>
-  <button class="lb-nav lb-next" id="lbNext">&#10095;</button>
-  <div class="lb-inner">
+  <button class="lb-close" id="lbClose">✕</button>
+  <button class="lb-nav lb-prev" id="lbPrev">‹</button>
+  <button class="lb-nav lb-next" id="lbNext">›</button>
+  <div class="lb-img-wrap">
     <img id="lbImg" src="" alt="">
-    <div class="lb-info">
-      <div class="counter" id="lbCounter"></div>
-    </div>
+    <div class="lb-counter" id="lbCounter"></div>
   </div>
 </div>
 
 <script>
 (function() {
-  var PHOTOS = [
-  "微信图片_20260720105037_335_3.jpg"
-  ,"微信图片_20260720105152_336_3.jpg"
-  ,"微信图片_20260720105259_337_3.jpg"
-  ,"微信图片_20260720105336_338_3.jpg"
-  ,"微信图片_20260720105341_339_3.jpg"
-  ,"微信图片_20260720105421_340_3.jpg"
-  ,"微信图片_20260720105451_341_3(1).jpg"
-  ,"微信图片_20260720105456_342_3(1).jpg"
-  ,"微信图片_20260720105531_343_3.jpg"
-  ,"微信图片_20260720105616_344_3.jpg"
-  ,"微信图片_20260720105623_345_3.jpg"
-  ,"微信图片_20260720105627_346_3.jpg"
-  ,"微信图片_20260720105629_347_3.jpg"
-  ,"微信图片_20260720105737_348_3.jpg"
-  ,"微信图片_20260720105815_349_3.jpg"
-  ,"微信图片_20260720105834_350_3.jpg"
-  ,"微信图片_20260720105915_351_3.jpg"
-  ,"微信图片_20260720105941_352_3.jpg"
-  ,"微信图片_20260720110018_353_3.jpg"
-  ,"微信图片_20260720110125_355_3.jpg"
-  ,"微信图片_20260720184633_357_3.jpg"
-  ,"微信图片_20260720184718_358_3.jpg"
-  ,"微信图片_20260720184719_359_3.jpg"
-  ,"微信图片_20260720184720_360_3.jpg"
-  ,"微信图片_20260720184721_361_3.jpg"
-  ,"微信图片_20260720184722_362_3.jpg"
-  ,"微信图片_20260720184723_363_3.jpg"
-  ,"微信图片_20260720184724_364_3.jpg"
-  ,"微信图片_20260720184725_365_3.jpg"
-  ,"微信图片_20260720184726_366_3.jpg"
-  ,"微信图片_20260720184727_367_3.jpg"
-  ,"微信图片_20260720184728_368_3.jpg"
-  ,"微信图片_20260720184729_369_3.jpg"
-  ,"微信图片_20260720184730_370_3.jpg"
-  ,"微信图片_20260720184731_371_3.jpg"
-  ,"微信图片_20260720184732_372_3.jpg"
-  ,"微信图片_20260720184733_373_3.jpg"
-  ,"微信图片_20260720213816_374_3.jpg"
-  ,"微信图片_20260720213819_375_3.jpg"
-  ,"微信图片_20260720213824_376_3.jpg"
-  ,"微信图片_20260720213826_377_3.jpg"
-  ,"微信图片_20260720213828_378_3.jpg"
-  ,"微信图片_20260720213832_379_3.jpg"
-  ,"微信图片_20260720213835_380_3.jpg"
-  ,"微信图片_20260720213838_381_3.jpg"
-  ,"微信图片_20260720213841_382_3.jpg"
-  ,"微信图片_20260720213845_383_3.jpg"
-  ,"微信图片_20260720213846_384_3.jpg"
-  ,"微信图片_20260720213849_385_3.jpg"
-  ,"微信图片_20260720213923_386_3.jpg"
-  ,"微信图片_20260720213925_387_3.jpg"
-  ,"微信图片_20260720213931_388_3.jpg"
-  ,"微信图片_20260720213932_389_3.jpg"
-  ,"微信图片_20260720213933_390_3.jpg"
-  ,"微信图片_20260720213934_391_3.jpg"
-  ,"微信图片_20260720213936_392_3.jpg"
-  ,"微信图片_20260720213939_393_3.jpg"
-  ,"微信图片_20260720213941_394_3.jpg"
-  ,"微信图片_20260720213943_395_3.jpg"
-  ,"微信图片_20260720213945_396_3.jpg"
-  ,"微信图片_20260720213948_397_3.jpg"
-  ,"微信图片_20260720213950_398_3.jpg"
-  ,"微信图片_20260720213952_399_3.jpg"
-  ,"微信图片_20260720213954_400_3.jpg"
-  ,"微信图片_20260720213955_401_3.jpg"
-  ,"微信图片_20260720213958_402_3.jpg"
-  ,"微信图片_20260720214011_403_3.jpg"
-  ,"微信图片_20260720214012_404_3.jpg"
-  ,"微信图片_20260720214013_405_3.jpg"
-  ,"微信图片_20260720214015_406_3.jpg"
-  ,"微信图片_20260720214017_407_3.jpg"
-  ,"微信图片_20260720214021_408_3.jpg"
-  ,"微信图片_20260720214022_409_3.jpg"
-  ,"微信图片_20260720214023_410_3.jpg"
-];
+  var PHOTOS = ["微信图片_20260720105037_335_3.jpg","微信图片_20260720105152_336_3.jpg","微信图片_20260720105259_337_3.jpg","微信图片_20260720105336_338_3.jpg","微信图片_20260720105341_339_3.jpg","微信图片_20260720105421_340_3.jpg","微信图片_20260720105451_341_3(1).jpg","微信图片_20260720105456_342_3(1).jpg","微信图片_20260720105531_343_3.jpg","微信图片_20260720105616_344_3.jpg","微信图片_20260720105623_345_3.jpg","微信图片_20260720105627_346_3.jpg","微信图片_20260720105629_347_3.jpg","微信图片_20260720105737_348_3.jpg","微信图片_20260720105815_349_3.jpg","微信图片_20260720105834_350_3.jpg","微信图片_20260720105915_351_3.jpg","微信图片_20260720105941_352_3.jpg","微信图片_20260720110018_353_3.jpg","微信图片_20260720110125_355_3.jpg","微信图片_20260720184633_357_3.jpg","微信图片_20260720184718_358_3.jpg","微信图片_20260720184719_359_3.jpg","微信图片_20260720184720_360_3.jpg","微信图片_20260720184721_361_3.jpg","微信图片_20260720184722_362_3.jpg","微信图片_20260720184723_363_3.jpg","微信图片_20260720184724_364_3.jpg","微信图片_20260720184725_365_3.jpg","微信图片_20260720184726_366_3.jpg","微信图片_20260720184727_367_3.jpg","微信图片_20260720184728_368_3.jpg","微信图片_20260720184729_369_3.jpg","微信图片_20260720184730_370_3.jpg","微信图片_20260720184731_371_3.jpg","微信图片_20260720184732_372_3.jpg","微信图片_20260720184733_373_3.jpg","微信图片_20260720213816_374_3.jpg","微信图片_20260720213819_375_3.jpg","微信图片_20260720213824_376_3.jpg","微信图片_20260720213826_377_3.jpg","微信图片_20260720213828_378_3.jpg","微信图片_20260720213832_379_3.jpg","微信图片_20260720213835_380_3.jpg","微信图片_20260720213838_381_3.jpg","微信图片_20260720213841_382_3.jpg","微信图片_20260720213845_383_3.jpg","微信图片_20260720213846_384_3.jpg","微信图片_20260720213849_385_3.jpg","微信图片_20260720213923_386_3.jpg","微信图片_20260720213925_387_3.jpg","微信图片_20260720213931_388_3.jpg","微信图片_20260720213932_389_3.jpg","微信图片_20260720213933_390_3.jpg","微信图片_20260720213934_391_3.jpg","微信图片_20260720213936_392_3.jpg","微信图片_20260720213939_393_3.jpg","微信图片_20260720213941_394_3.jpg","微信图片_20260720213943_395_3.jpg","微信图片_20260720213945_396_3.jpg","微信图片_20260720213948_397_3.jpg","微信图片_20260720213950_398_3.jpg","微信图片_20260720213952_399_3.jpg","微信图片_20260720213954_400_3.jpg","微信图片_20260720213955_401_3.jpg","微信图片_20260720213958_402_3.jpg","微信图片_20260720214011_403_3.jpg","微信图片_20260720214012_404_3.jpg","微信图片_20260720214013_405_3.jpg","微信图片_20260720214015_406_3.jpg","微信图片_20260720214017_407_3.jpg","微信图片_20260720214021_408_3.jpg","微信图片_20260720214022_409_3.jpg","微信图片_20260720214023_410_3.jpg"];
 
-  // Shuffle
   for (var i = PHOTOS.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var t = PHOTOS[i]; PHOTOS[i] = PHOTOS[j]; PHOTOS[j] = t;
@@ -309,25 +278,22 @@
   document.getElementById('totalPhotos').textContent = PHOTOS.length;
 
   var CDN = 'https://brian-photos.oss-cn-beijing.aliyuncs.com/';
-  var FALLBACK = 'photos/';
+  var FALLBACK = 'https://cdn.jsdelivr.net/gh/brian070613/page@main/photos/';
 
-  function photoUrl(f) { return CDN + encodeURIComponent(f); }
+  function imgUrl(f) { return CDN + encodeURIComponent(f); }
   function fallback(el, f) { el.onerror = null; el.src = FALLBACK + encodeURIComponent(f); }
 
   var gallery = document.getElementById('gallery');
   var lb = document.getElementById('lb');
   var lbImg = document.getElementById('lbImg');
-  var lbCounter = document.getElementById('lbCounter');
   var currentIdx = 0;
-  var renderedPhotos = [];
 
-  // Render each photo with staggered flow-in
   PHOTOS.forEach(function(file, index) {
     var item = document.createElement('div');
     item.className = 'gallery-item';
 
     var img = document.createElement('img');
-    img.dataset.src = photoUrl(file);
+    img.dataset.src = imgUrl(file);
     img.dataset.fallback = file;
 
     var obs = new IntersectionObserver(function(entries) {
@@ -339,32 +305,23 @@
           obs.unobserve(img);
         }
       });
-    }, { rootMargin: '200px' });
+    }, { rootMargin: '300px' });
     obs.observe(img);
 
-    // Number badge
-    var num = document.createElement('div');
-    num.className = 'num';
-    num.textContent = index + 1;
+    var badge = document.createElement('div');
+    badge.className = 'badge';
+    badge.textContent = index + 1;
 
     item.appendChild(img);
-    item.appendChild(num);
+    item.appendChild(badge);
 
-    // Staggered flow-in animation
-    var delay = Math.random() * 300;
-    setTimeout(function() {
-      item.classList.add('show');
-    }, delay);
+    var delay = Math.random() * 200;
+    setTimeout(function() { item.classList.add('show'); }, delay);
 
-    item.addEventListener('click', function() {
-      openLb(index);
-    });
-
+    item.addEventListener('click', function() { openLb(index); });
     gallery.appendChild(item);
-    renderedPhotos.push(item);
   });
 
-  // LIGHTBOX
   function openLb(idx) {
     currentIdx = idx;
     updateLb();
@@ -377,11 +334,9 @@
     lbImg.src = '';
     lbImg.dataset.fallback = file;
     lbImg.onerror = function() { fallback(this, this.dataset.fallback); };
-    requestAnimationFrame(function() {
-      lbImg.src = photoUrl(file);
-    });
-    lbCounter.textContent = (currentIdx + 1) + ' / ' + PHOTOS.length;
-    history.replaceState(null, '', '#photo-' + (currentIdx + 1));
+    requestAnimationFrame(function() { lbImg.src = imgUrl(file); });
+    document.getElementById('lbCounter').textContent = (currentIdx + 1) + ' / ' + PHOTOS.length;
+    history.replaceState(null, '', '#p-' + (currentIdx + 1));
   }
 
   document.getElementById('lbClose').addEventListener('click', function() {
@@ -389,19 +344,16 @@
     document.body.style.overflow = '';
     history.replaceState(null, '', window.location.pathname);
   });
-
   document.getElementById('lbPrev').addEventListener('click', function(e) {
     e.stopPropagation();
     currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length;
     updateLb();
   });
-
   document.getElementById('lbNext').addEventListener('click', function(e) {
     e.stopPropagation();
     currentIdx = (currentIdx + 1) % PHOTOS.length;
     updateLb();
   });
-
   lb.addEventListener('click', function(e) {
     if (e.target === lb) {
       lb.classList.remove('active');
@@ -437,7 +389,6 @@
     }
   }, { passive: true });
 
-  // Back to top
   var backTop = document.getElementById('backTop');
   window.addEventListener('scroll', function() {
     backTop.classList.toggle('show', window.scrollY > 400);
@@ -446,9 +397,8 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // Hash link
   if (window.location.hash) {
-    var m = window.location.hash.match(/photo-(\d+)/);
+    var m = window.location.hash.match(/p-(\d+)/);
     if (m) {
       var n = parseInt(m[1]) - 1;
       if (n >= 0 && n < PHOTOS.length) {
