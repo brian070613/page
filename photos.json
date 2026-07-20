@@ -1,10 +1,10 @@
 {
   "categories": [
-    { "id": "all", "name": "全部", "icon": "📸" },
-    { "id": "cat1", "name": "风光", "icon": "🌄" },
-    { "id": "cat2", "name": "城市", "icon": "🏙�? },
-    { "id": "cat3", "name": "人像", "icon": "👤" },
-    { "id": "cat4", "name": "随拍", "icon": "�? }
+    { "id": "all", "name": "全部", "icon": "\uD83D\uDCF8" },
+    { "id": "cat1", "name": "风光", "icon": "\uD83C\uDF04" },
+    { "id": "cat2", "name": "城市", "icon": "\uD83C\uDFD9\uFE0F" },
+    { "id": "cat3", "name": "人像", "icon": "\uD83D\uDC64" },
+    { "id": "cat4", "name": "随拍", "icon": "\u2615" }
   ],
   "photos": [
     { "file": "微信图片_20260720105037_335_3.jpg", "category": "cat1" },
