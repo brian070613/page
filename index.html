@@ -5,259 +5,502 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brian 摄影作品集</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: #0a0a0a;
-    color: #eee;
-    min-height: 100vh;
+
+  :root {
+    --bg: #0b0b0b;
+    --bg-card: #141414;
+    --bg-hover: #1c1c1c;
+    --text: #e8e8e8;
+    --text-muted: #888;
+    --text-dim: #555;
+    --accent: #c9a96e;
+    --accent-dim: #a08040;
+    --border: #222;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.5);
   }
 
-  header {
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    position: relative;
     text-align: center;
-    padding: 3rem 1rem 1.5rem;
+    padding: 5rem 1.5rem 3rem;
+    overflow: hidden;
   }
-  header h1 {
-    font-size: 2.2rem;
-    font-weight: 300;
-    letter-spacing: 4px;
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,169,110,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: 6px;
     color: #fff;
+    position: relative;
   }
-  header p {
-    color: #888;
-    margin-top: 0.5rem;
+  .hero h1::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: var(--accent);
+    margin: 1.2rem auto 1rem;
+  }
+  .hero p {
+    color: var(--text-muted);
     font-size: 0.95rem;
+    letter-spacing: 2px;
+    font-weight: 300;
+    position: relative;
+  }
+  .hero .stats {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-top: 2rem;
+    position: relative;
+  }
+  .hero .stats span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .hero .stats em {
+    font-style: normal;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .hero .stats small {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  /* ===== Filters ===== */
+  .filters {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    margin: 1rem auto 2rem;
+    max-width: 800px;
+  }
+  .filter-btn {
+    padding: 0.5rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
     letter-spacing: 1px;
   }
+  .filter-btn:hover {
+    border-color: var(--accent-dim);
+    color: var(--accent);
+  }
+  .filter-btn.active {
+    background: var(--accent);
+    color: #111;
+    border-color: var(--accent);
+    font-weight: 500;
+  }
+  .filter-btn .count {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 0.7rem;
+    opacity: 0.6;
+  }
 
+  /* ===== Gallery ===== */
+  .gallery-wrap {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0 12px 3rem;
+  }
   .gallery {
     column-count: 4;
-    column-gap: 12px;
-    max-width: 1500px;
-    margin: 2rem auto;
-    padding: 0 12px;
+    column-gap: 14px;
   }
   .gallery-item {
     break-inside: avoid;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    border-radius: var(--radius);
     overflow: hidden;
-    border-radius: 8px;
     cursor: pointer;
     position: relative;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background: #1a1a1a;
+    background: var(--bg-card);
+    transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.4s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.5s ease forwards;
   }
-  .gallery-item:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  .gallery-item.hidden {
+    display: none;
   }
   .gallery-item img {
     display: block;
     width: 100%;
     height: auto;
-    opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: transform 0.6s ease;
   }
-  .gallery-item img.loaded { opacity: 1; }
-  .gallery-item .overlay {
+  .gallery-item:hover img {
+    transform: scale(1.05);
+  }
+  .gallery-item:hover {
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+  }
+
+  /* Info overlay on hover */
+  .gallery-item .info {
     position: absolute;
     bottom: 0; left: 0; right: 0;
-    padding: 2rem 1rem 1rem;
-    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    padding: 3rem 1.2rem 1.2rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.35s ease;
     pointer-events: none;
   }
-  .gallery-item:hover .overlay { opacity: 1; }
-  .gallery-item .overlay span { font-size: 0.85rem; color: #ccc; }
+  .gallery-item:hover .info { opacity: 1; }
+  .gallery-item .info .title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 2px;
+  }
+  .gallery-item .info .desc {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+  .gallery-item .info .cat-tag {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 2px 10px;
+    border-radius: 100px;
+    background: rgba(201,169,110,0.2);
+    color: var(--accent);
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+  }
 
-  .lightbox {
+  /* Image loading */
+  .gallery-item img { opacity: 0; transition: opacity 0.6s ease; }
+  .gallery-item img.loaded { opacity: 1; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .gallery-item:nth-child(1) { animation-delay: 0.02s; }
+  .gallery-item:nth-child(2) { animation-delay: 0.04s; }
+  .gallery-item:nth-child(3) { animation-delay: 0.06s; }
+  .gallery-item:nth-child(4) { animation-delay: 0.08s; }
+  .gallery-item:nth-child(5) { animation-delay: 0.10s; }
+
+  /* ===== Lightbox ===== */
+  .lb {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 9999;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.94);
+    background: rgba(0,0,0,0.95);
     justify-content: center;
     align-items: center;
-    cursor: zoom-out;
+    backdrop-filter: blur(10px);
   }
-  .lightbox.active { display: flex; }
-  .lightbox img {
-    max-width: 92vw;
-    max-height: 92vh;
+  .lb.active { display: flex; }
+  .lb-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90vw;
+    max-height: 95vh;
+    animation: lbIn 0.3s ease;
+  }
+  @keyframes lbIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+  .lb-inner img {
+    max-width: 100%;
+    max-height: 80vh;
     object-fit: contain;
-    border-radius: 4px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.8);
-    animation: fadeIn 0.25s ease;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 0 60px rgba(0,0,0,0.7);
   }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+  .lb-meta {
+    text-align: center;
+    margin-top: 1rem;
+    max-width: 600px;
   }
-  .lightbox .close {
-    position: absolute; top: 20px; right: 30px;
-    font-size: 2rem; color: #fff; cursor: pointer;
-    opacity: 0.6; transition: opacity 0.2s;
+  .lb-meta .title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.2rem;
+    color: #fff;
+    letter-spacing: 2px;
+  }
+  .lb-meta .desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+  .lb-meta .counter {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+  .lb-close {
+    position: fixed; top: 25px; right: 30px;
+    color: #fff; font-size: 2.2rem; cursor: pointer;
+    opacity: 0.5; transition: opacity 0.2s;
     background: none; border: none;
+    z-index: 10000;
   }
-  .lightbox .close:hover { opacity: 1; }
-  .lightbox .nav {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    font-size: 2.5rem; color: #fff; cursor: pointer;
-    opacity: 0.4; transition: opacity 0.2s;
+  .lb-close:hover { opacity: 1; }
+  .lb-nav {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    color: #fff; font-size: 2.8rem; cursor: pointer;
+    opacity: 0.3; transition: opacity 0.2s;
     background: none; border: none;
-    padding: 1rem; user-select: none;
+    padding: 1.5rem 1rem;
+    z-index: 10000;
+    user-select: none;
   }
-  .lightbox .nav:hover { opacity: 1; }
-  .lightbox .prev { left: 10px; }
-  .lightbox .next { right: 10px; }
-  .lightbox .counter {
-    position: absolute; bottom: 30px; left: 50%;
-    transform: translateX(-50%);
-    color: #888; font-size: 0.9rem; letter-spacing: 1px;
-  }
+  .lb-nav:hover { opacity: 0.8; }
+  .lb-prev { left: 10px; }
+  .lb-next { right: 10px; }
 
+  /* ===== Footer ===== */
   footer {
     text-align: center;
-    padding: 2rem;
-    color: #555;
-    font-size: 0.85rem;
+    padding: 2.5rem;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    border-top: 1px solid var(--border);
   }
 
+  /* ===== Responsive ===== */
   @media (max-width: 1100px) { .gallery { column-count: 3; } }
   @media (max-width: 768px) {
-    .gallery { column-count: 2; column-gap: 8px; padding: 0 8px; }
+    .gallery { column-count: 2; column-gap: 8px; }
     .gallery-item { margin-bottom: 8px; }
-    header h1 { font-size: 1.5rem; }
+    .hero { padding: 3rem 1rem 2rem; }
+    .hero .stats { gap: 1.5rem; }
+    .lb-nav { font-size: 2rem; padding: 1rem 0.5rem; }
   }
   @media (max-width: 480px) { .gallery { column-count: 1; } }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>📷 作品集</h1>
-  <p>点击照片查看大图</p>
-</header>
+<div class="hero">
+  <h1>镜头之下</h1>
+  <p>Brian 的摄影记录</p>
+  <div class="stats" id="stats">
+    <span><em id="totalPhotos">0</em><small>作品</small></span>
+    <span><em id="totalCats">0</em><small>分类</small></span>
+  </div>
+</div>
 
-<div class="gallery" id="gallery"></div>
+<div class="filters" id="filters"></div>
 
-<footer>© 2026 · Brian 摄影作品</footer>
+<div class="gallery-wrap">
+  <div class="gallery" id="gallery"></div>
+</div>
 
-<div class="lightbox" id="lightbox">
-  <button class="close" id="lbClose">&times;</button>
-  <button class="nav prev" id="lbPrev">&#10094;</button>
-  <button class="nav next" id="lbNext">&#10095;</button>
-  <img id="lbImg" src="" alt="预览">
-  <div class="counter" id="lbCounter"></div>
+<footer>© 2026 Brian · 摄影作品集</footer>
+
+<div class="lb" id="lb">
+  <button class="lb-close" id="lbClose">&times;</button>
+  <button class="lb-nav lb-prev" id="lbPrev">&#10094;</button>
+  <button class="lb-nav lb-next" id="lbNext">&#10095;</button>
+  <div class="lb-inner">
+    <img id="lbImg" src="" alt="">
+    <div class="lb-meta">
+      <div class="title" id="lbTitle"></div>
+      <div class="desc" id="lbDesc"></div>
+      <div class="counter" id="lbCounter"></div>
+    </div>
+  </div>
 </div>
 
 <script>
-(function() {
-  var PHOTO_DIR = 'photos/';
+(async function() {
+  // Load data
+  const res = await fetch('photos.json');
+  const data = await res.json();
 
-  var photos = [
-    "微信图片_20260720105037_335_3.jpg",
-    "微信图片_20260720105152_336_3.jpg",
-    "微信图片_20260720105259_337_3.jpg",
-    "微信图片_20260720105336_338_3.jpg",
-    "微信图片_20260720105341_339_3.jpg",
-    "微信图片_20260720105421_340_3.jpg",
-    "微信图片_20260720105451_341_3(1).jpg",
-    "微信图片_20260720105456_342_3(1).jpg",
-    "微信图片_20260720105531_343_3.jpg",
-    "微信图片_20260720105616_344_3.jpg",
-    "微信图片_20260720105623_345_3.jpg",
-    "微信图片_20260720105627_346_3.jpg",
-    "微信图片_20260720105629_347_3.jpg",
-    "微信图片_20260720105737_348_3.jpg",
-    "微信图片_20260720105815_349_3.jpg",
-    "微信图片_20260720105834_350_3.jpg",
-    "微信图片_20260720105915_351_3.jpg",
-    "微信图片_20260720105941_352_3.jpg",
-    "微信图片_20260720110018_353_3.jpg",
-    "微信图片_20260720110107_354_3.jpg",
-    "微信图片_20260720110125_355_3.jpg"
-  ];
+  const cats = data.categories;
+  const photos = data.photos;
 
-  function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-    }
-    return a;
+  // Shuffle
+  for (let i = photos.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [photos[i], photos[j]] = [photos[j], photos[i]];
   }
-  photos = shuffle(photos);
 
-  var gallery = document.getElementById('gallery');
-  var lb = document.getElementById('lightbox');
-  var lbImg = document.getElementById('lbImg');
-  var lbCounter = document.getElementById('lbCounter');
-  var lbClose = document.getElementById('lbClose');
-  var lbPrev = document.getElementById('lbPrev');
-  var lbNext = document.getElementById('lbNext');
-  var idx = 0;
+  const PHOTO_DIR = 'photos/';
+  const $ = id => document.getElementById(id);
+  const gallery = $('gallery');
+  const filters = $('filters');
+  const lb = $('lb');
+  const lbImg = $('lbImg');
+  const lbTitle = $('lbTitle');
+  const lbDesc = $('lbDesc');
+  const lbCounter = $('lbCounter');
+  let currentIdx = 0;
+  let activeCat = 'all';
 
-  photos.forEach(function(src, i) {
-    var item = document.createElement('div');
-    item.className = 'gallery-item';
-    var img = document.createElement('img');
-    img.dataset.src = PHOTO_DIR + encodeURIComponent(src);
-    img.alt = '照片 ' + (i + 1);
-    img.loading = 'lazy';
+  // Stats
+  $('totalPhotos').textContent = photos.length;
+  $('totalCats').textContent = cats.length - 1;
 
-    var obs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) {
-          img.src = img.dataset.src;
-          img.onload = function() { img.classList.add('loaded'); };
-          img.onerror = function() { img.classList.add('loaded'); };
-          obs.unobserve(img);
-        }
-      });
-    }, { rootMargin: '200px' });
-    obs.observe(img);
-
-    var overlay = document.createElement('div');
-    overlay.className = 'overlay';
-    var span = document.createElement('span');
-    span.textContent = '照片 ' + (i + 1);
-    overlay.appendChild(span);
-    item.appendChild(img);
-    item.appendChild(overlay);
-    item.addEventListener('click', function() { openLb(i); });
-    gallery.appendChild(item);
+  // Build category map
+  const catMap = {};
+  photos.forEach(p => {
+    catMap[p.category] = (catMap[p.category] || 0) + 1;
   });
 
-  function openLb(n) { idx = n; updateLb(); lb.classList.add('active'); document.body.style.overflow = 'hidden'; }
-  function closeLb() { lb.classList.remove('active'); document.body.style.overflow = ''; }
+  // Render filters
+  cats.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (c.id === 'all' ? ' active' : '');
+    const count = c.id === 'all' ? photos.length : (catMap[c.id] || 0);
+    btn.innerHTML = `${c.icon} ${c.name} <span class="count">${count}</span>`;
+    btn.dataset.cat = c.id;
+    btn.addEventListener('click', () => filterPhotos(c.id));
+    filters.appendChild(btn);
+  });
+
+  // Render gallery
+  function renderGallery(list) {
+    gallery.innerHTML = '';
+    list.forEach((p, i) => {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      item.dataset.cat = p.category;
+
+      const img = document.createElement('img');
+      img.dataset.src = PHOTO_DIR + encodeURIComponent(p.file);
+      img.alt = p.title;
+      img.loading = 'lazy';
+
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            img.src = img.dataset.src;
+            img.onload = () => img.classList.add('loaded');
+            img.onerror = () => img.classList.add('loaded');
+            obs.unobserve(img);
+          }
+        });
+      }, { rootMargin: '200px' });
+      obs.observe(img);
+
+      const info = document.createElement('div');
+      info.className = 'info';
+      const cat = cats.find(c => c.id === p.category);
+      info.innerHTML = `
+        <div class="title">${p.title}</div>
+        <div class="desc">${p.desc}</div>
+        <div class="cat-tag">${cat ? cat.icon + ' ' + cat.name : ''}</div>
+      `;
+
+      item.appendChild(img);
+      item.appendChild(info);
+      item.addEventListener('click', () => openLb(p.file, list, i));
+      gallery.appendChild(item);
+    });
+  }
+
+  function filterPhotos(cat) {
+    activeCat = cat;
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.cat === cat);
+    });
+    const filtered = cat === 'all' ? photos : photos.filter(p => p.category === cat);
+    renderGallery(filtered);
+    // Smooth scroll to gallery
+    document.querySelector('.gallery-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Lightbox (operates on filtered list)
+  let lbList = [];
+
+  function openLb(file, list, idx) {
+    lbList = list;
+    currentIdx = idx;
+    updateLb();
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
   function updateLb() {
-    lbImg.src = PHOTO_DIR + encodeURIComponent(photos[idx]);
-    lbImg.alt = '照片 ' + (idx + 1);
-    lbCounter.textContent = (idx + 1) + ' / ' + photos.length;
+    const p = lbList[currentIdx];
+    lbImg.src = PHOTO_DIR + encodeURIComponent(p.file);
+    lbImg.alt = p.title;
+    lbTitle.textContent = p.title;
+    lbDesc.textContent = p.desc;
+    lbCounter.textContent = `${currentIdx + 1} / ${lbList.length}`;
   }
-  function prevLb() { idx = (idx - 1 + photos.length) % photos.length; updateLb(); }
-  function nextLb() { idx = (idx + 1) % photos.length; updateLb(); }
 
-  lbClose.addEventListener('click', closeLb);
-  lbPrev.addEventListener('click', function(e) { e.stopPropagation(); prevLb(); });
-  lbNext.addEventListener('click', function(e) { e.stopPropagation(); nextLb(); });
-  lb.addEventListener('click', closeLb);
-  lbImg.addEventListener('click', function(e) { e.stopPropagation(); });
+  function lbPrev() {
+    currentIdx = (currentIdx - 1 + lbList.length) % lbList.length;
+    updateLb();
+  }
+  function lbNext() {
+    currentIdx = (currentIdx + 1) % lbList.length;
+    updateLb();
+  }
 
-  document.addEventListener('keydown', function(e) {
+  // Events
+  $('lbClose').addEventListener('click', () => { lb.classList.remove('active'); document.body.style.overflow = ''; });
+  $('lbPrev').addEventListener('click', e => { e.stopPropagation(); lbPrev(); });
+  $('lbNext').addEventListener('click', e => { e.stopPropagation(); lbNext(); });
+  lb.addEventListener('click', e => { if (e.target === lb) { lb.classList.remove('active'); document.body.style.overflow = ''; } });
+
+  document.addEventListener('keydown', e => {
     if (!lb.classList.contains('active')) return;
-    if (e.key === 'Escape') closeLb();
-    if (e.key === 'ArrowLeft') prevLb();
-    if (e.key === 'ArrowRight') nextLb();
+    if (e.key === 'Escape') { lb.classList.remove('active'); document.body.style.overflow = ''; }
+    if (e.key === 'ArrowLeft') lbPrev();
+    if (e.key === 'ArrowRight') lbNext();
   });
 
-  var tx = 0;
-  lbImg.addEventListener('touchstart', function(e) { tx = e.changedTouches[0].screenX; }, { passive: true });
-  lbImg.addEventListener('touchend', function(e) {
-    var d = e.changedTouches[0].screenX - tx;
-    if (Math.abs(d) > 50) d > 0 ? prevLb() : nextLb();
+  // Touch swipe
+  let tx = 0;
+  lbImg.addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }, { passive: true });
+  lbImg.addEventListener('touchend', e => {
+    const d = e.changedTouches[0].screenX - tx;
+    if (Math.abs(d) > 50) d > 0 ? lbPrev() : lbNext();
   }, { passive: true });
+
+  // Init: show all
+  renderGallery(photos);
 })();
 </script>
 </body>

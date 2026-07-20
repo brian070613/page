@@ -1,0 +1,32 @@
+{
+  "categories": [
+    { "id": "all", "name": "全部", "icon": "📸" },
+    { "id": "nature", "name": "自然风光", "icon": "🌄" },
+    { "id": "city", "name": "城市建筑", "icon": "🏙️" },
+    { "id": "portrait", "name": "人像", "icon": "👤" },
+    { "id": "life", "name": "生活随拍", "icon": "☕" }
+  ],
+  "photos": [
+    { "file": "微信图片_20260720105037_335_3.jpg", "category": "nature", "title": "自然一隅", "desc": "山间晨雾，静谧如画" },
+    { "file": "微信图片_20260720105152_336_3.jpg", "category": "city", "title": "城市天际", "desc": "高楼林立间的光影交错" },
+    { "file": "微信图片_20260720105259_337_3.jpg", "category": "life", "title": "午后时光", "desc": "阳光洒落的温暖瞬间" },
+    { "file": "微信图片_20260720105336_338_3.jpg", "category": "portrait", "title": "侧影", "desc": "光影勾勒出的轮廓" },
+    { "file": "微信图片_20260720105341_339_3.jpg", "category": "nature", "title": "湖光山色", "desc": "水面倒映着天空的蓝" },
+    { "file": "微信图片_20260720105421_340_3.jpg", "category": "city", "title": "街头转角", "desc": "城市深处的安静角落" },
+    { "file": "微信图片_20260720105451_341_3(1).jpg", "category": "portrait", "title": "回眸", "desc": "不经意间的一瞥" },
+    { "file": "微信图片_20260720105456_342_3(1).jpg", "category": "life", "title": "咖啡与书", "desc": "一个人的下午茶" },
+    { "file": "微信图片_20260720105531_343_3.jpg", "category": "nature", "title": "林间小径", "desc": "树影斑驳的徒步小径" },
+    { "file": "微信图片_20260720105616_344_3.jpg", "category": "portrait", "title": "一瞬", "desc": "捕捉自然状态下的表情" },
+    { "file": "微信图片_20260720105623_345_3.jpg", "category": "city", "title": "夜幕降临", "desc": "华灯初上的城市剪影" },
+    { "file": "微信图片_20260720105627_346_3.jpg", "category": "portrait", "title": "光影之间", "desc": "明暗对比中的人像" },
+    { "file": "微信图片_20260720105629_347_3.jpg", "category": "nature", "title": "花间集", "desc": "微距镜头下的花朵细节" },
+    { "file": "微信图片_20260720105737_348_3.jpg", "category": "portrait", "title": "背影", "desc": "远去的背影故事" },
+    { "file": "微信图片_20260720105815_349_3.jpg", "category": "life", "title": "日常", "desc": "平凡日子里的光" },
+    { "file": "微信图片_20260720105834_350_3.jpg", "category": "portrait", "title": "笑容", "desc": "最真实的快乐" },
+    { "file": "微信图片_20260720105915_351_3.jpg", "category": "city", "title": "建筑几何", "desc": "线条与光影的建筑美学" },
+    { "file": "微信图片_20260720105941_352_3.jpg", "category": "life", "title": "味道", "desc": "美食也是一种摄影" },
+    { "file": "微信图片_20260720110018_353_3.jpg", "category": "nature", "title": "落日余晖", "desc": "夕阳无限好的时刻" },
+    { "file": "微信图片_20260720110107_354_3.jpg", "category": "city", "title": "老城故事", "desc": "老街巷里的时光印记" },
+    { "file": "微信图片_20260720110125_355_3.jpg", "category": "life", "title": "夜归人", "desc": "深夜街头的温暖灯光" }
+  ]
+}
