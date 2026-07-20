@@ -579,9 +579,9 @@
 
 <script>
 (async function() {
-  const res = await fetch('photos.json');
-  const data = await res.json();
-  const cats = data.categories, photos = data.photos;
+  // Inline photos data (no extra fetch needed)
+  const DATA = {"categories":[{"id":"all","name":"\u5168\u90e8","icon":"\uD83D\uDCF8"},{"id":"cat1","name":"\u98ce\u5149","icon":"\uD83C\uDF04"},{"id":"cat2","name":"\u57ce\u5e02","icon":"\uD83C\uDFD9\uFE0F"},{"id":"cat3","name":"\u4eba\u50cf","icon":"\uD83D\uDC64"},{"id":"cat4","name":"\u968f\u62cd","icon":"\u2615"}],"photos":[{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105037_335_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105152_336_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105259_337_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105336_338_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105341_339_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105421_340_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105451_341_3(1).jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105456_342_3(1).jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105531_343_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105616_344_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105623_345_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105627_346_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105629_347_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105737_348_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105815_349_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105834_350_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105915_351_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105941_352_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720110018_353_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720110125_355_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184633_357_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184718_358_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184719_359_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184720_360_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184721_361_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184722_362_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184723_363_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184724_364_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184725_365_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184726_366_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184727_367_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184728_368_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184729_369_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184730_370_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184731_371_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184732_372_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184733_373_3.jpg","category":"cat1"}]};
+  const cats = DATA.categories, photos = DATA.photos;
 
   // Shuffle
   for (let i = photos.length - 1; i > 0; i--) {
@@ -589,7 +589,8 @@
     [photos[i], photos[j]] = [photos[j], photos[i]];
   }
 
-  const PD = 'photos/';
+  const PD = 'https://cdn.jsdelivr.net/gh/brian070613/page@main/photos/';
+  const PD_FALLBACK = 'photos/';
   const $ = id => document.getElementById(id);
   const gallery = $('gallery'), filters = $('filters');
   const lb = $('lb'), lbImg = $('lbImg'), lbCounter = $('lbCounter');
@@ -603,7 +604,7 @@
   // ---- HERO BG ----
   if (photos.length > 0) {
     const heroImg = photos[0];
-    $('heroBg').style.backgroundImage = `url(${PD + encodeURIComponent(heroImg.file)})`;
+    $('heroBg').style.backgroundImage = `url(${imgSrc(heroImg.file)})`;
   }
 
   // ---- PARALLAX ----
@@ -624,14 +625,15 @@
       const item = document.createElement('div');
       item.className = 'featured-item';
       const img = document.createElement('img');
-      img.dataset.src = PD + encodeURIComponent(p.file);
+      img.dataset.src = imgSrc(p.file);
+      img.dataset.fallback = p.file;
       img.alt = '';
       const obs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting) {
             img.src = img.dataset.src;
             img.onload = () => img.classList.add('loaded');
-            img.onerror = () => img.classList.add('loaded');
+            img.onerror = function() { img.classList.add('loaded'); imgFallback(this, this.dataset.fallback); };
             obs.unobserve(img);
           }
         });
@@ -673,14 +675,15 @@
       item.className = 'gallery-item';
 
       const img = document.createElement('img');
-      img.dataset.src = PD + encodeURIComponent(p.file);
+      img.dataset.src = imgSrc(p.file);
+      img.dataset.fallback = p.file;
       img.alt = '';
       const obs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting) {
             img.src = img.dataset.src;
             img.onload = () => img.classList.add('loaded');
-            img.onerror = () => img.classList.add('loaded');
+            img.onerror = function() { img.classList.add('loaded'); imgFallback(this, this.dataset.fallback); };
             obs.unobserve(img);
           }
         });
@@ -718,7 +721,9 @@
 
   function updateLb() {
     const p = lbList[lbIdx];
-    lbImg.src = PD + encodeURIComponent(p.file);
+    lbImg.src = imgSrc(p.file);
+    lbImg.dataset.fallback = p.file;
+    lbImg.onerror = function() { imgFallback(this, this.dataset.fallback); };
     lbImg.alt = '';
     lbCounter.textContent = `${lbIdx + 1} / ${lbList.length}`;
 
