@@ -10,323 +10,108 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #090909;
-    --bg2: #111;
-    --card: #181818;
-    --text: #eee;
-    --text2: #999;
-    --text3: #666;
-    --gold: #c9a96e;
-    --gold2: #a08040;
-    --border: #222;
-    --r: 14px;
+    --bg: #090909; --bg2: #111; --card: #181818;
+    --text: #eee; --text2: #999; --text3: #666;
+    --gold: #c9a96e; --gold2: #a08040;
+    --border: #222; --r: 14px;
   }
 
-  html { scroll-behavior: smooth; }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; -webkit-font-smoothing: antialiased;
   }
-  a { color: var(--gold); text-decoration: none; }
-  a:hover { color: var(--gold2); }
 
-  /* ===== HERO ===== */
-  .hero {
-    position: relative;
-    height: 100vh;
-    min-height: 500px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  /* Header */
+  .header {
     text-align: center;
-    overflow: hidden;
+    padding: 3rem 1rem 1.5rem;
   }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background: var(--bg) center/cover no-repeat;
-    filter: brightness(0.3) saturate(0.8);
-    transform: scale(1.1);
-    transition: transform 0.1s linear;
-    will-change: transform;
-  }
-  .hero-overlay {
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 50% 30%, transparent 30%, rgba(0,0,0,0.6) 80%);
-  }
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    padding: 0 2rem;
-  }
-  .hero-badge {
-    display: inline-block;
-    padding: 4px 16px;
-    border: 1px solid var(--gold);
-    border-radius: 100px;
-    color: var(--gold);
-    font-size: 0.75rem;
-    letter-spacing: 3px;
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.2s forwards;
-  }
-  .hero h1 {
+  .header h1 {
     font-family: 'Noto Serif SC', serif;
-    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
     font-weight: 700;
+    letter-spacing: 6px;
     color: #fff;
-    letter-spacing: 8px;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.4s forwards;
   }
-  .hero h1::after {
+  .header h1::after {
     content: '';
     display: block;
-    width: 50px;
-    height: 2px;
-    background: var(--gold);
-    margin: 1.2rem auto;
-  }
-  .hero p {
-    color: rgba(255,255,255,0.6);
-    font-size: 1rem;
-    letter-spacing: 3px;
-    font-weight: 300;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.6s forwards;
-  }
-  .hero-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.8s forwards;
-  }
-  .hero-btn {
-    padding: 10px 28px;
-    border-radius: 100px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-family: inherit;
-    letter-spacing: 1px;
-  }
-  .hero-btn.primary {
-    background: var(--gold);
-    color: #111;
-    border: none;
-    font-weight: 500;
-  }
-  .hero-btn.primary:hover { background: var(--gold2); }
-  .hero-btn.outline {
-    background: transparent;
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.3);
-  }
-  .hero-btn.outline:hover { border-color: #fff; }
-
-  .scroll-indicator {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    opacity: 0;
-    animation: fadeUp 0.8s 1.2s forwards;
-    cursor: pointer;
-  }
-  .scroll-indicator span {
-    font-size: 0.65rem;
-    color: rgba(255,255,255,0.3);
-    letter-spacing: 2px;
-  }
-  .scroll-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(rgba(255,255,255,0.4), transparent);
-    animation: scrollPulse 2s ease-in-out infinite;
-  }
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  /* ===== SECTION ===== */
-  .section-title {
-    text-align: center;
-    padding: 0 1rem;
-    margin-bottom: 2rem;
-  }
-  .section-title h2 {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 1.6rem;
-    font-weight: 600;
-    letter-spacing: 4px;
-    color: #fff;
-  }
-  .section-title h2::after {
-    content: '';
-    display: block;
-    width: 30px;
-    height: 1.5px;
+    width: 30px; height: 2px;
     background: var(--gold);
     margin: 0.8rem auto;
   }
-  .section-title p {
+  .header p {
     color: var(--text2);
     font-size: 0.85rem;
-    letter-spacing: 1px;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  /* ===== FEATURED ===== */
-  .featured {
-    padding: 4rem 12px 3rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .featured-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 12px;
-  }
-  .featured-item {
-    border-radius: var(--r);
-    overflow: hidden;
-    cursor: pointer;
-    position: relative;
-    background: var(--card);
-  }
-  .featured-item:first-child {
-    grid-row: span 2;
-  }
-  .featured-item img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s ease, opacity 0.5s;
-    opacity: 0;
-  }
-  .featured-item img.loaded { opacity: 1; }
-  .featured-item:hover img { transform: scale(1.05); }
-
-  .featured-item .label {
-    position: absolute;
-    top: 12px; left: 12px;
-    padding: 3px 10px;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(6px);
-    border-radius: 100px;
-    color: var(--gold);
-    font-size: 0.65rem;
     letter-spacing: 2px;
+    font-weight: 300;
+    margin-top: 0.3rem;
+  }
+  .header .stats {
+    display: flex; justify-content: center; gap: 2rem;
+    margin-top: 1rem;
+  }
+  .header .stats em {
+    font-style: normal; font-size: 1.3rem;
+    font-weight: 600; color: var(--gold);
+  }
+  .header .stats small {
+    display: block; font-size: 0.65rem;
+    color: var(--text3); letter-spacing: 1px;
   }
 
-  /* ===== ABOUT ===== */
+  /* About */
   .about {
-    padding: 4rem 1.5rem;
-    max-width: 700px;
-    margin: 0 auto;
     text-align: center;
-  }
-  .about-avatar {
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    border: 2px solid var(--gold);
-    margin: 0 auto 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-  }
-  .about h3 {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-    color: #fff;
-    letter-spacing: 3px;
+    padding: 1rem 1.5rem 2rem;
+    max-width: 600px;
+    margin: 0 auto;
   }
   .about p {
     color: var(--text2);
-    font-size: 0.9rem;
-    line-height: 1.8;
+    font-size: 0.85rem;
+    line-height: 1.7;
     letter-spacing: 0.5px;
   }
-  .about .contact {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-top: 1rem;
+  .about .links {
+    display: flex; justify-content: center; gap: 1.2rem;
+    margin-top: 0.5rem;
   }
-  .about .contact a {
-    font-size: 0.8rem;
+  .about .links a {
+    color: var(--gold); font-size: 0.8rem;
     letter-spacing: 1px;
   }
+  .about .links a:hover { color: var(--gold2); }
 
-  /* ===== FILTERS ===== */
-  .filter-bar {
-    padding: 0 1rem 3rem;
-    max-width: 1500px;
-    margin: 0 auto;
-  }
-  .filter-scroll {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.4rem;
+  /* Filters */
+  .filters {
+    display: flex; justify-content: center;
+    flex-wrap: wrap; gap: 0.4rem;
+    padding: 0 1rem;
+    max-width: 800px; margin: 0 auto 1.5rem;
   }
   .filter-btn {
-    padding: 6px 16px;
+    padding: 5px 14px;
     border: 1px solid var(--border);
     border-radius: 100px;
     background: transparent;
     color: var(--text2);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     cursor: pointer;
     transition: all 0.3s;
     font-family: inherit;
     letter-spacing: 1px;
   }
-  .filter-btn:hover {
-    border-color: var(--gold2);
-    color: var(--gold);
-  }
-  .filter-btn.active {
-    background: var(--gold);
-    color: #111;
-    border-color: var(--gold);
-    font-weight: 500;
-  }
-  .filter-btn .count {
-    font-size: 0.7rem;
-    opacity: 0.5;
-    margin-left: 3px;
-  }
+  .filter-btn:hover { border-color: var(--gold2); color: var(--gold); }
+  .filter-btn.active { background: var(--gold); color: #111; border-color: var(--gold); font-weight: 500; }
+  .filter-btn .count { font-size: 0.65rem; opacity: 0.5; margin-left: 3px; }
 
-  /* ===== GALLERY ===== */
+  /* Gallery */
   .gallery-wrap {
     max-width: 1500px;
     margin: 0 auto;
-    padding: 0 12px 4rem;
+    padding: 0 12px 3rem;
   }
   .gallery {
     column-count: 4;
@@ -341,28 +126,22 @@
     position: relative;
     background: var(--card);
     transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.4s;
-    opacity: 0;
-    transform: translateY(20px);
+    opacity: 0; transform: translateY(20px);
     animation: fadeUp 0.5s ease forwards;
   }
   .gallery-item.hidden { display: none; }
   .gallery-item img {
-    display: block;
-    width: 100%;
-    height: auto;
-    opacity: 0;
-    transition: transform 0.6s, opacity 0.5s;
+    display: block; width: 100%; height: auto;
+    opacity: 0; transition: transform 0.6s, opacity 0.5s;
   }
   .gallery-item img.loaded { opacity: 1; }
   .gallery-item:hover img { transform: scale(1.05); }
   .gallery-item:hover { box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
   .gallery-item .cat-tag {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
+    position: absolute; bottom: 0; left: 0; right: 0;
     padding: 3rem 1rem 1rem;
     background: linear-gradient(transparent, rgba(0,0,0,0.85));
-    opacity: 0;
-    transition: opacity 0.35s;
+    opacity: 0; transition: opacity 0.35s;
     pointer-events: none;
   }
   .gallery-item:hover .cat-tag { opacity: 1; }
@@ -376,14 +155,17 @@
     letter-spacing: 1px;
   }
 
-  /* ===== LIGHTBOX ===== */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Lightbox */
   .lb {
     display: none;
     position: fixed; z-index: 9999;
     top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.95);
-    justify-content: center;
-    align-items: center;
+    justify-content: center; align-items: center;
     backdrop-filter: blur(12px);
   }
   .lb.active { display: flex; }
@@ -399,32 +181,22 @@
     transition: opacity 0.2s ease;
   }
   .lb-inner img[src=""] { opacity: 0; }
-  .lb-info {
-    text-align: center; margin-top: 0.8rem;
-  }
-  .lb-info .counter {
-    font-size: 0.8rem; color: var(--text3);
-    letter-spacing: 1px;
-  }
-  .lb-info .meta-line {
-    font-size: 0.7rem; color: var(--text3);
-    margin-top: 4px;
-    letter-spacing: 0.5px;
-  }
+  .lb-info { text-align: center; margin-top: 0.8rem; }
+  .lb-info .counter { font-size: 0.8rem; color: var(--text3); letter-spacing: 1px; }
   .lb-info .tag {
     display: inline-block; margin-top: 4px;
     padding: 2px 10px; border-radius: 100px;
     background: rgba(201,169,110,0.15);
-    color: var(--gold); font-size: 0.7rem;
-    letter-spacing: 1px;
+    color: var(--gold); font-size: 0.7rem; letter-spacing: 1px;
   }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   .lb-close {
     position: fixed; top: 20px; right: 25px;
     color: #fff; font-size: 2rem; cursor: pointer;
     opacity: 0.5; transition: opacity 0.2s;
-    background: none; border: none; z-index: 10000;
-    line-height: 1;
+    background: none; border: none; z-index: 10000; line-height: 1;
   }
   .lb-close:hover { opacity: 1; }
   .lb-nav {
@@ -438,59 +210,32 @@
   .lb-prev { left: 10px; }
   .lb-next { right: 10px; }
 
-  .lb-full {
-    position: fixed; bottom: 30px; right: 30px;
-    background: none; border: 1px solid rgba(255,255,255,0.2);
-    color: #fff; padding: 8px 16px; border-radius: 6px;
-    cursor: pointer; font-size: 0.75rem; z-index: 10000;
-    opacity: 0.4; transition: opacity 0.2s;
-    letter-spacing: 1px;
-  }
-  .lb-full:hover { opacity: 0.8; }
-
-  /* ===== BACK TO TOP ===== */
   .back-top {
-    position: fixed;
-    bottom: 30px; left: 30px;
-    width: 42px; height: 42px;
+    position: fixed; bottom: 30px; left: 30px;
+    width: 40px; height: 40px;
     border-radius: 50%;
     border: 1px solid var(--border);
     background: var(--card);
     color: var(--text2);
-    cursor: pointer;
-    font-size: 1.2rem;
+    cursor: pointer; font-size: 1.1rem;
     z-index: 100;
-    opacity: 0;
-    transition: opacity 0.3s, background 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    opacity: 0; transition: opacity 0.3s;
+    display: flex; align-items: center; justify-content: center;
   }
-  .back-top.show { opacity: 0.7; }
+  .back-top.show { opacity: 0.6; }
   .back-top.show:hover { opacity: 1; background: var(--gold); color: #111; border-color: var(--gold); }
 
-  /* ===== FOOTER ===== */
   footer {
-    text-align: center;
-    padding: 2.5rem;
-    color: var(--text3);
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    border-top: 1px solid var(--border);
+    text-align: center; padding: 2rem;
+    color: var(--text3); font-size: 0.8rem;
+    letter-spacing: 1px; border-top: 1px solid var(--border);
   }
 
-  /* ===== RESPONSIVE ===== */
   @media (max-width: 1100px) { .gallery { column-count: 3; } }
-  @media (max-width: 900px) {
-    .featured-grid { grid-template-columns: 1fr 1fr; }
-    .featured-item:first-child { grid-row: span 1; }
-  }
   @media (max-width: 768px) {
     .gallery { column-count: 2; column-gap: 8px; }
     .gallery-item { margin-bottom: 8px; }
-    .hero h1 { letter-spacing: 4px; }
-    .featured { padding: 3rem 8px 2rem; }
-    .featured-grid { gap: 8px; }
+    .header { padding: 2rem 1rem 1rem; }
     .lb-nav { font-size: 2rem; padding: 1rem 0.5rem; }
   }
   @media (max-width: 480px) { .gallery { column-count: 1; } }
@@ -498,274 +243,166 @@
 </head>
 <body>
 
-<!-- ===== HERO ===== -->
-<div class="hero" id="hero">
-  <div class="hero-bg" id="heroBg"></div>
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <div class="hero-badge">PHOTOGRAPHY</div>
-    <h1>镜头之下</h1>
-    <p>Brian 的摄影记录</p>
-    <div class="hero-actions">
-      <button class="hero-btn primary" id="btnRandom">🎲 随便看看</button>
-      <button class="hero-btn outline" onclick="document.getElementById('gallerySec').scrollIntoView({behavior:'smooth'})">浏览全部</button>
-    </div>
-  </div>
-  <div class="scroll-indicator" onclick="document.getElementById('featuredSec').scrollIntoView({behavior:'smooth'})">
-    <span>滚动探索</span>
-    <div class="scroll-line"></div>
+<div class="header">
+  <h1>镜头之下</h1>
+  <p>Brian 的摄影记录</p>
+  <div class="stats">
+    <span><em id="totalPhotos">0</em><small>作品</small></span>
+    <span><em id="totalCats">0</em><small>分类</small></span>
   </div>
 </div>
 
-<!-- ===== FEATURED ===== -->
-<section class="featured" id="featuredSec">
-  <div class="section-title">
-    <h2>精选作品</h2>
-    <p>几张代表作，欢迎浏览全部</p>
-  </div>
-  <div class="featured-grid" id="featuredGrid"></div>
-</section>
-
-<!-- ===== ABOUT ===== -->
-<section class="about" id="aboutSec">
-  <div class="section-title">
-    <h2>关于我</h2>
-  </div>
-  <div class="about-avatar">📷</div>
-  <h3>Brian</h3>
-  <p>
-    摄影爱好者，喜欢用镜头记录身边的风景与故事。
-    从城市街头到山川湖海，每一张照片都是一段记忆的切片。
-  </p>
-  <div class="contact">
+<div class="about">
+  <p>摄影爱好者，喜欢用镜头记录身边的风景与故事。</p>
+  <div class="links">
     <a href="https://github.com/brian070613" target="_blank">GitHub</a>
     <a href="https://brian070613.github.io/page/">作品集</a>
   </div>
-</section>
-
-<!-- ===== FILTERS ===== -->
-<div class="filter-bar" id="gallerySec">
-  <div class="section-title" style="margin-bottom:1.2rem">
-    <h2>全部作品</h2>
-    <p id="totalLabel">共 0 张照片</p>
-  </div>
-  <div class="filter-scroll" id="filters"></div>
 </div>
 
-<!-- ===== GALLERY ===== -->
+<div class="filters" id="filters"></div>
+
 <div class="gallery-wrap">
   <div class="gallery" id="gallery"></div>
 </div>
 
-<!-- ===== BACK TO TOP ===== -->
 <button class="back-top" id="backTop">↑</button>
 
-<!-- ===== FOOTER ===== -->
-<footer>© 2026 Brian · 摄影作品集 · 用 ❤️ 和镜头记录世界</footer>
+<footer>© 2026 Brian · 摄影作品集</footer>
 
-<!-- ===== LIGHTBOX ===== -->
 <div class="lb" id="lb">
   <button class="lb-close" id="lbClose">&times;</button>
   <button class="lb-nav lb-prev" id="lbPrev">&#10094;</button>
   <button class="lb-nav lb-next" id="lbNext">&#10095;</button>
-  <button class="lb-full" id="lbFull">⛶ 全屏</button>
   <div class="lb-inner">
     <img id="lbImg" src="" alt="">
     <div class="lb-info">
       <div class="counter" id="lbCounter"></div>
-      <div class="meta-line" id="lbMeta"></div>
       <div class="tag" id="lbTag"></div>
     </div>
   </div>
 </div>
 
 <script>
-(async function() {
-  // Inline photos data (no extra fetch needed)
-  const DATA = {"categories":[{"id":"all","name":"\u5168\u90e8","icon":"\uD83D\uDCF8"},{"id":"cat1","name":"\u98ce\u5149","icon":"\uD83C\uDF04"},{"id":"cat2","name":"\u57ce\u5e02","icon":"\uD83C\uDFD9\uFE0F"},{"id":"cat3","name":"\u4eba\u50cf","icon":"\uD83D\uDC64"},{"id":"cat4","name":"\u968f\u62cd","icon":"\u2615"}],"photos":[{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105037_335_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105152_336_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105259_337_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105336_338_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105341_339_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105421_340_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105451_341_3(1).jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105456_342_3(1).jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105531_343_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105616_344_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105623_345_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105627_346_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105629_347_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105737_348_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105815_349_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105834_350_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105915_351_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105941_352_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720110018_353_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720110125_355_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184633_357_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184718_358_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184719_359_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184720_360_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184721_361_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184722_362_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184723_363_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184724_364_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184725_365_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184726_366_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184727_367_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184728_368_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184729_369_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184730_370_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184731_371_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184732_372_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184733_373_3.jpg","category":"cat1"}]};
-  const cats = DATA.categories, photos = DATA.photos;
+(function() {
+  // Inline data
+  var DATA = {"categories":[{"id":"all","name":"\u5168\u90e8","icon":"\ud83d\udcf8"},{"id":"cat1","name":"\u98ce\u5149","icon":"\ud83c\udf04"},{"id":"cat2","name":"\u57ce\u5e02","icon":"\ud83c\udfd9\ufe0f"},{"id":"cat3","name":"\u4eba\u50cf","icon":"\ud83d\udc64"},{"id":"cat4","name":"\u968f\u62cd","icon":"\u2615"}],"photos":[{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105037_335_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105152_336_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105259_337_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105336_338_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105341_339_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105421_340_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105451_341_3(1).jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105456_342_3(1).jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105531_343_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105616_344_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105623_345_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105627_346_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105629_347_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105737_348_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105815_349_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105834_350_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105915_351_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720105941_352_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720110018_353_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720110125_355_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184633_357_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184718_358_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184719_359_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184720_360_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184721_361_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184722_362_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184723_363_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184724_364_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184725_365_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184726_366_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184727_367_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184728_368_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184729_369_3.jpg","category":"cat1"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184730_370_3.jpg","category":"cat2"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184731_371_3.jpg","category":"cat3"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184732_372_3.jpg","category":"cat4"},{"file":"\u5fae\u4fe1\u56fe\u7247_20260720184733_373_3.jpg","category":"cat1"}]};
+
+  var cats = DATA.categories, photos = DATA.photos;
+  var PD = 'https://cdn.jsdelivr.net/gh/brian070613/page@main/photos/';
+  var PD_FALLBACK = 'photos/';
+
+  function imgSrc(f) { return PD + encodeURIComponent(f); }
+  function imgFallback(el, f) { el.onerror = null; el.src = PD_FALLBACK + encodeURIComponent(f); }
 
   // Shuffle
-  for (let i = photos.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [photos[i], photos[j]] = [photos[j], photos[i]];
+  for (var i = photos.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = photos[i]; photos[i] = photos[j]; photos[j] = t;
   }
 
-  const PD = 'https://cdn.jsdelivr.net/gh/brian070613/page@main/photos/';
-  const PD_FALLBACK = 'photos/';
-  const $ = id => document.getElementById(id);
-  const gallery = $('gallery'), filters = $('filters');
-  const lb = $('lb'), lbImg = $('lbImg'), lbCounter = $('lbCounter');
-  const lbMeta = $('lbMeta'), lbTag = $('lbTag');
-  const catById = {};
-  cats.forEach(c => { catById[c.id] = c; });
+  var $ = function(id) { return document.getElementById(id); };
+  var gallery = $('gallery'), filters = $('filters'), lb = $('lb');
+  var catById = {};
+  cats.forEach(function(c) { catById[c.id] = c; });
 
   // Stats
-  $('totalLabel').textContent = `共 ${photos.length} 张照片`;
+  $('totalPhotos').textContent = photos.length;
+  $('totalCats').textContent = cats.length - 1;
 
-  // ---- HERO BG ----
-  if (photos.length > 0) {
-    const heroImg = photos[0];
-    $('heroBg').style.backgroundImage = `url(${imgSrc(heroImg.file)})`;
-  }
+  // Category counts
+  var catMap = {};
+  photos.forEach(function(p) { catMap[p.category] = (catMap[p.category] || 0) + 1; });
 
-  // ---- PARALLAX ----
-  window.addEventListener('scroll', () => {
-    const s = window.scrollY;
-    const bg = $('heroBg');
-    if (s < window.innerHeight) {
-      bg.style.transform = `scale(${1.1 + s * 0.0003}) translateY(${s * 0.15}px)`;
-    }
-  });
-
-  // ---- FEATURED (first 4 photos) ----
-  const featured = photos.slice(0, Math.min(4, photos.length));
-  if (featured.length >= 3) {
-    // Reorder first 4 for layout: put portrait-ish one first
-    const fGrid = $('featuredGrid');
-    featured.forEach(p => {
-      const item = document.createElement('div');
-      item.className = 'featured-item';
-      const img = document.createElement('img');
-      img.dataset.src = imgSrc(p.file);
-      img.dataset.fallback = p.file;
-      img.alt = '';
-      const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            img.src = img.dataset.src;
-            img.onload = () => img.classList.add('loaded');
-            img.onerror = function() { img.classList.add('loaded'); imgFallback(this, this.dataset.fallback); };
-            obs.unobserve(img);
-          }
-        });
-      }, { rootMargin: '100px' });
-      obs.observe(img);
-      const label = document.createElement('div');
-      label.className = 'label';
-      const c = catById[p.category];
-      label.textContent = c ? c.icon + ' ' + c.name : '';
-      item.appendChild(label);
-      item.appendChild(img);
-      item.addEventListener('click', () => openLb(photos, photos.indexOf(p)));
-      fGrid.appendChild(item);
-    });
-  }
-
-  // ---- FILTERS ----
-  const catMap = {};
-  photos.forEach(p => { catMap[p.category] = (catMap[p.category] || 0) + 1; });
-
-  cats.forEach(c => {
-    const btn = document.createElement('button');
+  // Filters
+  cats.forEach(function(c) {
+    var btn = document.createElement('button');
     btn.className = 'filter-btn' + (c.id === 'all' ? ' active' : '');
-    const cnt = c.id === 'all' ? photos.length : (catMap[c.id] || 0);
-    btn.innerHTML = `${c.icon} ${c.name} <span class="count">${cnt}</span>`;
+    var cnt = c.id === 'all' ? photos.length : (catMap[c.id] || 0);
+    btn.innerHTML = c.icon + ' ' + c.name + ' <span class="count">' + cnt + '</span>';
     btn.dataset.cat = c.id;
-    btn.addEventListener('click', () => filterBy(c.id));
+    btn.addEventListener('click', function() { filterBy(c.id); });
     filters.appendChild(btn);
   });
 
-  let activeCat = 'all';
-  let lbList = [];
-  let lbIdx = 0;
+  var activeCat = 'all';
+  var lbList = [], lbIdx = 0;
 
+  // RENDER
   function render(list) {
     gallery.innerHTML = '';
-    list.forEach(p => {
-      const item = document.createElement('div');
+    list.forEach(function(p) {
+      var item = document.createElement('div');
       item.className = 'gallery-item';
-
-      const img = document.createElement('img');
+      var img = document.createElement('img');
       img.dataset.src = imgSrc(p.file);
       img.dataset.fallback = p.file;
-      img.alt = '';
-      const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
           if (e.isIntersecting) {
             img.src = img.dataset.src;
-            img.onload = () => img.classList.add('loaded');
+            img.onload = function() { img.classList.add('loaded'); };
             img.onerror = function() { img.classList.add('loaded'); imgFallback(this, this.dataset.fallback); };
             obs.unobserve(img);
           }
         });
       }, { rootMargin: '200px' });
       obs.observe(img);
-
-      const tag = document.createElement('div');
+      var tag = document.createElement('div');
       tag.className = 'cat-tag';
-      const c = catById[p.category];
-      tag.innerHTML = `<span>${c ? c.icon + ' ' + c.name : ''}</span>`;
-
+      var c = catById[p.category];
+      tag.innerHTML = '<span>' + (c ? c.icon + ' ' + c.name : '') + '</span>';
       item.appendChild(img);
       item.appendChild(tag);
-      item.addEventListener('click', () => openLb(list, list.indexOf(p)));
+      item.addEventListener('click', function() { openLb(list, list.indexOf(p)); });
       gallery.appendChild(item);
     });
   }
 
   function filterBy(cat) {
     activeCat = cat;
-    document.querySelectorAll('.filter-btn').forEach(b =>
-      b.classList.toggle('active', b.dataset.cat === cat));
-    const filtered = cat === 'all' ? photos : photos.filter(p => p.category === cat);
-    render(filtered);
-    $('gallerySec').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelectorAll('.filter-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.cat === cat);
+    });
+    render(cat === 'all' ? photos : photos.filter(function(p) { return p.category === cat; }));
   }
 
+  // LIGHTBOX
   function openLb(list, idx) {
-    lbList = list;
-    lbIdx = idx;
+    lbList = list; lbIdx = idx;
     updateLb();
     lb.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
-
   function updateLb() {
-    const p = lbList[lbIdx];
-    // 先清空再加载，避免切换时还卡着旧图
-    lbImg.src = '';
-    lbImg.dataset.fallback = p.file;
-    lbImg.onerror = function() { imgFallback(this, this.dataset.fallback); };
-    // 下一帧再设置新图片
-    requestAnimationFrame(() => {
-      lbImg.src = imgSrc(p.file);
-    });
-    lbImg.alt = '';
-    lbCounter.textContent = `${lbIdx + 1} / ${lbList.length}`;
-
-    const c = catById[p.category];
-    lbTag.textContent = c ? c.icon + ' ' + c.name : '';
-
-    // Update URL hash
-    history.replaceState(null, '', `#photo-${lbIdx + 1}`);
-    updateMeta(p);
+    var p = lbList[lbIdx];
+    var img = $('lbImg');
+    img.src = '';
+    img.dataset.fallback = p.file;
+    img.onerror = function() { imgFallback(this, this.dataset.fallback); };
+    requestAnimationFrame(function() { img.src = imgSrc(p.file); });
+    $('lbCounter').textContent = (lbIdx + 1) + ' / ' + lbList.length;
+    var c = catById[p.category];
+    $('lbTag').textContent = c ? c.icon + ' ' + c.name : '';
+    history.replaceState(null, '', '#photo-' + (lbIdx + 1));
   }
 
-  function updateMeta(p) {
-    // Show file info
-    const parts = p.file.split('_');
-    lbMeta.textContent = '';
-  }
-
-  // Lightbox events
-  $('lbClose').addEventListener('click', () => {
+  $('lbClose').addEventListener('click', function() {
     lb.classList.remove('active');
     document.body.style.overflow = '';
     history.replaceState(null, '', window.location.pathname);
   });
-
-  $('lbPrev').addEventListener('click', e => {
+  $('lbPrev').addEventListener('click', function(e) {
     e.stopPropagation();
     lbIdx = (lbIdx - 1 + lbList.length) % lbList.length;
     updateLb();
   });
-  $('lbNext').addEventListener('click', e => {
+  $('lbNext').addEventListener('click', function(e) {
     e.stopPropagation();
     lbIdx = (lbIdx + 1) % lbList.length;
     updateLb();
   });
-  lb.addEventListener('click', e => {
+  lb.addEventListener('click', function(e) {
     if (e.target === lb) {
       lb.classList.remove('active');
       document.body.style.overflow = '';
@@ -773,17 +410,7 @@
     }
   });
 
-  // Fullscreen
-  $('lbFull').addEventListener('click', () => {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else {
-      document.documentElement.requestFullscreen().catch(() => {});
-    }
-  });
-
-  // Keyboard
-  document.addEventListener('keydown', e => {
+  document.addEventListener('keydown', function(e) {
     if (!lb.classList.contains('active')) return;
     if (e.key === 'Escape') {
       lb.classList.remove('active');
@@ -800,11 +427,10 @@
     }
   });
 
-  // Touch swipe
-  let tx = 0;
-  lbImg.addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }, { passive: true });
-  lbImg.addEventListener('touchend', e => {
-    const d = e.changedTouches[0].screenX - tx;
+  var tx = 0;
+  $('lbImg').addEventListener('touchstart', function(e) { tx = e.changedTouches[0].screenX; }, { passive: true });
+  $('lbImg').addEventListener('touchend', function(e) {
+    var d = e.changedTouches[0].screenX - tx;
     if (Math.abs(d) > 50) {
       d > 0 ? (lbIdx = (lbIdx - 1 + lbList.length) % lbList.length) : (lbIdx = (lbIdx + 1) % lbList.length);
       updateLb();
@@ -812,27 +438,21 @@
   }, { passive: true });
 
   // Back to top
-  const backTop = $('backTop');
-  window.addEventListener('scroll', () => {
+  var backTop = $('backTop');
+  window.addEventListener('scroll', function() {
     backTop.classList.toggle('show', window.scrollY > 400);
   });
-  backTop.addEventListener('click', () => {
+  backTop.addEventListener('click', function() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // Random photo
-  $('btnRandom').addEventListener('click', () => {
-    const r = Math.floor(Math.random() * photos.length);
-    openLb(photos, r);
-  });
-
-  // Shareable hash links
+  // Hash link
   if (window.location.hash) {
-    const m = window.location.hash.match(/photo-(\d+)/);
+    var m = window.location.hash.match(/photo-(\d+)/);
     if (m) {
-      const n = parseInt(m[1]) - 1;
+      var n = parseInt(m[1]) - 1;
       if (n >= 0 && n < photos.length) {
-        setTimeout(() => openLb(photos, n), 500);
+        setTimeout(function() { openLb(photos, n); }, 300);
       }
     }
   }
