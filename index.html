@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brian 摄影作品集</title>
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
+<style>
+  /* === Reset & Base === */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #0a0a0a;
+    color: #eee;
+    min-height: 100vh;
+  }
+
+  /* === Header === */
+  header {
+    text-align: center;
+    padding: 3rem 1rem 1.5rem;
+    position: relative;
+  }
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: #fff;
+  }
+  header p {
+    color: #888;
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+  }
+
+  /* === Gallery Grid === */
+  .gallery {
+    column-count: 4;
+    column-gap: 12px;
+    max-width: 1500px;
+    margin: 2rem auto;
+    padding: 0 12px;
+  }
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: 12px;
+    overflow: hidden;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #1a1a1a;
+  }
+  .gallery-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  }
+  .gallery-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: filter 0.4s ease;
+  }
+  .gallery-item .overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 2rem 1rem 1rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .gallery-item:hover .overlay {
+    opacity: 1;
+  }
+  .gallery-item .overlay span {
+    font-size: 0.85rem;
+    color: #ccc;
+  }
+
+  /* === Loading States === */
+  .gallery-item img {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .gallery-item img.loaded {
+    opacity: 1;
+  }
+
+  /* === Lightbox === */
+  .lightbox {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.94);
+    justify-content: center;
+    align-items: center;
+    cursor: zoom-out;
+  }
+  .lightbox.active {
+    display: flex;
+  }
+  .lightbox img {
+    max-width: 92vw;
+    max-height: 92vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .lightbox .close {
+    position: absolute;
+    top: 20px; right: 30px;
+    font-size: 2rem;
+    color: #fff;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    background: none;
+    border: none;
+  }
+  .lightbox .close:hover { opacity: 1; }
+  .lightbox .nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.5rem;
+    color: #fff;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+    background: none;
+    border: none;
+    padding: 1rem;
+    user-select: none;
+  }
+  .lightbox .nav:hover { opacity: 1; }
+  .lightbox .prev { left: 10px; }
+  .lightbox .next { right: 10px; }
+  .lightbox .counter {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #888;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
+
+  /* === Comment Section === */
+  .comment-section {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 0 20px 3rem;
+  }
+  .comment-section h2 {
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: #aaa;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  /* Waline dark theme overrides */
+  :root {
+    --waline-theme-color: #6a9fb5;
+    --waline-active-color: #8bbdd3;
+    --waline-bgcolor: #1a1a1a;
+    --waline-bgcolor-light: #252525;
+    --waline-bgcolor-hover: #2a2a2a;
+    --waline-color: #eee;
+    --waline-border-color: #333;
+    --waline-text-color: #ccc;
+    --waline-badge-color: #6a9fb5;
+  }
+
+  /* === Footer === */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: #555;
+    font-size: 0.85rem;
+  }
+
+  /* === Responsive === */
+  @media (max-width: 1100px) { .gallery { column-count: 3; } }
+  @media (max-width: 768px) {
+    .gallery { column-count: 2; column-gap: 8px; padding: 0 8px; }
+    .gallery-item { margin-bottom: 8px; }
+    header h1 { font-size: 1.5rem; }
+  }
+  @media (max-width: 480px) { .gallery { column-count: 1; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📷 作品集</h1>
+  <p>点击照片查看大图 · 底部可评论点赞</p>
+</header>
+
+<div class="gallery" id="gallery"></div>
+
+<!-- Comment Section -->
+<div class="comment-section">
+  <h2>💬 评论 & 点赞</h2>
+  <div id="waline"></div>
+</div>
+
+<footer>© 2026 · Brian 摄影作品</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="close" id="lbClose">&times;</button>
+  <button class="nav prev" id="lbPrev">&#10094;</button>
+  <button class="nav next" id="lbNext">&#10095;</button>
+  <img id="lbImg" src="" alt="预览">
+  <div class="counter" id="lbCounter"></div>
+</div>
+
+<script type="module">
+import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.mjs';
+
+// === jsDelivr CDN base URL for images ===
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/brian070613/page@main/photos/';
+const extensions = ['.jpg','.jpeg','.png','.webp','.gif','.bmp','.heic','.avif'];
+
+let photos = [
+  "微信图片_20260720105037_335_3.jpg",
+  "微信图片_20260720105152_336_3.jpg",
+  "微信图片_20260720105259_337_3.jpg",
+  "微信图片_20260720105336_338_3.jpg",
+  "微信图片_20260720105341_339_3.jpg",
+  "微信图片_20260720105421_340_3.jpg",
+  "微信图片_20260720105451_341_3(1).jpg",
+  "微信图片_20260720105456_342_3(1).jpg",
+  "微信图片_20260720105531_343_3.jpg",
+  "微信图片_20260720105616_344_3.jpg",
+  "微信图片_20260720105623_345_3.jpg",
+  "微信图片_20260720105627_346_3.jpg",
+  "微信图片_20260720105629_347_3.jpg",
+  "微信图片_20260720105737_348_3.jpg",
+  "微信图片_20260720105815_349_3.jpg",
+  "微信图片_20260720105834_350_3.jpg",
+  "微信图片_20260720105915_351_3.jpg",
+  "微信图片_20260720105941_352_3.jpg",
+  "微信图片_20260720110018_353_3.jpg",
+  "微信图片_20260720110107_354_3.jpg",
+  "微信图片_20260720110125_355_3.jpg"
+];
+
+const gallery = document.getElementById('gallery');
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lbImg');
+const lbCounter = document.getElementById('lbCounter');
+const lbClose = document.getElementById('lbClose');
+const lbPrev = document.getElementById('lbPrev');
+const lbNext = document.getElementById('lbNext');
+let currentIndex = 0;
+
+// Shuffle for visual variety
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+photos = shuffle(photos);
+
+// Render gallery
+photos.forEach((src, index) => {
+  const item = document.createElement('div');
+  item.className = 'gallery-item';
+
+  const img = document.createElement('img');
+  img.dataset.src = CDN_BASE + encodeURIComponent(src);
+  img.alt = `照片 ${index + 1}`;
+  img.loading = 'lazy';
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        img.src = img.dataset.src;
+        img.onload = () => img.classList.add('loaded');
+        img.onerror = () => { img.src = ''; img.alt = '加载失败'; img.classList.add('loaded'); };
+        observer.unobserve(img);
+      }
+    });
+  }, { rootMargin: '200px' });
+  observer.observe(img);
+
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  const span = document.createElement('span');
+  span.textContent = `照片 ${index + 1}`;
+  overlay.appendChild(span);
+
+  item.appendChild(img);
+  item.appendChild(overlay);
+  item.addEventListener('click', () => openLightbox(index));
+  gallery.appendChild(item);
+});
+
+// Lightbox
+function openLightbox(index) {
+  currentIndex = index;
+  updateLightbox();
+  lightbox.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  lightbox.classList.remove('active');
+  document.body.style.overflow = '';
+}
+function updateLightbox() {
+  lbImg.src = CDN_BASE + encodeURIComponent(photos[currentIndex]);
+  lbImg.alt = `照片 ${currentIndex + 1}`;
+  lbCounter.textContent = `${currentIndex + 1} / ${photos.length}`;
+}
+function prevPhoto() {
+  currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+  updateLightbox();
+}
+function nextPhoto() {
+  currentIndex = (currentIndex + 1) % photos.length;
+  updateLightbox();
+}
+
+lbClose.addEventListener('click', closeLightbox);
+lbPrev.addEventListener('click', (e) => { e.stopPropagation(); prevPhoto(); });
+lbNext.addEventListener('click', (e) => { e.stopPropagation(); nextPhoto(); });
+lightbox.addEventListener('click', closeLightbox);
+lbImg.addEventListener('click', (e) => e.stopPropagation());
+
+document.addEventListener('keydown', (e) => {
+  if (!lightbox.classList.contains('active')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') prevPhoto();
+  if (e.key === 'ArrowRight') nextPhoto();
+});
+
+let touchStartX = 0;
+lbImg.addEventListener('touchstart', (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+}, { passive: true });
+lbImg.addEventListener('touchend', (e) => {
+  const diff = e.changedTouches[0].screenX - touchStartX;
+  if (Math.abs(diff) > 50) {
+    diff > 0 ? prevPhoto() : nextPhoto();
+  }
+}, { passive: true });
+
+// === Initialize Waline ===
+// ⚠️ 待替换：部署 Waline 后台后，把下面 serverURL 改成你的真实地址
+init({
+  el: '#waline',
+  serverURL: 'https://你的-waline-地址.vercel.app',
+  lang: 'zh-CN',
+  dark: 'html[class="dark"]',
+  reaction: true,        // 开启表情反应（点赞功能）
+  requiredMeta: ['nick'], // 评论必填：昵称
+  pageSize: 10,
+});
+</script>
+</body>
+</html>
