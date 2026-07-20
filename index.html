@@ -63,6 +63,31 @@
     text-transform: uppercase;
   }
 
+  /* ===== ABOUT ===== */
+  .about {
+    text-align: center;
+    max-width: 500px;
+    margin: 1rem auto 2.5rem;
+    padding: 0 1.5rem;
+  }
+  .about .avatar {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    margin: 0 auto 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    opacity: 0.7;
+  }
+  .about p {
+    color: var(--text2);
+    font-size: 0.85rem;
+    line-height: 1.8;
+    letter-spacing: 1px;
+  }
+
   /* ===== GALLERY ===== */
   .gallery-wrap {
     max-width: 1600px;
@@ -247,6 +272,11 @@
   <h1>镜头之下</h1>
   <p><span id="totalPhotos">0</span> 张作品</p>
 </header>
+
+<div class="about">
+  <div class="avatar">📷</div>
+  <p>Brian，一位热爱摄影的大学生。<br>用镜头记录身边的风景与故事。</p>
+</div>
 
 <div class="gallery-wrap">
   <div class="gallery" id="gallery"></div>
