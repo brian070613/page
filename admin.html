@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -93,12 +93,12 @@ body{
 </div>
 
 <div class="main">
-  <div class="card">
-    <div class="card-title">🔑 第一次使用：粘贴下面的密钥</div>
+  <div class="card" id="tokenCard">
+    <div class="card-title">🔑 密钥（只需输入一次，自动保存）</div>
     <input type="password" id="tokenInput" placeholder="粘贴密钥..."
       style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #2a2a2a;background:#0e0e0e;color:#eee;font-size:0.85rem;outline:none">
-    <button onclick="saveToken()" style="margin-top:8px;padding:8px 20px;border-radius:8px;border:1px solid #d4a853;background:transparent;color:#d4a853;font-size:0.8rem;cursor:pointer">保存，以后不用再输</button>
-    <div style="font-size:0.7rem;color:#555;margin-top:6px">密钥存于手机本地，安全放心</div>
+    <button onclick="saveToken()" style="margin-top:8px;padding:8px 20px;border-radius:8px;border:1px solid #d4a853;background:transparent;color:#d4a853;font-size:0.8rem;cursor:pointer">保存</button>
+    <div style="font-size:0.7rem;color:#555;margin-top:6px">密钥存于手机本地，一次设置永久使用</div>
   </div>
 
   <div class="card">
@@ -131,16 +131,24 @@ body{
 <script>
 const REPO = 'brian070613/page';
 const BRANCH = 'main';
-const TOKEN = 'ghp_du…4xhE';
 let selectedFiles = [];
 let selectedCat = 'daily';
 
-// 密钥已内置，直接隐藏输入框
 (function() {
-  document.querySelectorAll('.card')[0].style.display = 'none';
+  const saved = localStorage.getItem('gh_token');
+  if (saved) { document.getElementById('tokenInput').value = saved; }
 })();
 
-function getToken() { return TOKEN; }
+function saveToken() {
+  const t = document.getElementById('tokenInput').value.trim();
+  if (!t) return alert('先粘贴密钥');
+  if (t.length < 30) return alert('密钥不完整，检查是否全部复制');
+  localStorage.setItem('gh_token', t);
+  document.getElementById('tokenCard').style.display = 'none';
+  log('密钥已保存 ✅', 'ok');
+}
+
+function getToken() { return document.getElementById('tokenInput').value || localStorage.getItem('gh_token'); }
 
 function log(msg, type) {
   const el = document.getElementById('logArea');
@@ -203,17 +211,17 @@ function compressImage(file) {
 
 document.getElementById('publishBtn').addEventListener('click', async () => {
   if (!getToken()) { alert('先输入密钥再发布'); return; }
-  
+
   const TOKEN = getToken();
   const btn = document.getElementById('publishBtn');
   btn.disabled = true; btn.classList.add('working');
   btn.textContent = '⏳ 处理中...';
   setStatus('上传中...'); setProgress(0);
   document.getElementById('logArea').innerHTML = '';
-  
+
   const total = selectedFiles.length;
   const uploaded = [];
-  
+
   try {
     for (let i = 0; i < total; i++) {
       log(`压缩 ${i+1}/${total}...`, 'info');
@@ -221,7 +229,7 @@ document.getElementById('publishBtn').addEventListener('click', async () => {
       const name = `photo_${Date.now()}_${i}.jpg`;
       log(`上传 ${i+1}/${total}`, 'info');
       setProgress((i/total)*70);
-      
+
       const b64 = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result.split(',')[1]); fr.readAsDataURL(compressed); });
       const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/photos/${name}`, {
         method: 'PUT',
@@ -236,14 +244,14 @@ document.getElementById('publishBtn').addEventListener('click', async () => {
 
     setProgress(75);
     log('更新网站代码...', 'info');
-    
+
     const cur = await fetch('https://api.github.com/repos/'+REPO+'/contents/index.html', {
       headers: {'Authorization':'Bearer '+TOKEN}
     });
     const curData = await cur.json();
     const dec = new TextDecoder('utf-8');
     const curContent = dec.decode(Uint8Array.from(atob(curData.content), c=>c.charCodeAt(0)));
-    
+
     const cat = selectedCat;
     const entries = uploaded.map(f => '    { file: "'+f+'", cat: "'+cat+'" }');
     const idx = curContent.lastIndexOf('  ];');
@@ -251,11 +259,11 @@ document.getElementById('publishBtn').addEventListener('click', async () => {
     const before = curContent.slice(0, idx).trimEnd();
     const prefix = before.endsWith(',') ? '' : ',';
     const newContent = curContent.slice(0, idx) + prefix + '\n' + entries.join(',\n') + ',' + curContent.slice(idx);
-    
+
     const enc = new TextEncoder();
     let binary = '';
     enc.encode(newContent).forEach(b => binary += String.fromCharCode(b));
-    
+
     const up = await fetch('https://api.github.com/repos/'+REPO+'/contents/index.html', {
       method: 'PUT',
       headers: {'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json'},
@@ -265,7 +273,7 @@ document.getElementById('publishBtn').addEventListener('click', async () => {
       })
     });
     if (!up.ok) throw new Error((await up.json()).message);
-    
+
     setProgress(100);
     log('', 'info');
     log('🎉 全部完成！'+uploaded.length+' 张照片已发布', 'ok');
@@ -275,7 +283,7 @@ document.getElementById('publishBtn').addEventListener('click', async () => {
     btn.textContent = '✅ 发布成功';
     selectedFiles = [];
     renderPreviews(); updateBtn();
-    
+
   } catch (err) {
     log('出错：'+err.message, 'err');
     setStatus('失败 ✗');
