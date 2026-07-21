@@ -1,9 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brian 摄影作品集</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -19,80 +22,169 @@
     --border: #1a1a1a;
     --radius: 16px;
     --radius-sm: 8px;
+    --hero-h: 100vh;
   }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
-  /* ===== CUSTOM SCROLLBAR ===== */
-  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: #222; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
   ::-webkit-scrollbar-thumb:hover { background: #333; }
 
-  /* ===== HEADER ===== */
-  header {
-    text-align: center;
-    padding: 4rem 1rem 0.5rem;
+  /* ===== HERO ===== */
+  .hero {
     position: relative;
+    height: var(--hero-h);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    will-change: transform;
   }
-  header h1 {
-    font-size: clamp(1.8rem, 4vw, 2.6rem);
-    font-weight: 300;
-    letter-spacing: 8px;
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    will-change: transform;
+    transition: opacity 1.2s ease;
+    opacity: 0;
+  }
+  .hero-bg.loaded { opacity: 1; }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0,0,0,0.55) 0%,
+      rgba(0,0,0,0.35) 50%,
+      rgba(8,8,8,1) 100%
+    );
+    z-index: 1;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+    animation: heroFadeIn 1.8s ease forwards;
+    opacity: 0;
+  }
+  @keyframes heroFadeIn {
+    0%   { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .hero-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(2.4rem, 6vw, 4.8rem);
+    font-weight: 600;
+    letter-spacing: 12px;
     color: #fff;
+    text-shadow: 0 2px 40px rgba(0,0,0,0.4);
+    line-height: 1.3;
   }
-  header h1::after {
+  .hero-title::after {
     content: '';
     display: block;
-    width: 24px; height: 1px;
+    width: 40px; height: 1.5px;
     background: var(--gold);
-    margin: 1rem auto;
-    opacity: 0.6;
+    margin: 1.2rem auto;
+    opacity: 0.7;
   }
-  header p {
-    color: var(--text3);
-    font-size: 0.78rem;
+  .hero-sub {
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
+    font-weight: 200;
+    letter-spacing: 6px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 0.5rem;
+  }
+  .hero-sub span { color: var(--gold); font-weight: 300; }
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.4;
+    animation: bounceDown 2s ease infinite;
+    cursor: default;
+  }
+  .hero-scroll span {
+    font-size: 0.6rem;
     letter-spacing: 3px;
-    font-weight: 300;
+    color: rgba(255,255,255,0.3);
+    font-weight: 200;
     text-transform: uppercase;
+  }
+  .hero-scroll-line {
+    width: 1px; height: 32px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.3), transparent);
+  }
+  @keyframes bounceDown {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
   }
 
   /* ===== ABOUT ===== */
   .about {
     text-align: center;
     max-width: 500px;
-    margin: 1rem auto 2.5rem;
+    margin: -2rem auto 3rem;
     padding: 0 1.5rem;
+    position: relative;
+    z-index: 3;
   }
   .about .avatar {
-    width: 56px; height: 56px;
+    width: 64px; height: 64px;
     border-radius: 50%;
-    border: 1.5px solid var(--gold);
-    margin: 0 auto 0.8rem;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+    margin: 0 auto 1rem;
+    display: block;
+    object-fit: cover;
+  }
+  .about .avatar-inner {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: var(--bg);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.6rem;
-    opacity: 0.7;
+    overflow: hidden;
+  }
+  .about .avatar-inner img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
   }
   .about p {
     color: var(--text2);
     font-size: 0.85rem;
-    line-height: 1.8;
+    line-height: 1.9;
     letter-spacing: 1px;
+    font-weight: 300;
   }
+  .about .cn { font-family: 'Noto Serif SC', serif; font-size: 0.95rem; color: var(--text); letter-spacing: 2px; }
 
   /* ===== GALLERY ===== */
   .gallery-wrap {
     max-width: 1600px;
     margin: 0 auto;
-    padding: 2.5rem 16px 4rem;
+    padding: 1rem 16px 4rem;
   }
   .gallery {
     column-count: 4;
@@ -112,7 +204,7 @@
     transform: translateY(24px) scale(0.98);
   }
   .gallery-item.show {
-    animation: cardIn 0.6s ease forwards;
+    animation: cardIn 0.7s ease forwards;
   }
   .gallery-item:hover {
     transform: scale(1.02) !important;
@@ -124,32 +216,53 @@
     height: auto;
     opacity: 0;
     transition: opacity 0.6s ease, transform 0.6s ease;
+    position: relative;
+    z-index: 1;
   }
   .gallery-item img.loaded { opacity: 1; }
   .gallery-item:hover img { transform: scale(1.05); }
 
-  /* Index badge */
-  .gallery-item .badge {
+  /* Skeleton shimmer */
+  .gallery-item .skeleton {
     position: absolute;
-    top: 12px; right: 12px;
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.35);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.5);
-    font-size: 0.6rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 400;
-    transition: all 0.3s;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(90deg, #111 25%, #1a1a1a 50%, #111 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease infinite;
   }
-  .gallery-item:hover .badge {
-    background: rgba(0,0,0,0.5);
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .gallery-item img.loaded + .skeleton { opacity: 0; transition: opacity 0.3s; }
+
+  /* Hover overlay */
+  .gallery-item .overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1rem;
+  }
+  .gallery-item:hover .overlay { opacity: 1; }
+  .gallery-item .overlay .idx {
+    font-size: 0.65rem;
     color: var(--gold);
-    border-color: rgba(212,168,83,0.3);
+    letter-spacing: 2px;
+    font-weight: 300;
+    margin-bottom: 4px;
+  }
+  .gallery-item .overlay .hint {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 2px;
+    font-weight: 200;
   }
 
   @keyframes cardIn {
@@ -162,70 +275,72 @@
     display: none;
     position: fixed; z-index: 9999;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.92);
+    background: rgba(0,0,0,0.93);
     justify-content: center; align-items: center;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
   }
   .lb.active { display: flex; }
   .lb-img-wrap {
     display: flex; flex-direction: column; align-items: center;
-    max-width: 90vw; max-height: 92vh;
-    animation: lbEntry 0.3s ease;
+    max-width: 92vw; max-height: 90vh;
+    animation: lbEntry 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
   @keyframes lbEntry {
-    from { opacity: 0; transform: scale(0.92); }
+    from { opacity: 0; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1); }
   }
   .lb-img-wrap img {
-    max-width: 100%; max-height: 83vh;
+    max-width: 100%; max-height: 82vh;
     object-fit: contain;
     border-radius: var(--radius-sm);
     box-shadow: 0 0 80px rgba(0,0,0,0.6);
-    transition: opacity 0.2s ease;
+    transition: opacity 0.25s ease;
   }
   .lb-img-wrap img[src=""] { opacity: 0; }
   .lb-counter {
     margin-top: 0.8rem;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: var(--text3);
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    font-weight: 300;
   }
 
   .lb-close {
     position: fixed; top: 24px; right: 28px;
     width: 40px; height: 40px;
     border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.08);
     color: #fff; font-size: 1.2rem;
     cursor: pointer; background: rgba(0,0,0,0.3);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: 10000;
     display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
+    transition: all 0.25s;
     line-height: 1;
   }
-  .lb-close:hover { background: rgba(255,255,255,0.1); }
+  .lb-close:hover { background: rgba(255,255,255,0.1); transform: rotate(90deg); }
 
   .lb-nav {
     position: fixed; top: 50%; transform: translateY(-50%);
     width: 44px; height: 44px;
     border-radius: 50%;
     border: 1px solid rgba(255,255,255,0.06);
-    color: #fff; font-size: 1.2rem;
+    color: #fff; font-size: 1.3rem;
     cursor: pointer; background: rgba(0,0,0,0.2);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: 10000;
     display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
+    transition: all 0.25s;
     opacity: 0.3;
     user-select: none;
   }
-  .lb-nav:hover { opacity: 0.8; background: rgba(255,255,255,0.08); }
+  .lb-nav:hover { opacity: 0.9; background: rgba(255,255,255,0.08); transform: translateY(-50%) scale(1.08); }
   .lb-prev { left: 20px; }
   .lb-next { right: 20px; }
+  .lb-nav:active { transform: translateY(-50%) scale(0.95); }
 
   /* ===== BACK TO TOP ===== */
   .back-top {
@@ -237,18 +352,28 @@
     color: var(--text3);
     cursor: pointer; font-size: 1rem;
     z-index: 100;
-    opacity: 0; transition: all 0.3s;
+    opacity: 0; transition: all 0.35s ease;
     display: flex; align-items: center; justify-content: center;
   }
   .back-top.show { opacity: 0.5; }
-  .back-top.show:hover { opacity: 1; background: var(--gold); color: #111; border-color: var(--gold); }
+  .back-top.show:hover { opacity: 1; background: var(--gold); color: #111; border-color: var(--gold); transform: scale(1.1); }
 
   /* ===== FOOTER ===== */
   footer {
-    text-align: center; padding: 2.5rem;
-    color: var(--text3); font-size: 0.75rem;
-    letter-spacing: 2px;
+    text-align: center; padding: 3rem 2rem;
+    color: var(--text3); font-size: 0.72rem;
+    letter-spacing: 3px;
+    font-weight: 200;
     border-top: 1px solid var(--border);
+    position: relative;
+  }
+  footer::before {
+    content: '';
+    display: block;
+    width: 20px; height: 1px;
+    background: var(--gold);
+    margin: 0 auto 1.2rem;
+    opacity: 0.3;
   }
 
   /* ===== RESPONSIVE ===== */
@@ -257,35 +382,57 @@
     .gallery { column-count: 2; column-gap: 10px; }
     .gallery-item { margin-bottom: 10px; }
     .gallery-wrap { padding: 1.5rem 10px 3rem; }
-    header { padding: 2.5rem 1rem 0.5rem; }
+    .hero { --hero-h: 80vh; }
+    .hero-title { letter-spacing: 8px; }
     .lb-nav { width: 36px; height: 36px; font-size: 1rem; }
     .lb-prev { left: 10px; }
     .lb-next { right: 10px; }
-    .lb-close { top: 16px; right: 16px; width: 36px; height: 36px; font-size: 1rem; }
+    .lb-close { top: 16px; right: 16px; width: 36px; height: 36px; }
   }
-  @media (max-width: 500px) { .gallery { column-count: 1; } }
+  @media (max-width: 500px) {
+    .gallery { column-count: 1; }
+    .hero { --hero-h: 70vh; }
+    .hero-title { letter-spacing: 4px; }
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>镜头之下</h1>
-  <p><span id="totalPhotos">0</span> 张作品</p>
-</header>
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">镜头之下</h1>
+    <p class="hero-sub"><span id="totalPhotos">0</span> 张作品 · 光影之间</p>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
 
+<!-- ABOUT -->
 <div class="about">
-  <img src="avatar.jpg" class="avatar" alt="Brian">
-  <p>Brian，一位热爱摄影的大学生。<br>用镜头记录身边的风景与故事。</p>
+  <div class="avatar">
+    <div class="avatar-inner">
+      <img src="avatar.jpg" alt="Brian" id="avatarImg" onerror="this.parentElement.textContent='📷';this.style.display='none'">
+    </div>
+  </div>
+  <p class="cn">Brian</p>
+  <p>一位热爱摄影的大学生 · 用镜头记录身边的风景与故事</p>
 </div>
 
+<!-- GALLERY -->
 <div class="gallery-wrap">
   <div class="gallery" id="gallery"></div>
 </div>
 
 <button class="back-top" id="backTop">↑</button>
 
-<footer>&copy; 2026 Brian</footer>
+<footer>&copy; 2026 Brian · 镜头之下</footer>
 
+<!-- LIGHTBOX -->
 <div class="lb" id="lb">
   <button class="lb-close" id="lbClose">✕</button>
   <button class="lb-nav lb-prev" id="lbPrev">‹</button>
@@ -300,6 +447,7 @@
 (function() {
   var PHOTOS = ["微信图片_20260720105037_335_3.jpg","微信图片_20260720105152_336_3.jpg","微信图片_20260720105259_337_3.jpg","微信图片_20260720105336_338_3.jpg","微信图片_20260720105341_339_3.jpg","微信图片_20260720105421_340_3.jpg","微信图片_20260720105451_341_3(1).jpg","微信图片_20260720105456_342_3(1).jpg","微信图片_20260720105531_343_3.jpg","微信图片_20260720105616_344_3.jpg","微信图片_20260720105623_345_3.jpg","微信图片_20260720105627_346_3.jpg","微信图片_20260720105629_347_3.jpg","微信图片_20260720105737_348_3.jpg","微信图片_20260720105815_349_3.jpg","微信图片_20260720105834_350_3.jpg","微信图片_20260720105915_351_3.jpg","微信图片_20260720105941_352_3.jpg","微信图片_20260720110018_353_3.jpg","微信图片_20260720110125_355_3.jpg","微信图片_20260720184633_357_3.jpg","微信图片_20260720184718_358_3.jpg","微信图片_20260720184719_359_3.jpg","微信图片_20260720184720_360_3.jpg","微信图片_20260720184721_361_3.jpg","微信图片_20260720184722_362_3.jpg","微信图片_20260720184723_363_3.jpg","微信图片_20260720184724_364_3.jpg","微信图片_20260720184725_365_3.jpg","微信图片_20260720184726_366_3.jpg","微信图片_20260720184727_367_3.jpg","微信图片_20260720184728_368_3.jpg","微信图片_20260720184729_369_3.jpg","微信图片_20260720184730_370_3.jpg","微信图片_20260720184731_371_3.jpg","微信图片_20260720184732_372_3.jpg","微信图片_20260720184733_373_3.jpg","微信图片_20260720213816_374_3.jpg","微信图片_20260720213819_375_3.jpg","微信图片_20260720213824_376_3.jpg","微信图片_20260720213826_377_3.jpg","微信图片_20260720213828_378_3.jpg","微信图片_20260720213832_379_3.jpg","微信图片_20260720213835_380_3.jpg","微信图片_20260720213838_381_3.jpg","微信图片_20260720213841_382_3.jpg","微信图片_20260720213845_383_3.jpg","微信图片_20260720213846_384_3.jpg","微信图片_20260720213849_385_3.jpg","微信图片_20260720213923_386_3.jpg","微信图片_20260720213925_387_3.jpg","微信图片_20260720213931_388_3.jpg","微信图片_20260720213932_389_3.jpg","微信图片_20260720213933_390_3.jpg","微信图片_20260720213934_391_3.jpg","微信图片_20260720213936_392_3.jpg","微信图片_20260720213939_393_3.jpg","微信图片_20260720213941_394_3.jpg","微信图片_20260720213943_395_3.jpg","微信图片_20260720213945_396_3.jpg","微信图片_20260720213948_397_3.jpg","微信图片_20260720213950_398_3.jpg","微信图片_20260720213952_399_3.jpg","微信图片_20260720213954_400_3.jpg","微信图片_20260720213955_401_3.jpg","微信图片_20260720213958_402_3.jpg","微信图片_20260720214011_403_3.jpg","微信图片_20260720214012_404_3.jpg","微信图片_20260720214013_405_3.jpg","微信图片_20260720214015_406_3.jpg","微信图片_20260720214017_407_3.jpg","微信图片_20260720214021_408_3.jpg","微信图片_20260720214022_409_3.jpg","微信图片_20260720214023_410_3.jpg"];
 
+  // Shuffle
   for (var i = PHOTOS.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var t = PHOTOS[i]; PHOTOS[i] = PHOTOS[j]; PHOTOS[j] = t;
@@ -313,6 +461,35 @@
   function imgUrl(f) { return CDN + encodeURIComponent(f); }
   function fallback(el, f) { el.onerror = null; el.src = FALLBACK + encodeURIComponent(f); }
 
+  // ===== HERO BACKGROUND =====
+  (function initHero() {
+    var heroBg = document.getElementById('heroBg');
+    // Pick the first shuffled photo for hero
+    var heroFile = PHOTOS[0];
+    var heroImg = new Image();
+    heroImg.onload = function() {
+      heroBg.style.backgroundImage = 'url(' + heroImg.src + ')';
+      heroBg.classList.add('loaded');
+    };
+    heroImg.onerror = function() {
+      heroImg.src = FALLBACK + encodeURIComponent(heroFile);
+    };
+    heroImg.src = imgUrl(heroFile);
+
+    // Parallax on scroll
+    window.addEventListener('scroll', function() {
+      var scrollY = window.scrollY;
+      var hero = document.getElementById('hero');
+      var maxTranslate = hero.offsetHeight * 0.35;
+      if (scrollY <= hero.offsetHeight) {
+        heroBg.style.transform = 'translateY(' + (scrollY * 0.3) + 'px)';
+        hero.querySelector('.hero-content').style.transform = 'translateY(' + (-scrollY * 0.15) + 'px)';
+        hero.querySelector('.hero-content').style.opacity = Math.max(0, 1 - scrollY / (hero.offsetHeight * 0.6));
+      }
+    }, { passive: true });
+  })();
+
+  // ===== GALLERY =====
   var gallery = document.getElementById('gallery');
   var lb = document.getElementById('lb');
   var lbImg = document.getElementById('lbImg');
@@ -326,32 +503,45 @@
     img.dataset.src = imgUrl(file);
     img.dataset.fallback = file;
 
+    var skeleton = document.createElement('div');
+    skeleton.className = 'skeleton';
+
+    // Overlay
+    var overlay = document.createElement('div');
+    overlay.className = 'overlay';
+    overlay.innerHTML = '<div class="idx">#' + (index + 1) + '</div><div class="hint">查看</div>';
+
+    // Lazy load
     var obs = new IntersectionObserver(function(entries) {
       entries.forEach(function(e) {
         if (e.isIntersecting) {
           img.src = img.dataset.src;
-          img.onload = function() { img.classList.add('loaded'); };
-          img.onerror = function() { img.classList.add('loaded'); fallback(this, this.dataset.fallback); };
+          img.onload = function() {
+            img.classList.add('loaded');
+          };
+          img.onerror = function() {
+            img.classList.add('loaded');
+            fallback(this, this.dataset.fallback);
+          };
           obs.unobserve(img);
         }
       });
     }, { rootMargin: '300px' });
     obs.observe(img);
 
-    var badge = document.createElement('div');
-    badge.className = 'badge';
-    badge.textContent = index + 1;
-
     item.appendChild(img);
-    item.appendChild(badge);
+    item.appendChild(skeleton);
+    item.appendChild(overlay);
 
-    var delay = Math.random() * 200;
+    // Staggered entrance
+    var delay = 100 + Math.random() * 300;
     setTimeout(function() { item.classList.add('show'); }, delay);
 
     item.addEventListener('click', function() { openLb(index); });
     gallery.appendChild(item);
   });
 
+  // ===== LIGHTBOX =====
   function openLb(idx) {
     currentIdx = idx;
     updateLb();
@@ -361,19 +551,18 @@
 
   function updateLb() {
     var file = PHOTOS[currentIdx];
-    lbImg.src = '';
+    lbImg.style.opacity = '0';
     lbImg.dataset.fallback = file;
     lbImg.onerror = function() { fallback(this, this.dataset.fallback); };
-    requestAnimationFrame(function() { lbImg.src = imgUrl(file); });
+    setTimeout(function() {
+      lbImg.src = imgUrl(file);
+      lbImg.style.opacity = '1';
+    }, 50);
     document.getElementById('lbCounter').textContent = (currentIdx + 1) + ' / ' + PHOTOS.length;
     history.replaceState(null, '', '#p-' + (currentIdx + 1));
   }
 
-  document.getElementById('lbClose').addEventListener('click', function() {
-    lb.classList.remove('active');
-    document.body.style.overflow = '';
-    history.replaceState(null, '', window.location.pathname);
-  });
+  document.getElementById('lbClose').addEventListener('click', closeLb);
   document.getElementById('lbPrev').addEventListener('click', function(e) {
     e.stopPropagation();
     currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length;
@@ -384,31 +573,25 @@
     currentIdx = (currentIdx + 1) % PHOTOS.length;
     updateLb();
   });
+
+  function closeLb() {
+    lb.classList.remove('active');
+    document.body.style.overflow = '';
+    history.replaceState(null, '', window.location.pathname);
+  }
+
   lb.addEventListener('click', function(e) {
-    if (e.target === lb) {
-      lb.classList.remove('active');
-      document.body.style.overflow = '';
-      history.replaceState(null, '', window.location.pathname);
-    }
+    if (e.target === lb) closeLb();
   });
 
   document.addEventListener('keydown', function(e) {
     if (!lb.classList.contains('active')) return;
-    if (e.key === 'Escape') {
-      lb.classList.remove('active');
-      document.body.style.overflow = '';
-      history.replaceState(null, '', window.location.pathname);
-    }
-    if (e.key === 'ArrowLeft') {
-      currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length;
-      updateLb();
-    }
-    if (e.key === 'ArrowRight') {
-      currentIdx = (currentIdx + 1) % PHOTOS.length;
-      updateLb();
-    }
+    if (e.key === 'Escape') { closeLb(); return; }
+    if (e.key === 'ArrowLeft') { currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length; updateLb(); }
+    if (e.key === 'ArrowRight') { currentIdx = (currentIdx + 1) % PHOTOS.length; updateLb(); }
   });
 
+  // Touch swipe
   var tx = 0;
   lbImg.addEventListener('touchstart', function(e) { tx = e.changedTouches[0].screenX; }, { passive: true });
   lbImg.addEventListener('touchend', function(e) {
@@ -419,20 +602,22 @@
     }
   }, { passive: true });
 
+  // ===== BACK TO TOP =====
   var backTop = document.getElementById('backTop');
   window.addEventListener('scroll', function() {
-    backTop.classList.toggle('show', window.scrollY > 400);
-  });
+    backTop.classList.toggle('show', window.scrollY > window.innerHeight * 0.6);
+  }, { passive: true });
   backTop.addEventListener('click', function() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
+  // ===== HASH NAV =====
   if (window.location.hash) {
     var m = window.location.hash.match(/p-(\d+)/);
     if (m) {
       var n = parseInt(m[1]) - 1;
       if (n >= 0 && n < PHOTOS.length) {
-        setTimeout(function() { openLb(n); }, 500);
+        setTimeout(function() { openLb(n); }, 600);
       }
     }
   }
