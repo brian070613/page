@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -131,25 +131,16 @@ body{
 <script>
 const REPO = 'brian070613/page';
 const BRANCH = 'main';
+const TOKEN = 'ghp_du…4xhE';
 let selectedFiles = [];
 let selectedCat = 'daily';
 
-// 自动读取之前保存的密钥
+// 密钥已内置，直接隐藏输入框
 (function() {
-  const saved = localStorage.getItem('gh_token');
-  if (saved) { document.getElementById('tokenInput').value = saved; }
+  document.querySelectorAll('.card')[0].style.display = 'none';
 })();
 
-function getToken() { return document.getElementById('tokenInput').value || localStorage.getItem('gh_token'); }
-
-function saveToken() {
-  const t = document.getElementById('tokenInput').value.trim();
-  if (!t) return alert('先粘贴密钥');
-  if (t.length < 20) return alert('密钥不对，检查是否完整复制');
-  localStorage.setItem('gh_token', t);
-  document.querySelectorAll('.card')[0].style.display = 'none';
-  log('密钥已保存 ✅', 'ok');
-}
+function getToken() { return TOKEN; }
 
 function log(msg, type) {
   const el = document.getElementById('logArea');
@@ -256,7 +247,10 @@ document.getElementById('publishBtn').addEventListener('click', async () => {
     const cat = selectedCat;
     const entries = uploaded.map(f => '    { file: "'+f+'", cat: "'+cat+'" }');
     const idx = curContent.lastIndexOf('  ];');
-    const newContent = curContent.slice(0, idx) + '\n' + entries.join(',\n') + ',' + curContent.slice(idx);
+    // 自动补逗号
+    const before = curContent.slice(0, idx).trimEnd();
+    const prefix = before.endsWith(',') ? '' : ',';
+    const newContent = curContent.slice(0, idx) + prefix + '\n' + entries.join(',\n') + ',' + curContent.slice(idx);
     
     const enc = new TextEncoder();
     let binary = '';
