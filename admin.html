@@ -26,7 +26,6 @@ body{
   padding:16px;margin-bottom:16px
 }
 .card-title{font-size:0.8rem;color:#666;letter-spacing:1px;margin-bottom:12px;font-weight:400}
-
 .upload-zone{
   border:1.5px dashed #2a2a2a;border-radius:12px;
   padding:32px 16px;text-align:center;cursor:pointer;
@@ -37,7 +36,6 @@ body{
 .upload-zone .label{font-size:0.85rem;color:#888;font-weight:300}
 .upload-zone .sublabel{font-size:0.7rem;color:#555;margin-top:4px}
 .upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
-
 .preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .preview-item{
   position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:#1a1a1a
@@ -49,16 +47,13 @@ body{
   background:rgba(0,0,0,0.6);border:none;color:#fff;
   font-size:0.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center
 }
-
 .cat-grid{display:flex;gap:8px}
 .cat-btn{
   flex:1;padding:10px;border-radius:8px;border:1px solid #2a2a2a;
   background:transparent;color:#888;font-size:0.8rem;cursor:pointer;
-  transition:all 0.2s;font-family:inherit;letter-spacing:1px;
-  text-align:center
+  transition:all 0.2s;font-family:inherit;letter-spacing:1px;text-align:center
 }
 .cat-btn.selected{background:#d4a85322;border-color:#d4a853;color:#d4a853}
-
 .publish-btn{
   width:100%;padding:14px;border:none;border-radius:10px;
   background:#d4a853;color:#111;font-size:1rem;font-weight:600;
@@ -68,7 +63,6 @@ body{
 .publish-btn:disabled{opacity:0.3;cursor:not-allowed}
 .publish-btn:active:not(:disabled){transform:scale(0.98)}
 .publish-btn.working{background:#333;color:#888}
-
 .progress-bar{
   height:3px;background:#1a1a1a;border-radius:2px;overflow:hidden;margin:12px 0
 }
@@ -86,21 +80,17 @@ body{
 </style>
 </head>
 <body>
-
 <div class="header">
   <h1>📷 网站管理</h1>
   <span class="status" id="headerStatus">就绪</span>
 </div>
-
 <div class="main">
   <div class="card" id="tokenCard">
-    <div class="card-title">🔑 密钥（只需输入一次，自动保存）</div>
+    <div class="card-title">🔑 密钥（只需输入一次，以后自动保存）</div>
     <input type="password" id="tokenInput" placeholder="粘贴密钥..."
       style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #2a2a2a;background:#0e0e0e;color:#eee;font-size:0.85rem;outline:none">
     <button onclick="saveToken()" style="margin-top:8px;padding:8px 20px;border-radius:8px;border:1px solid #d4a853;background:transparent;color:#d4a853;font-size:0.8rem;cursor:pointer">保存</button>
-    <div style="font-size:0.7rem;color:#555;margin-top:6px">密钥存于手机本地，一次设置永久使用</div>
   </div>
-
   <div class="card">
     <div class="card-title">📸 选照片</div>
     <div class="upload-zone" id="uploadZone">
@@ -111,7 +101,6 @@ body{
     </div>
     <div class="preview-grid" id="previewGrid"></div>
   </div>
-
   <div class="card">
     <div class="card-title">🏷️ 放哪个图集</div>
     <div class="cat-grid">
@@ -119,7 +108,6 @@ body{
       <button class="cat-btn" data-cat="china-gt">China GT</button>
     </div>
   </div>
-
   <div class="card">
     <div class="card-title">🚀 发布</div>
     <button class="publish-btn" id="publishBtn" disabled>📤 上传并发布</button>
@@ -127,169 +115,57 @@ body{
     <div class="log" id="logArea">等你的操作...</div>
   </div>
 </div>
-
 <script>
-const REPO = 'brian070613/page';
-const BRANCH = 'main';
-let selectedFiles = [];
-let selectedCat = 'daily';
+const REPO='brian070613/page',BRANCH='main';
+let selectedFiles=[],selectedCat='daily';
 
-(function() {
-  const saved = localStorage.getItem('gh_token');
-  if (saved) { document.getElementById('tokenInput').value = saved; }
-})();
+(function(){const s=localStorage.getItem('gh_token');if(s)document.getElementById('tokenInput').value=s})();
+function saveToken(){const t=document.getElementById('tokenInput').value.trim();if(!t)return alert('先粘贴密钥');if(t.length<30)return alert('密钥不完整');localStorage.setItem('gh_token',t);document.getElementById('tokenCard').style.display='none';log('密钥已保存 ✅','ok')}
+function getToken(){return document.getElementById('tokenInput').value||localStorage.getItem('gh_token')}
+function log(m,t){const e=document.getElementById('logArea'),p={ok:'✓',err:'✗'};(e.innerHTML)+='<span class="'+(t||'info')+'">'+(p[t]||'→')+' '+m+'</span>\n';e.scrollTop=e.scrollHeight}
+function setStatus(t){document.getElementById('headerStatus').textContent=t}
+function setProgress(p){document.getElementById('progressFill').style.width=p+'%'}
+document.querySelectorAll('.cat-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');selectedCat=b.dataset.cat}));
+document.getElementById('fileInput').addEventListener('change',e=>{selectedFiles=[...selectedFiles,...Array.from(e.target.files)];renderPreviews();updateBtn();e.target.value=''});
+function renderPreviews(){const g=document.getElementById('previewGrid');g.innerHTML='';selectedFiles.forEach((f,i)=>{const d=document.createElement('div');d.className='preview-item';const img=document.createElement('img');img.src=URL.createObjectURL(f);const btn=document.createElement('button');btn.className='remove';btn.textContent='✕';btn.onclick=()=>{selectedFiles.splice(i,1);renderPreviews();updateBtn()};d.appendChild(img);d.appendChild(btn);g.appendChild(d)})}
+function updateBtn(){const b=document.getElementById('publishBtn');b.disabled=selectedFiles.length===0;b.textContent=selectedFiles.length?'📤 上传并发布（'+selectedFiles.length+' 张）':'📤 上传并发布'}
+function compressImage(file){return new Promise(r=>{const fr=new FileReader();fr.onload=e=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height,m=2000;if(w>m||h>m){if(w>=h){h=h*m/w;w=m}else{w=w*m/h;h=m}}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);c.toBlob(b=>r(b),'image/jpeg',0.8)};img.src=e.target.result};fr.readAsDataURL(file)})}
 
-function saveToken() {
-  const t = document.getElementById('tokenInput').value.trim();
-  if (!t) return alert('先粘贴密钥');
-  if (t.length < 30) return alert('密钥不完整，检查是否全部复制');
-  localStorage.setItem('gh_token', t);
-  document.getElementById('tokenCard').style.display = 'none';
-  log('密钥已保存 ✅', 'ok');
-}
-
-function getToken() { return document.getElementById('tokenInput').value || localStorage.getItem('gh_token'); }
-
-function log(msg, type) {
-  const el = document.getElementById('logArea');
-  const p = {ok:'✓', err:'✗', info:'→'};
-  el.innerHTML += `<span class="${type||'info'}">${p[type]||'→'} ${msg}</span>\n`;
-  el.scrollTop = el.scrollHeight;
-}
-function setStatus(t) { document.getElementById('headerStatus').textContent = t; }
-function setProgress(p) { document.getElementById('progressFill').style.width = p + '%'; }
-
-document.querySelectorAll('.cat-btn').forEach(b => b.addEventListener('click', () => {
-  document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('selected'));
-  b.classList.add('selected'); selectedCat = b.dataset.cat;
-}));
-
-document.getElementById('fileInput').addEventListener('change', e => {
-  selectedFiles = [...selectedFiles, ...Array.from(e.target.files)];
-  renderPreviews(); updateBtn(); e.target.value = '';
-});
-
-function renderPreviews() {
-  const g = document.getElementById('previewGrid'); g.innerHTML = '';
-  selectedFiles.forEach((f, i) => {
-    const d = document.createElement('div'); d.className = 'preview-item';
-    const img = document.createElement('img'); img.src = URL.createObjectURL(f);
-    const btn = document.createElement('button'); btn.className = 'remove'; btn.textContent = '✕';
-    btn.onclick = () => { selectedFiles.splice(i,1); renderPreviews(); updateBtn(); };
-    d.appendChild(img); d.appendChild(btn); g.appendChild(d);
-  });
-}
-
-function updateBtn() {
-  const b = document.getElementById('publishBtn');
-  b.disabled = selectedFiles.length === 0;
-  b.textContent = selectedFiles.length ? `📤 上传并发布（${selectedFiles.length} 张）` : '📤 上传并发布';
-}
-
-function compressImage(file) {
-  return new Promise(resolve => {
-    const r = new FileReader();
-    r.onload = e => {
-      const img = new Image();
-      img.onload = () => {
-        let w = img.width, h = img.height;
-        const m = 2000;
-        if (w > m || h > m) {
-          if (w >= h) { h = h * m / w; w = m; }
-          else { w = w * m / h; h = m; }
-        }
-        const c = document.createElement('canvas');
-        c.width = w; c.height = h;
-        c.getContext('2d').drawImage(img, 0, 0, w, h);
-        c.toBlob(b => resolve(b), 'image/jpeg', 0.8);
-      };
-      img.src = e.target.result;
-    };
-    r.readAsDataURL(file);
-  });
-}
-
-document.getElementById('publishBtn').addEventListener('click', async () => {
-  if (!getToken()) { alert('先输入密钥再发布'); return; }
-
-  const TOKEN = getToken();
-  const btn = document.getElementById('publishBtn');
-  btn.disabled = true; btn.classList.add('working');
-  btn.textContent = '⏳ 处理中...';
-  setStatus('上传中...'); setProgress(0);
-  document.getElementById('logArea').innerHTML = '';
-
-  const total = selectedFiles.length;
-  const uploaded = [];
-
-  try {
-    for (let i = 0; i < total; i++) {
-      log(`压缩 ${i+1}/${total}...`, 'info');
-      const compressed = await compressImage(selectedFiles[i]);
-      const name = `photo_${Date.now()}_${i}.jpg`;
-      log(`上传 ${i+1}/${total}`, 'info');
-      setProgress((i/total)*70);
-
-      const b64 = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result.split(',')[1]); fr.readAsDataURL(compressed); });
-      const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/photos/${name}`, {
-        method: 'PUT',
-        headers: {'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json'},
-        body: JSON.stringify({message:'Upload '+name, content:b64, branch:BRANCH})
-      });
-      if (!resp.ok) throw new Error((await resp.json()).message);
-      uploaded.push(name);
-      log(`✓ ${name} (${(compressed.size/1024).toFixed(0)}KB)`, 'ok');
-      setProgress((i+1)/total*70);
+document.getElementById('publishBtn').addEventListener('click',async()=>{
+  if(!getToken()){alert('先输入密钥再发布');return}
+  const TOKEN=getToken(),btn=document.getElementById('publishBtn');
+  btn.disabled=true;btn.classList.add('working');btn.textContent='⏳ 处理中...';
+  setStatus('上传中...');setProgress(0);document.getElementById('logArea').innerHTML='';
+  const total=selectedFiles.length,uploaded=[];
+  try{
+    for(let i=0;i<total;i++){
+      log('压缩 '+(i+1)+'/'+total+'...','info');
+      const c=await compressImage(selectedFiles[i]),name='photo_'+Date.now()+'_'+i+'.jpg';
+      log('上传 '+(i+1)+'/'+total,'info');setProgress(i/total*70);
+      const b64=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result.split(',')[1]);fr.readAsDataURL(c)});
+      const resp=await fetch('https://api.github.com/repos/'+REPO+'/contents/photos/'+name,{method:'PUT',headers:{'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json'},body:JSON.stringify({message:'Upload '+name,content:b64,branch:BRANCH})});
+      if(!resp.ok)throw new Error((await resp.json()).message);
+      uploaded.push(name);log('✓ '+name+' ('+(c.size/1024).toFixed(0)+'KB)','ok');setProgress((i+1)/total*70)
     }
-
-    setProgress(75);
-    log('更新网站代码...', 'info');
-
-    const cur = await fetch('https://api.github.com/repos/'+REPO+'/contents/index.html', {
-      headers: {'Authorization':'Bearer '+TOKEN}
-    });
-    const curData = await cur.json();
-    const dec = new TextDecoder('utf-8');
-    const curContent = dec.decode(Uint8Array.from(atob(curData.content), c=>c.charCodeAt(0)));
-
-    const cat = selectedCat;
-    const entries = uploaded.map(f => '    { file: "'+f+'", cat: "'+cat+'" }');
-    const idx = curContent.lastIndexOf('  ];');
-    // 自动补逗号
-    const before = curContent.slice(0, idx).trimEnd();
-    const prefix = before.endsWith(',') ? '' : ',';
-    const newContent = curContent.slice(0, idx) + prefix + '\n' + entries.join(',\n') + ',' + curContent.slice(idx);
-
-    const enc = new TextEncoder();
-    let binary = '';
-    enc.encode(newContent).forEach(b => binary += String.fromCharCode(b));
-
-    const up = await fetch('https://api.github.com/repos/'+REPO+'/contents/index.html', {
-      method: 'PUT',
-      headers: {'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json'},
-      body: JSON.stringify({
-        message: '📸 新增 '+uploaded.length+' 张照片',
-        content: btoa(binary), sha: curData.sha, branch: BRANCH
-      })
-    });
-    if (!up.ok) throw new Error((await up.json()).message);
-
-    setProgress(100);
-    log('', 'info');
-    log('🎉 全部完成！'+uploaded.length+' 张照片已发布', 'ok');
-    log('分类：'+(cat==='china-gt'?'China GT':'日常'), 'info');
-    log('⏳ 等1-2分钟部署完毕就能看到', 'info');
-    setStatus('完成 ✓');
-    btn.textContent = '✅ 发布成功';
-    selectedFiles = [];
-    renderPreviews(); updateBtn();
-
-  } catch (err) {
-    log('出错：'+err.message, 'err');
-    setStatus('失败 ✗');
-    btn.textContent = '❌ 重试';
-    btn.disabled = false; btn.classList.remove('working');
-  }
+    setProgress(75);log('更新网站...','info');
+    const cur=await fetch('https://api.github.com/repos/'+REPO+'/contents/index.html',{headers:{'Authorization':'Bearer '+TOKEN}});
+    const curData=await cur.json();
+    const raw=atob(curData.content),buf=new Uint8Array(raw.length);
+    for(let i=0;i<raw.length;i++)buf[i]=raw.charCodeAt(i);
+    const curContent=new TextDecoder('utf-8').decode(buf);
+    const cat=selectedCat,entries=uploaded.map(f=>'    { file: "'+f+'", cat: "'+cat+'" }');
+    // 找 ALL_PHOTOS 数组结尾，在其前插入
+    const idx=curContent.lastIndexOf('  ];');
+    const beforeTrim=curContent.slice(0,idx).trimEnd();
+    // 始终补逗号（逗号在单独一行，JS语法允许）
+    const prefix=beforeTrim.endsWith(',')?'\n':',\n';
+    const newContent=curContent.slice(0,idx)+prefix+entries.join(',\n')+'\n'+'  ];';
+    const enc=new TextEncoder(),bytes=enc.encode(newContent);
+    let bin='';for(let b of bytes)bin+=String.fromCharCode(b);
+    const up=await fetch('https://api.github.com/repos/'+REPO+'/contents/index.html',{method:'PUT',headers:{'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json'},body:JSON.stringify({message:'📸 新增 '+uploaded.length+' 张照片',content:btoa(bin),sha:curData.sha,branch:BRANCH})});
+    if(!up.ok)throw new Error((await up.json()).message);
+    setProgress(100);log('','info');log('🎉 全部完成！'+uploaded.length+' 张照片已发布','ok');log('分类：'+(cat==='china-gt'?'China GT':'日常'),'info');log('⏳ 等1-2分钟部署...','info');setStatus('完成 ✓');btn.textContent='✅ 发布成功';selectedFiles=[];renderPreviews();updateBtn()
+  }catch(e){log('出错：'+e.message,'err');setStatus('失败 ✗');btn.textContent='❌ 重试';btn.disabled=false;btn.classList.remove('working')}
 });
 </script>
 </body>
