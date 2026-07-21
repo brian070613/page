@@ -615,6 +615,239 @@
     { file: "微信图片_20260721230214_471_3.jpg", cat: "china-gt" },
     { file: "微信图片_20260721230220_472_3.jpg", cat: "china-gt" },
     { file: "微信图片_20260721230229_473_3.jpg", cat: "china-gt" }
-,
-    { file: "photo_1784651839597_0.jpg", cat: "daily" }
   ];
+
+  var currentFilter = 'all';
+  var PHOTOS = []; // currently displayed
+
+  function shuffleArray(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+
+  function getFilteredPhotos(filter) {
+    if (filter === 'all') return shuffleArray(ALL_PHOTOS.slice());
+    return shuffleArray(ALL_PHOTOS.filter(function(p) { return p.cat === filter; }));
+  }
+
+  function updatePhotoCount() {
+    document.getElementById('totalPhotos').textContent = PHOTOS.length;
+  }
+
+  function updateFilterSubtitle() {
+    var el = document.getElementById('filterSub');
+    var scHamCard = document.getElementById('scHamCard');
+    var chinaCount = ALL_PHOTOS.filter(function(p) { return p.cat === 'china-gt'; }).length;
+    var dailyCount = ALL_PHOTOS.filter(function(p) { return p.cat === 'daily'; }).length;
+    if (currentFilter === 'china-gt') {
+      el.innerHTML = 'China GT <span class="highlight">' + chinaCount + '</span> 张';
+      scHamCard.style.display = 'block';
+    } else if (currentFilter === 'daily') {
+      el.innerHTML = '日常 <span class="highlight">' + dailyCount + '</span> 张';
+      scHamCard.style.display = 'none';
+    } else {
+      el.innerHTML = '共 <span class="highlight">' + ALL_PHOTOS.length + '</span> 张 · 日常 ' + dailyCount + ' 张 · China GT ' + chinaCount + ' 张';
+      scHamCard.style.display = 'block';
+    }
+  }
+
+  PHOTOS = getFilteredPhotos('all');
+  updatePhotoCount();
+  updateFilterSubtitle();
+
+  var CDN = 'https://brian-photos.oss-cn-beijing.aliyuncs.com/';
+  var FALLBACK = 'https://cdn.jsdelivr.net/gh/brian070613/page@main/photos/';
+
+  function imgUrl(f) { return CDN + encodeURIComponent(f); }
+  function fallback(el, f) { el.onerror = null; el.src = FALLBACK + encodeURIComponent(f); }
+
+  // ===== HERO BACKGROUND =====
+  (function initHero() {
+    var heroBg = document.getElementById('heroBg');
+    // Pick the first shuffled photo for hero
+    var heroFile = PHOTOS[0].file;
+    var heroImg = new Image();
+    heroImg.onload = function() {
+      heroBg.style.backgroundImage = 'url(' + heroImg.src + ')';
+      heroBg.classList.add('loaded');
+    };
+    heroImg.onerror = function() {
+      heroImg.src = FALLBACK + encodeURIComponent(heroFile);
+    };
+    heroImg.src = imgUrl(heroFile);
+
+    // Parallax on scroll
+    window.addEventListener('scroll', function() {
+      var scrollY = window.scrollY;
+      var hero = document.getElementById('hero');
+      var maxTranslate = hero.offsetHeight * 0.35;
+      if (scrollY <= hero.offsetHeight) {
+        heroBg.style.transform = 'translateY(' + (scrollY * 0.3) + 'px)';
+        hero.querySelector('.hero-content').style.transform = 'translateY(' + (-scrollY * 0.15) + 'px)';
+        hero.querySelector('.hero-content').style.opacity = Math.max(0, 1 - scrollY / (hero.offsetHeight * 0.6));
+      }
+    }, { passive: true });
+  })();
+
+  // ===== GALLERY RENDER =====
+  var gallery = document.getElementById('gallery');
+  var lb = document.getElementById('lb');
+  var lbImg = document.getElementById('lbImg');
+  var currentIdx = 0;
+
+  function renderGallery() {
+    gallery.innerHTML = '';
+    PHOTOS.forEach(function(photo, index) {
+      var file = photo.file;
+      var item = document.createElement('div');
+      item.className = 'gallery-item';
+
+      var img = document.createElement('img');
+      img.dataset.src = imgUrl(file);
+      img.dataset.fallback = file;
+
+      var skeleton = document.createElement('div');
+      skeleton.className = 'skeleton';
+
+      var hint = (photo.cat === 'china-gt') ? 'China GT' : '';
+      var overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      overlay.innerHTML = '<div class="idx">#' + (index + 1) + '</div><div class="hint">' + hint + '</div>';
+
+      // Lazy load
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            img.src = img.dataset.src;
+            img.onload = function() {
+              img.classList.add('loaded');
+            };
+            img.onerror = function() {
+              img.classList.add('loaded');
+              fallback(this, this.dataset.fallback);
+            };
+            obs.unobserve(img);
+          }
+        });
+      }, { rootMargin: '300px' });
+      obs.observe(img);
+
+      item.appendChild(img);
+      item.appendChild(skeleton);
+      item.appendChild(overlay);
+
+      // Staggered entrance
+      var delay = 100 + Math.random() * 300;
+      setTimeout(function() { item.classList.add('show'); }, delay);
+
+      item.addEventListener('click', function() { openLb(index); });
+      gallery.appendChild(item);
+    });
+  }
+
+  renderGallery();
+
+  // ===== LIGHTBOX =====
+  function openLb(idx) {
+    currentIdx = idx;
+    updateLb();
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function updateLb() {
+    var photo = PHOTOS[currentIdx];
+    var file = photo.file;
+    lbImg.style.opacity = '0';
+    lbImg.dataset.fallback = file;
+    lbImg.onerror = function() { fallback(this, this.dataset.fallback); };
+    setTimeout(function() {
+      lbImg.src = imgUrl(file);
+      lbImg.style.opacity = '1';
+    }, 50);
+    document.getElementById('lbCounter').textContent = (currentIdx + 1) + ' / ' + PHOTOS.length;
+    history.replaceState(null, '', '#p-' + (currentIdx + 1));
+  }
+
+  document.getElementById('lbClose').addEventListener('click', closeLb);
+  document.getElementById('lbPrev').addEventListener('click', function(e) {
+    e.stopPropagation();
+    currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length;
+    updateLb();
+  });
+  document.getElementById('lbNext').addEventListener('click', function(e) {
+    e.stopPropagation();
+    currentIdx = (currentIdx + 1) % PHOTOS.length;
+    updateLb();
+  });
+
+  function closeLb() {
+    lb.classList.remove('active');
+    document.body.style.overflow = '';
+    history.replaceState(null, '', window.location.pathname);
+  }
+
+  lb.addEventListener('click', function(e) {
+    if (e.target === lb) closeLb();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (!lb.classList.contains('active')) return;
+    if (e.key === 'Escape') { closeLb(); return; }
+    if (e.key === 'ArrowLeft') { currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length; updateLb(); }
+    if (e.key === 'ArrowRight') { currentIdx = (currentIdx + 1) % PHOTOS.length; updateLb(); }
+  });
+
+  // Touch swipe
+  var tx = 0;
+  lbImg.addEventListener('touchstart', function(e) { tx = e.changedTouches[0].screenX; }, { passive: true });
+  lbImg.addEventListener('touchend', function(e) {
+    var d = e.changedTouches[0].screenX - tx;
+    if (Math.abs(d) > 50) {
+      d > 0 ? (currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length) : (currentIdx = (currentIdx + 1) % PHOTOS.length);
+      updateLb();
+    }
+  }, { passive: true });
+
+  // ===== BACK TO TOP =====
+  var backTop = document.getElementById('backTop');
+  window.addEventListener('scroll', function() {
+    backTop.classList.toggle('show', window.scrollY > window.innerHeight * 0.6);
+  }, { passive: true });
+  backTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ===== FILTER TABS =====
+  var filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      filterBtns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      PHOTOS = getFilteredPhotos(currentFilter);
+      updatePhotoCount();
+      updateFilterSubtitle();
+      renderGallery();
+      // Also re-init lightbox with new array
+      currentIdx = 0;
+    });
+  });
+
+  // ===== HASH NAV =====
+  if (window.location.hash) {
+    var m = window.location.hash.match(/p-(\d+)/);
+    if (m) {
+      var n = parseInt(m[1]) - 1;
+      if (n >= 0 && n < PHOTOS.length) {
+        setTimeout(function() { openLb(n); }, 600);
+      }
+    }
+  }
+})();
+</script>
+</body>
+</html>
