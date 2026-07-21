@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -831,7 +831,17 @@
       PHOTOS = getFilteredPhotos(currentFilter);
       updatePhotoCount();
       updateFilterSubtitle();
-      renderGallery();
+      renderGallery()
+  // Load additional photos from photos.json
+  fetch('photos.json').then(function(r){return r.json()}).then(function(data){
+    if(data&&data.length){
+      var existing={};PHOTOS.forEach(function(p){existing[p.file]=1});
+      data.forEach(function(p){if(!existing[p.file])ALL_PHOTOS.push(p)});
+      PHOTOS=getFilteredPhotos(currentFilter);
+      updatePhotoCount();
+      renderGallery()
+    }
+  }).catch(function(){});
       // Also re-init lightbox with new array
       currentIdx = 0;
     });
