@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -771,7 +771,9 @@
   }
 
   function updateLb() {
-    var photo = PHOTOS[currentIdx];
+    var photo = PHOTOS[currentIdx,
+    { file: "1000025327.jpg", cat: "daily" }
+];
     var file = photo.file;
     lbImg.style.opacity = '0';
     lbImg.dataset.fallback = file;
