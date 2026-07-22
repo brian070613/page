@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -157,7 +157,19 @@
   .about .photographer-card {
     flex: 0 1 200px;
     text-align: center;
+    cursor: pointer;
+    transition: transform 0.35s ease, opacity 0.35s ease;
   }
+  .about .photographer-card:hover { transform: translateY(-4px); }
+  .about .photographer-card .avatar {
+    transition: box-shadow 0.35s ease, transform 0.35s ease;
+  }
+  .about .photographer-card.active .avatar {
+    box-shadow: 0 0 20px rgba(212,168,83,0.5), 0 0 60px rgba(212,168,83,0.15);
+    transform: scale(1.06);
+  }
+  .about .photographer-card.active .cn { color: var(--gold); }
+  .about .photographer-card.dimmed { opacity: 0.3; }
   .about .avatar {
     width: 64px; height: 64px;
     border-radius: 50%;
@@ -479,7 +491,7 @@
 <!-- ABOUT -->
 <div class="about">
   <div class="photographers" id="photographers">
-    <div class="photographer-card">
+    <div class="photographer-card" data-photographer="brian" onclick="filterByPhotographer('brian')">
       <div class="avatar">
         <div class="avatar-inner">
           <img src="avatar.jpg" alt="Brian" onerror="this.parentElement.textContent='📷';this.style.display='none'">
@@ -488,7 +500,7 @@
       <p class="cn">Brian</p>
       <p>一位热爱摄影的大学生 · 用镜头记录身边的风景与故事</p>
     </div>
-    <div class="photographer-card" id="scHamCard">
+    <div class="photographer-card" data-photographer="scham" onclick="filterByPhotographer('scham')">
       <div class="avatar">
         <div class="avatar-inner">
           <img src="sc-ham-avatar.jpg" alt="SC-HAM" onerror="this.parentElement.textContent='📸';this.parentElement.style.fontSize='1.4rem'">
@@ -821,10 +833,60 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
+  // ===== PHOTOGRAPHER CLICK =====
+  var activePhotographer = null;
+
+  function filterByPhotographer(name) {
+    // Toggle: click same again = unselect
+    if (activePhotographer === name) {
+      activePhotographer = null;
+      // Switch back to 'all'
+      filterBtns.forEach(function(b) {
+        b.classList.remove('active');
+        if (b.dataset.filter === 'all') b.classList.add('active');
+      });
+      currentFilter = 'all';
+    } else {
+      activePhotographer = name;
+      var cat = (name === 'scham') ? 'china-gt' : 'daily';
+      filterBtns.forEach(function(b) {
+        b.classList.remove('active');
+        if (b.dataset.filter === cat) b.classList.add('active');
+      });
+      currentFilter = cat;
+    }
+    // Update photographer card states
+    var cards = document.querySelectorAll('.photographer-card');
+    cards.forEach(function(c) {
+      c.classList.remove('active', 'dimmed');
+      if (activePhotographer) {
+        if (c.dataset.photographer === activePhotographer) {
+          c.classList.add('active');
+        } else {
+          c.classList.add('dimmed');
+        }
+      }
+    });
+    PHOTOS = getFilteredPhotos(currentFilter);
+    updatePhotoCount();
+    updateFilterSubtitle();
+    renderGallery();
+    currentIdx = 0;
+    // Smooth scroll to gallery
+    setTimeout(function() {
+      document.querySelector('.gallery-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+
   // ===== FILTER TABS =====
   var filterBtns = document.querySelectorAll('.filter-btn');
   filterBtns.forEach(function(btn) {
     btn.addEventListener('click', function() {
+      // Clear photographer selection when using tabs
+      activePhotographer = null;
+      var cards = document.querySelectorAll('.photographer-card');
+      cards.forEach(function(c) { c.classList.remove('active', 'dimmed'); });
+
       filterBtns.forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
       currentFilter = btn.dataset.filter;
@@ -861,3 +923,4 @@
 </script>
 </body>
 </html>
+
