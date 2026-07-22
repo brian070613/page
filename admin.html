@@ -3,135 +3,347 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>📷 网站管理</title>
+<title>📸 上传 — Brian 摄影</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0a0a0a;color:#eee;min-height:100vh;padding:0 0 env(safe-area-inset-bottom,0);-webkit-font-smoothing:antialiased}
-.header{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);padding:16px 20px 12px;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;justify-content:space-between}
-.header h1{font-size:1.1rem;font-weight:500;letter-spacing:1px}
-.header .status{font-size:0.7rem;color:#555}
-.main{padding:20px;max-width:480px;margin:0 auto}
-.card{background:#111;border-radius:14px;border:1px solid #1a1a1a;padding:16px;margin-bottom:16px}
-.card-title{font-size:0.8rem;color:#666;letter-spacing:1px;margin-bottom:12px;font-weight:400}
-.upload-zone{border:1.5px dashed #2a2a2a;border-radius:12px;padding:32px 16px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;background:#0e0e0e}
-.upload-zone:active{background:#161616;border-color:#d4a853}
-.upload-zone .icon{font-size:2rem;margin-bottom:8px;display:block}
-.upload-zone .label{font-size:0.85rem;color:#888;font-weight:300}
-.upload-zone .sublabel{font-size:0.7rem;color:#555;margin-top:4px}
-.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-.preview-item{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:#1a1a1a}
-.preview-item img{width:100%;height:100%;object-fit:cover}
-.preview-item .remove{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.6);border:none;color:#fff;font-size:0.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.cat-grid{display:flex;gap:8px}
-.cat-btn{flex:1;padding:10px;border-radius:8px;border:1px solid #2a2a2a;background:transparent;color:#888;font-size:0.8rem;cursor:pointer;transition:all 0.2s;font-family:inherit;letter-spacing:1px;text-align:center}
-.cat-btn.selected{background:#d4a85322;border-color:#d4a853;color:#d4a853}
-.publish-btn{width:100%;padding:14px;border:none;border-radius:10px;background:#d4a853;color:#111;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:inherit;letter-spacing:1px;margin-top:4px}
-.publish-btn:disabled{opacity:0.3;cursor:not-allowed}
-.publish-btn:active:not(:disabled){transform:scale(0.98)}
-.publish-btn.working{background:#333;color:#888}
-.progress-bar{height:3px;background:#1a1a1a;border-radius:2px;overflow:hidden;margin:12px 0}
-.progress-bar .fill{height:100%;width:0%;background:linear-gradient(90deg,#d4a853,#f0d080);border-radius:2px;transition:width 0.3s}
-.log{font-size:0.7rem;color:#555;line-height:1.6;max-height:150px;overflow-y:auto;font-family:monospace;white-space:pre-wrap;word-break:break-all}
-.log .ok{color:#4caf50}
-.log .err{color:#f44336}
-.log .info{color:#888}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #080808; --card: #111; --text: #eee; --text2: #999; --text3: #555;
+    --gold: #d4a853; --gold-dim: #a08030; --green: #4caf50; --red: #f44336;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh;
+    -webkit-font-smoothing: antialiased; padding-bottom: 40px;
+  }
+  .container { max-width: 480px; margin: 0 auto; padding: 20px 16px; }
+  h1 { font-size: 1.3rem; font-weight: 600; margin: 16px 0 20px; text-align: center; letter-spacing: 4px; }
+  h1 span { color: var(--gold); }
+  .card {
+    background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 14px;
+  }
+  label { display: block; font-size: 0.75rem; color: var(--text2); letter-spacing: 2px; margin-bottom: 6px; }
+  .upload-area {
+    border: 2px dashed #333; border-radius: 12px; padding: 28px 16px; text-align: center;
+    cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;
+  }
+  .upload-area:hover { border-color: var(--gold-dim); background: #161616; }
+  .upload-area.has-img { border-style: solid; border-color: var(--gold-dim); padding: 6px; }
+  .upload-area img { max-width: 100%; max-height: 260px; border-radius: 8px; display: block; margin: 0 auto; }
+  .upload-area .hint { font-size: 0.85rem; color: var(--text2); line-height: 1.7; }
+  .upload-area .hint .icon { font-size: 2rem; display: block; margin-bottom: 6px; }
+  .upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  select, input, textarea {
+    width: 100%; padding: 10px 12px; background: #1a1a1a; border: 1px solid #222; border-radius: 10px;
+    color: var(--text); font-size: 0.88rem; outline: none; font-family: inherit;
+  }
+  select { -webkit-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; }
+  select:focus, input:focus { border-color: var(--gold-dim); }
+  textarea { resize: none; height: 54px; }
+  .btn {
+    width: 100%; padding: 14px; border: none; border-radius: 12px;
+    font-size: 1rem; font-weight: 500; letter-spacing: 3px;
+    cursor: pointer; transition: all 0.25s;
+    background: var(--gold); color: #111;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+  #status { text-align: center; font-size: 0.82rem; margin-top: 12px; min-height: 1.5em; letter-spacing: 1px; }
+  #status.ok { color: var(--green); }
+  #status.err { color: var(--red); }
+  #status.busy { color: var(--gold); }
+  .preview-link { text-align: center; margin-top: 10px; }
+  .preview-link a { color: var(--gold-dim); font-size: 0.78rem; letter-spacing: 1px; }
+
+  /* Token / Key 管理 */
+  .settings-toggle {
+    text-align: center; margin-top: 20px; padding-top: 14px;
+    border-top: 1px solid #111;
+  }
+  .settings-toggle a { color: #444; font-size: 0.72rem; cursor: pointer; letter-spacing: 1px; }
+  .settings-panel { display: none; margin-top: 12px; }
+  .settings-panel.open { display: block; }
+  .settings-panel .row { margin-bottom: 10px; }
+  .settings-panel label { font-size: 0.7rem; color: #555; }
+  .settings-panel input { font-size: 0.78rem; padding: 8px 10px; }
+  .settings-panel .status { font-size: 0.7rem; color: var(--green); margin-top: 4px; }
+  .settings-panel .status.missing { color: var(--red); }
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>📷 网站管理</h1>
-  <span class="status" id="headerStatus">就绪</span>
-</div>
-<div class="main">
-  <div class="card" id="tokenCard">
-    <div class="card-title">🔑 密钥（只需输入一次）</div>
-    <input type="password" id="tokenInput" placeholder="粘贴密钥..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #2a2a2a;background:#0e0e0e;color:#eee;font-size:0.85rem;outline:none">
-    <button onclick="saveToken()" style="margin-top:8px;padding:8px 20px;border-radius:8px;border:1px solid #d4a853;background:transparent;color:#d4a853;font-size:0.8rem;cursor:pointer">保存</button>
-  </div>
+
+<div class="container">
+  <h1>📸 <span>上传</span>照片</h1>
+
+  <!-- 照片 -->
   <div class="card">
-    <div class="card-title">📸 选照片</div>
-    <div class="upload-zone" id="uploadZone"><span class="icon">📁</span><div class="label">点我选照片</div><div class="sublabel">可以多选，自动压缩</div><input type="file" accept="image/*" multiple id="fileInput"></div>
-    <div class="preview-grid" id="previewGrid"></div>
-  </div>
-  <div class="card">
-    <div class="card-title">🏷️ 放哪个图集</div>
-    <div class="cat-grid">
-      <button class="cat-btn selected" data-cat="daily">日常</button>
-      <button class="cat-btn" data-cat="china-gt">China GT</button>
+    <label>照片</label>
+    <div class="upload-area" id="uploadArea">
+      <input type="file" accept="image/*" capture="environment" id="photoFile">
+      <div class="hint" id="uploadHint"><span class="icon">📷</span>点击选择或拍照</div>
     </div>
   </div>
+
+  <!-- 摄影师 -->
   <div class="card">
-    <div class="card-title">🚀 发布</div>
-    <button class="publish-btn" id="publishBtn" disabled>📤 上传并发布</button>
-    <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
-    <div class="log" id="logArea">等你的操作...</div>
+    <label>摄影师</label>
+    <select id="photographer">
+      <option value="brian">Brian — 日常</option>
+      <option value="scham">SC-HAM — China GT</option>
+    </select>
+  </div>
+
+  <!-- 描述 -->
+  <div class="card">
+    <label>备注（可选）</label>
+    <textarea id="caption" placeholder="例如：珠海站 911 GT3 R" maxlength="60"></textarea>
+  </div>
+
+  <!-- 按钮 -->
+  <button class="btn" id="uploadBtn" onclick="doUpload()">⬆ 上传</button>
+  <div id="status"></div>
+  <div class="preview-link" id="previewLink"></div>
+
+  <!-- 设置 -->
+  <div class="settings-toggle">
+    <a onclick="toggleSettings()">⚙ 配置</a>
+  </div>
+  <div class="settings-panel" id="settingsPanel">
+    <div class="row">
+      <label>GitHub Token（repo 权限）</label>
+      <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" onchange="saveSettings()">
+      <div class="status missing" id="ghTokenStatus">未设置</div>
+    </div>
+    <div class="row">
+      <label>阿里云 OSS AccessKey ID</label>
+      <input type="password" id="ossKey" placeholder="LTAI5t..." onchange="saveSettings()">
+      <div class="status missing" id="ossKeyStatus">未设置</div>
+    </div>
+    <div class="row">
+      <label>阿里云 OSS AccessKey Secret</label>
+      <input type="password" id="ossSecret" placeholder="..." onchange="saveSettings()">
+      <div class="status missing" id="ossSecretStatus">未设置</div>
+    </div>
   </div>
 </div>
-  <div style='text-align:center;font-size:0.7rem;color:#555;margin-top:-8px;margin-bottom:16px'><a href='#' onclick='localStorage.removeItem("gh_token");location.reload()' style='color:#888'>重置密钥</a></div>
+
+<script src="https://gosspublic.alicdn.com/aliyun-oss-sdk-6.18.0.min.js"></script>
 <script>
-const REPO='brian070613/page',BRANCH='main';
-let selectedFiles=[],selectedCat='daily';
+(function() {
+  var REPO = 'brian070613/page';
+  var OSS_REGION = 'oss-cn-beijing';
+  var OSS_BUCKET = 'brian-photos';
+  var CDN = 'https://brian-photos.oss-cn-beijing.aliyuncs.com/';
 
-(function(){const s=localStorage.getItem('gh_token');if(s)document.getElementById('tokenInput').value=s})();
-function saveToken(){const t=document.getElementById('tokenInput').value.trim();if(!t||t.length<30)return alert('密钥不完整');localStorage.setItem('gh_token',t);document.getElementById('tokenCard').style.display='none';log('密钥已保存 ✅','ok')}
-function getToken(){return document.getElementById('tokenInput').value||localStorage.getItem('gh_token')}
-function log(m,t){const e=document.getElementById('logArea'),p={ok:'✓',err:'✗'};(e.innerHTML)+='<span class="'+(t||'info')+'">'+(p[t]||'→')+' '+m+'</span>\n';e.scrollTop=e.scrollHeight}
-function setStatus(t){document.getElementById('headerStatus').textContent=t}
-function setProgress(p){document.getElementById('progressFill').style.width=p+'%'}
-document.querySelectorAll('.cat-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');selectedCat=b.dataset.cat}));
-document.getElementById('fileInput').addEventListener('change',e=>{selectedFiles=[...selectedFiles,...Array.from(e.target.files)];renderPreviews();updateBtn();e.target.value=''});
-function renderPreviews(){const g=document.getElementById('previewGrid');g.innerHTML='';selectedFiles.forEach((f,i)=>{const d=document.createElement('div');d.className='preview-item';const img=document.createElement('img');img.src=URL.createObjectURL(f);const btn=document.createElement('button');btn.className='remove';btn.textContent='✕';btn.onclick=()=>{selectedFiles.splice(i,1);renderPreviews();updateBtn()};d.appendChild(img);d.appendChild(btn);g.appendChild(d)})}
-function updateBtn(){const b=document.getElementById('publishBtn');b.disabled=selectedFiles.length===0;b.textContent=selectedFiles.length?'📤 上传并发布（'+selectedFiles.length+' 张）':'📤 上传并发布'}
-function compressImage(file){return new Promise(r=>{const fr=new FileReader();fr.onload=e=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height,m=2000;if(w>m||h>m){if(w>=h){h=h*m/w;w=m}else{w=w*m/h;h=m}}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);c.toBlob(b=>r(b),'image/jpeg',0.8)};img.src=e.target.result};fr.readAsDataURL(file)})}
+  var previewImg = null;
 
-document.getElementById('publishBtn').addEventListener('click',async()=>{
-  if(!getToken()){alert('先输入密钥再发布');return}
-  const TOKEN=getToken();const btn=document.getElementById('publishBtn');
-  btn.disabled=true;btn.classList.add('working');btn.textContent='⏳ 处理中...';
-  setStatus('上传中...');setProgress(0);document.getElementById('logArea').innerHTML='';
-  const total=selectedFiles.length,uploaded=[];
-  try{
-    for(let i=0;i<total;i++){
-      log('压缩 '+(i+1)+'/'+total+'...','info');
-      const c=await compressImage(selectedFiles[i]),name='photo_'+Date.now()+'_'+i+'.jpg';
-      log('上传 '+(i+1)+'/'+total,'info');setProgress(i/total*70);
-      const b64=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result.split(',')[1]);fr.readAsDataURL(c)});
-      const resp=await fetch('https://api.github.com/repos/'+REPO+'/contents/photos/'+name,{method:'PUT',headers:{'Authorization':'***'+TOKEN,'Content-Type':'application/json'},body:JSON.stringify({message:'Upload '+name,content:b64,branch:BRANCH})});
-      if(!resp.ok)throw new Error((await resp.json()).message);
-      uploaded.push(name);log('✓ '+name+' ('+(c.size/1024).toFixed(0)+'KB)','ok');setProgress((i+1)/total*70)
+  // ===== Settings =====
+  function load(key, fallback) {
+    try { return localStorage.getItem('upload_' + key) || ''; } catch(e) { return ''; }
+  }
+  function save(key, val) {
+    try { localStorage.setItem('upload_' + key, val); } catch(e) {}
+  }
+
+  var ghToken = load('ghToken');
+  var ossKey = load('ossKey');
+  var ossSecret = load('ossSecret');
+
+  function updateSettingsUI() {
+    document.getElementById('ghToken').value = ghToken;
+    document.getElementById('ossKey').value = ossKey;
+    document.getElementById('ossSecret').value = ossSecret;
+    var gs = document.getElementById('ghTokenStatus');
+    gs.textContent = ghToken ? '✅ 已设置 (' + ghToken.slice(0,8) + '...)' : '❌ 未设置';
+    gs.className = 'status' + (ghToken ? '' : ' missing');
+    var os = document.getElementById('ossKeyStatus');
+    os.textContent = ossKey ? '✅ 已设置 (' + ossKey.slice(0,8) + '...)' : '❌ 未设置';
+    os.className = 'status' + (ossKey ? '' : ' missing');
+    var oss = document.getElementById('ossSecretStatus');
+    oss.textContent = ossSecret ? '✅ 已设置' : '❌ 未设置';
+    oss.className = 'status' + (ossSecret ? '' : ' missing');
+  }
+
+  window.toggleSettings = function() {
+    document.getElementById('settingsPanel').classList.toggle('open');
+  };
+
+  window.saveSettings = function() {
+    ghToken = document.getElementById('ghToken').value;
+    ossKey = document.getElementById('ossKey').value;
+    ossSecret = document.getElementById('ossSecret').value;
+    save('ghToken', ghToken);
+    save('ossKey', ossKey);
+    save('ossSecret', ossSecret);
+    updateSettingsUI();
+  };
+
+  // Auto-prompt if no settings
+  if (!ghToken || !ossKey || !ossSecret) {
+    setTimeout(function() {
+      document.getElementById('settingsPanel').classList.add('open');
+    }, 300);
+  }
+  updateSettingsUI();
+
+  // ===== Preview =====
+  document.getElementById('photoFile').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var area = document.getElementById('uploadArea');
+    var hint = document.getElementById('uploadHint');
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      if (previewImg) previewImg.remove();
+      previewImg = document.createElement('img');
+      previewImg.src = ev.target.result;
+      previewImg.alt = 'preview';
+      area.insertBefore(previewImg, hint);
+      area.classList.add('has-img');
+      hint.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ===== Status =====
+  function setStatus(msg, type) {
+    var el = document.getElementById('status');
+    el.textContent = msg;
+    el.className = type || '';
+  }
+
+  // ===== Encode helpers =====
+  function encodeUTF8(str) {
+    var bytes = new TextEncoder().encode(str);
+    var bin = '';
+    for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+  function decodeUTF8(b64) {
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+
+  // ===== GitHub API =====
+  async function ghGet(path) {
+    var r = await fetch('https://api.github.com/repos/' + REPO + '/contents/' + path, {
+      headers: { 'Authorization': 'token ' + ghToken, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (!r.ok) throw new Error('GET ' + path + ': ' + r.status);
+    return r.json();
+  }
+
+  async function ghPut(path, content, message, sha) {
+    var body = { message: message, content: content };
+    if (sha) body.sha = sha;
+    var r = await fetch('https://api.github.com/repos/' + REPO + '/contents/' + path, {
+      method: 'PUT',
+      headers: { 'Authorization': 'token ' + ghToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) throw new Error('PUT ' + path + ': ' + r.status);
+    return r.json();
+  }
+
+  // ===== File -> base64 =====
+  function fileToBase64(file) {
+    return new Promise(function(resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function() { resolve(reader.result.split(',')[1]); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ===== Upload =====
+  window.doUpload = async function() {
+    var file = document.getElementById('photoFile').files[0];
+    if (!file) { setStatus('请先选择一张照片', 'err'); return; }
+    if (!ghToken) { setStatus('请先在 ⚙ 配置 里设置 GitHub Token', 'err'); return; }
+    if (!ossKey || !ossSecret) { setStatus('请先在 ⚙ 配置 里设置阿里云 OSS Key', 'err'); return; }
+
+    var photographer = document.getElementById('photographer').value;
+    var cat = (photographer === 'scham') ? 'china-gt' : 'daily';
+    var caption = document.getElementById('caption').value.trim();
+    var btn = document.getElementById('uploadBtn');
+    btn.disabled = true;
+
+    try {
+      // 1. Read photo
+      setStatus('正在读取照片...', 'busy');
+      var photoB64 = await fileToBase64(file);
+
+      // 2. Upload to OSS
+      setStatus('正在上传到阿里云 OSS...', 'busy');
+      var ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      // Use original filename if it exists, otherwise generate
+      var ossFilename = file.name;
+
+      // Check if file.name is pure ASCII or needs encoding for URL
+      // For OSS, we'll use the original name but URL-encode in the CDN URL
+
+      var client = new OSS({
+        region: OSS_REGION,
+        bucket: OSS_BUCKET,
+        accessKeyId: ossKey,
+        accessKeySecret: ossSecret,
+        secure: true
+      });
+
+      // Upload: need to convert base64 back to blob/buffer
+      var binary = atob(photoB64);
+      var bytes = new Uint8Array(binary.length);
+      for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      var blob = new Blob([bytes], { type: file.type || 'image/jpeg' });
+
+      await client.put(ossFilename, blob, { mime: file.type || 'image/jpeg' });
+
+      setStatus('OSS 上传成功，正在更新网站...', 'busy');
+
+      // 3. Update index.html
+      var indexData = await ghGet('index.html');
+      var html = decodeUTF8(indexData.content);
+      var sha = indexData.sha;
+
+      // Find ALL_PHOTOS closing bracket and insert
+      var insertAt = html.lastIndexOf('];');
+      if (insertAt === -1) throw new Error('Cannot find ALL_PHOTOS in index.html');
+
+      var before = html.substring(0, insertAt).trimEnd();
+      var after = html.substring(insertAt);
+
+      // Check if last line in before ends with comma
+      var comma = before.endsWith(',') ? '' : ',';
+      var note = caption ? ' /* ' + caption.replace(/\*/g, '') + ' */' : '';
+
+      var newEntry = comma + '\n    { file: "' + ossFilename + '", cat: "' + cat + '" }' + note;
+      var updatedHtml = before + newEntry + '\n' + after;
+
+      await ghPut('index.html', encodeUTF8(updatedHtml), 'add photo: ' + ossFilename + ' (' + photographer + ')', sha);
+
+      // 4. Done!
+      setStatus('上传成功！照片已添加到网站', 'ok');
+      document.getElementById('previewLink').innerHTML =
+        '<a href="https://brian070613.github.io/page/" target="_blank">👉 查看网站</a>';
+
+      // Reset
+      document.getElementById('photoFile').value = '';
+      document.getElementById('caption').value = '';
+      if (previewImg) { previewImg.remove(); previewImg = null; }
+      document.getElementById('uploadArea').classList.remove('has-img');
+      document.getElementById('uploadHint').style.display = '';
+
+    } catch(e) {
+      setStatus('上传失败: ' + e.message, 'err');
+      console.error(e);
+    } finally {
+      btn.disabled = false;
     }
-    setProgress(75);log('更新网站...','info');
-    
-    // ★ 关键修复：用 raw 格式直接获取文件内容 ★
-    const rawResp=await fetch('https://api.github.com/repos/'+REPO+'/contents/index.html',{headers:{'Authorization':'***'+TOKEN,'Accept':'application/vnd.github.v3.raw'}});
-    const curContent=await rawResp.text();
-    
-    // 同时获取 SHA（需要带 json 头的请求）
-    const metaResp=await fetch('https://api.github.com/repos/'+REPO+'/contents/index.html',{headers:{'Authorization':'***'+TOKEN}});
-    const meta=await metaResp.json();
-    const sha=meta.sha;
-    
-    const cat=selectedCat;
-    const entries=uploaded.map(f=>'    { file: "'+f+'", cat: "'+cat+'" }');
-    
-    // 找 ALL_PHOTOS 数组结尾
-    const marker='  ];';
-    const idx=curContent.lastIndexOf(marker);
-    const beforeTrim=curContent.slice(0,idx).trimEnd();
-    // 始终补逗号
-    const prefix=beforeTrim.endsWith(',')?'\n':',\n';
-    const newContent=curContent.slice(0,idx)+prefix+entries.join(',\n')+'\n'+marker;
-    
-    // base64 编码（用 unescape/encodeURIComponent 正确处理中文）
-    const b64content=btoa(unescape(encodeURIComponent(newContent)));
-    
-    const up=await fetch('https://api.github.com/repos/'+REPO+'/contents/index.html',{method:'PUT',headers:{'Authorization':'***'+TOKEN,'Content-Type':'application/json'},body:JSON.stringify({message:'📸 新增 '+uploaded.length+' 张照片',content:b64content,sha:sha,branch:BRANCH})});
-    if(!up.ok){const err=await up.json();throw new Error(err.message||'更新失败')}
-    
-    setProgress(100);log('','info');log('🎉 全部完成！'+uploaded.length+' 张照片已发布','ok');log('分类：'+(cat==='china-gt'?'China GT':'日常'),'info');log('⏳ 等1-2分钟部署...','info');setStatus('完成 ✓');btn.textContent='✅ 发布成功';selectedFiles=[];renderPreviews();updateBtn()
-  }catch(e){log('出错：'+e.message,'err');setStatus('失败 ✗');btn.textContent='❌ 重试';btn.disabled=false;btn.classList.remove('working')}
-});
+  };
+})();
 </script>
 </body>
 </html>
