@@ -626,8 +626,10 @@
     { file: "微信图片_20260721230207_470_3.jpg", cat: "china-gt" },
     { file: "微信图片_20260721230214_471_3.jpg", cat: "china-gt" },
     { file: "微信图片_20260721230220_472_3.jpg", cat: "china-gt" },
-    { file: "微信图片_20260721230229_473_3.jpg", cat: "china-gt" }
-  ];
+    { file: "微信图片_20260721230229_473_3.jpg", cat: "china-gt" },
+    { file: "1000025327.jpg", cat: "daily" },
+    { file: "1000011306.jpg", cat: "china-gt" }
+
 
   var currentFilter = 'all';
   var PHOTOS = []; // currently displayed
@@ -772,10 +774,6 @@
 
   function updateLb() {
     var photo = PHOTOS[currentIdx,
-    { file: "1000025327.jpg", cat: "daily" },
-    { file: "1000011306.jpg", cat: "china-gt" },
-    { file: "1000011306.jpg", cat: "china-gt" }
-];
     var file = photo.file;
     lbImg.style.opacity = '0';
     lbImg.dataset.fallback = file;
