@@ -836,6 +836,8 @@
   // ===== PHOTOGRAPHER CLICK =====
   var activePhotographer = null;
 
+  window.filterByPhotographer = filterByPhotographer;
+
   function filterByPhotographer(name) {
     // Toggle: click same again = unselect
     if (activePhotographer === name) {
