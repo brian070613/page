@@ -632,7 +632,11 @@
 
 
   var currentFilter = 'all';
-  var PHOTOS = []; // currently displayed
+  var PHOTOS = [,
+    { file: "1000025327.jpg", cat: "daily" },
+    { file: "1000011306.jpg", cat: "china-gt" }
+  ];
+// currently displayed
 
   function shuffleArray(arr) {
     for (var i = arr.length - 1; i > 0; i--) {
