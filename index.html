@@ -460,6 +460,54 @@
     .hero { --hero-h: 70vh; }
     .hero-title { letter-spacing: 4px; }
   }
+
+  /* ===== HOVER ENHANCEMENTS ===== */
+  .gallery-item:hover {
+    box-shadow: 0 0 30px rgba(212,168,83,0.3), 0 20px 60px rgba(0,0,0,0.5) !important;
+    outline: 1px solid rgba(212,168,83,0.15);
+    outline-offset: -1px;
+  }
+  .gallery-item .overlay {
+    background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .gallery-item:hover .overlay { opacity: 1; }
+  
+  /* ===== SKELETON RAINBOW ===== */
+  .gallery-item .skeleton {
+    background: linear-gradient(90deg, #1a1a1a, #2a2a2a 20%, #d4a853 40%, #2a2a2a 60%, #1a1a1a);
+    background-size: 300% 100%;
+    animation: rainbowShimmer 2s ease infinite;
+  }
+  @keyframes rainbowShimmer {
+    0% { background-position: 300% 0; }
+    100% { background-position: -300% 0; }
+  }
+  
+  /* ===== FILTER BUTTON UNDERLINE ===== */
+  .filter-btn {
+    position: relative;
+    overflow: hidden;
+  }
+  .filter-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 1.5px;
+    background: var(--gold);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+  }
+  .filter-btn.active::after { width: 60%; }
+  .filter-btn:hover::after { width: 40%; }
+  
+  /* ===== BACK TO TOP ===== */
+  .back-top { width: 44px; height: 44px; }
+  .back-top.show:hover { transform: scale(1.1) rotate(-90deg); }
+
 </style>
 </head>
 <body>
