@@ -1,4 +1,17 @@
-<!DOCTYPE html>
+,
+    { file: "微信图片_20260722184303_501_3.jpg", cat: "daily" }
+    { file: "微信图片_20260722184310_502_3.jpg", cat: "daily" }
+    { file: "微信图片_20260722184317_503_3.jpg", cat: "daily" }
+    { file: "微信图片_20260722184324_504_3.jpg", cat: "daily" }
+    { file: "微信图片_20260722184331_505_3.jpg", cat: "daily" }
+    { file: "微信图片_20260722184337_506_3.jpg", cat: "daily" }
+    { file: "微信图片_20260722184341_507_3.jpg", cat: "daily" }
+    { file: "微信图片_20260722184350_508_3.jpg", cat: "daily" }
+    { file: "微信图片_20260722184357_509_3.jpg", cat: "daily" }
+    { file: "微信图片_20260722184407_510_3.jpg", cat: "daily" }
+    { file: "微信图片_20260722184412_511_3.jpg", cat: "daily" }
+    { file: "微信图片_20260722184422_512_3.jpg", cat: "daily" }
+  <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -848,28 +861,7 @@
   }
 
   function updateLb() {
-    var photo = PHOTOS[currentIdx
-    { file: "微信图片_20260722184303_501_3.jpg", cat: "daily" },
-    { file: "微信图片_20260722184310_502_3.jpg", cat: "daily" },
-    { file: "微信图片_20260722184317_503_3.jpg", cat: "daily" },
-    { file: "微信图片_20260722184324_504_3.jpg", cat: "daily" },
-    { file: "微信图片_20260722184331_505_3.jpg", cat: "daily" },
-    { file: "微信图片_20260722184337_506_3.jpg", cat: "daily" },
-    { file: "微信图片_20260722184341_507_3.jpg", cat: "daily" },
-    { file: "微信图片_20260722184350_508_3.jpg", cat: "daily" },
-    { file: "微信图片_20260722184357_509_3.jpg", cat: "daily" },
-    { file: "微信图片_20260722184407_510_3.jpg", cat: "daily" },
-    { file: "微信图片_20260722184412_511_3.jpg", cat: "daily" },
-    { file: "微信图片_20260722184422_512_3.jpg", cat: "daily" },];
-    var file = photo.file;
-    lbImg.style.opacity = '0';
-    lbImg.dataset.fallback = file;
-    lbImg.onerror = function() { fallback(this, this.dataset.fallback); };
-    setTimeout(function() {
-      lbImg.src = imgUrl(file);
-      lbImg.style.opacity = '1';
-    }, 50);
-    document.getElementById('lbCounter').textContent = (currentIdx + 1) + ' / ' + PHOTOS.length;
+    var photo = PHOTOS[currentIdx];
     history.replaceState(null, '', '#p-' + (currentIdx + 1));
   }
 
