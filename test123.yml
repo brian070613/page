@@ -1,0 +1,22 @@
+name: Add Photo
+on:
+  workflow_dispatch:
+    inputs:
+      filename:
+        description: Photo filename
+        required: true
+      category:
+        description: daily or china-gt
+        required: true
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sed -i "0,/];/s/];/    { file: \"${{ inputs.filename }}\", cat: \"${{ inputs.category }}\" }\n];/" index.html
+          git config user.name bot
+          git config user.email bot@x.com
+          git add index.html
+          git commit -m "add ${{ inputs.filename }}" || true
+          git push
