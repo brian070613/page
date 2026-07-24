@@ -1,1035 +1,2079 @@
 ,
+
     
+
   <!DOCTYPE html>
+
 <html lang="zh-CN">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Brian 摄影作品集</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
+
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+
+
   :root {
+
     --bg: #080808;
+
     --card: #111;
+
     --card-hover: #1a1a1a;
+
     --text: #eee;
+
     --text2: #999;
+
     --text3: #555;
+
     --gold: #d4a853;
+
     --gold-dim: #a08030;
+
     --border: #1a1a1a;
+
     --radius: 16px;
+
     --radius-sm: 8px;
+
     --hero-h: 100vh;
+
   }
+
+
 
   body {
+
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
     background: var(--bg);
+
     color: var(--text);
+
     min-height: 100vh;
+
     -webkit-font-smoothing: antialiased;
+
     overflow-x: hidden;
+
   }
+
+
 
   ::-webkit-scrollbar { width: 5px; }
+
   ::-webkit-scrollbar-track { background: var(--bg); }
+
   ::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
+
   ::-webkit-scrollbar-thumb:hover { background: #333; }
 
+
+
   /* ===== HERO ===== */
+
   .hero {
+
     position: relative;
+
     height: var(--hero-h);
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     overflow: hidden;
+
     will-change: transform;
+
   }
+
   .hero-bg {
+
     position: absolute;
+
     inset: 0;
+
     background-size: cover;
+
     background-position: center;
+
     background-repeat: no-repeat;
+
     will-change: transform;
+
     transition: opacity 1.2s ease;
+
     opacity: 0;
+
   }
+
   .hero-bg.loaded { opacity: 1; }
+
   .hero-overlay {
+
     position: absolute;
+
     inset: 0;
+
     background: linear-gradient(
+
       180deg,
+
       rgba(0,0,0,0.55) 0%,
+
       rgba(0,0,0,0.35) 50%,
+
       rgba(8,8,8,1) 100%
+
     );
+
     z-index: 1;
+
   }
+
   .hero-content {
+
     position: relative;
+
     z-index: 2;
+
     text-align: center;
+
     padding: 2rem;
+
     animation: heroFadeIn 1.8s ease forwards;
+
     opacity: 0;
+
   }
+
   @keyframes heroFadeIn {
+
     0%   { opacity: 0; transform: translateY(20px); }
+
     100% { opacity: 1; transform: translateY(0); }
+
   }
+
   .hero-title {
+
     font-family: 'Noto Serif SC', serif;
+
     font-size: clamp(2.4rem, 6vw, 4.8rem);
+
     font-weight: 600;
+
     letter-spacing: 12px;
+
     color: #fff;
+
     text-shadow: 0 2px 40px rgba(0,0,0,0.4);
+
     line-height: 1.3;
+
   }
+
   .hero-title::after {
+
     content: '';
+
     display: block;
+
     width: 40px; height: 1.5px;
+
     background: var(--gold);
+
     margin: 1.2rem auto;
+
     opacity: 0.7;
+
   }
+
   .hero-sub {
+
     font-size: clamp(0.8rem, 1.5vw, 1rem);
+
     font-weight: 200;
+
     letter-spacing: 6px;
+
     color: rgba(255,255,255,0.6);
+
     margin-top: 0.5rem;
+
   }
+
   .hero-sub span { color: var(--gold); font-weight: 300; }
+
   .hero-scroll {
+
     position: absolute;
+
     bottom: 40px;
+
     left: 50%;
+
     transform: translateX(-50%);
+
     z-index: 2;
+
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     gap: 8px;
+
     opacity: 0.4;
+
     animation: bounceDown 2s ease infinite;
+
     cursor: default;
+
   }
+
   .hero-scroll span {
+
     font-size: 0.6rem;
+
     letter-spacing: 3px;
+
     color: rgba(255,255,255,0.3);
+
     font-weight: 200;
+
     text-transform: uppercase;
+
   }
+
   .hero-scroll-line {
+
     width: 1px; height: 32px;
+
     background: linear-gradient(180deg, rgba(255,255,255,0.3), transparent);
+
   }
+
   @keyframes bounceDown {
+
     0%, 100% { transform: translateX(-50%) translateY(0); }
+
     50% { transform: translateX(-50%) translateY(6px); }
+
   }
+
+
+
 
 
   /* ===== ABOUT ===== */
+
   .about {
+
     text-align: center;
+
     max-width: 550px;
+
     margin: 2.5rem auto 3rem;
+
     padding: 0 1.5rem;
+
     position: relative;
+
     z-index: 3;
+
   }
+
   .about .photographers {
+
     display: flex;
+
     gap: 2rem;
+
     justify-content: center;
+
     flex-wrap: wrap;
+
   }
+
   .about .photographer-card {
+
     flex: 0 1 200px;
+
     text-align: center;
+
     cursor: pointer;
+
     transition: transform 0.35s ease, opacity 0.35s ease;
+
   }
+
   .about .photographer-card:hover { transform: translateY(-4px); }
+
   .about .photographer-card .avatar {
+
     transition: box-shadow 0.35s ease, transform 0.35s ease;
+
   }
+
   .about .photographer-card.active .avatar {
+
     box-shadow: 0 0 20px rgba(212,168,83,0.5), 0 0 60px rgba(212,168,83,0.15);
+
     transform: scale(1.06);
+
   }
+
   .about .photographer-card.active .cn { color: var(--gold); }
+
   .about .photographer-card.dimmed { opacity: 0.3; }
+
   .about .avatar {
+
     width: 64px; height: 64px;
+
     border-radius: 50%;
+
     padding: 2px;
+
     background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+
     margin: 0 auto 1rem;
+
     display: block;
+
     object-fit: cover;
+
   }
+
   .about .avatar-inner {
+
     width: 100%; height: 100%;
+
     border-radius: 50%;
+
     background: var(--bg);
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     font-size: 1.6rem;
+
     overflow: hidden;
+
   }
+
   .about .avatar-inner img {
+
     width: 100%; height: 100%;
+
     object-fit: cover;
+
     border-radius: 50%;
+
   }
+
   .about p {
+
     color: var(--text2);
+
     font-size: 0.85rem;
+
     line-height: 1.9;
+
     letter-spacing: 1px;
+
     font-weight: 300;
+
   }
+
   .about .cn { font-family: 'Noto Serif SC', serif; font-size: 0.95rem; color: var(--text); letter-spacing: 2px; }
 
+
+
   /* ===== FILTER TABS ===== */
+
   .filter-wrap {
+
     text-align: center;
+
     padding: 1rem 1rem 0.5rem;
+
     position: relative;
+
     z-index: 3;
+
   }
+
   .filter-tabs {
+
     display: inline-flex;
+
     gap: 4px;
+
     background: #111;
+
     padding: 3px;
+
     border-radius: 10px;
+
     border: 1px solid #1a1a1a;
+
   }
+
   .filter-btn {
+
     padding: 6px 18px;
+
     border: none;
+
     border-radius: 7px;
+
     font-size: 0.78rem;
+
     letter-spacing: 2px;
+
     font-weight: 300;
+
     cursor: pointer;
+
     background: transparent;
+
     color: var(--text3);
+
     transition: all 0.3s;
+
     font-family: 'Inter', sans-serif;
+
   }
+
   .filter-btn:hover { color: var(--text2); }
+
   .filter-btn.active {
+
     background: #222;
+
     color: var(--gold);
+
   }
+
   .filter-sub {
+
     margin-top: 10px;
+
     font-size: 0.7rem;
+
     color: var(--text3);
+
     letter-spacing: 2px;
+
     font-weight: 200;
+
     min-height: 1.2em;
+
   }
+
   .filter-sub .highlight { color: var(--gold); }
 
+
+
   /* ===== GALLERY ===== */
+
   .gallery-wrap {
+
     max-width: 1600px;
+
     margin: 0 auto;
+
     padding: 1rem 16px 4rem;
+
   }
+
   .gallery {
+
     column-count: 4;
+
     column-gap: 16px;
+
   }
+
+
 
   .gallery-item {
+
     break-inside: avoid;
+
     margin-bottom: 16px;
+
     border-radius: var(--radius);
+
     overflow: hidden;
+
     cursor: pointer;
+
     position: relative;
+
     background: var(--card);
+
     transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.5s;
+
     opacity: 0;
+
     transform: translateY(24px) scale(0.98);
+
   }
+
   .gallery-item.show {
+
     animation: cardIn 0.7s ease forwards;
+
   }
+
   .gallery-item:hover {
+
     transform: scale(1.02) !important;
+
     box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+
   }
+
   .gallery-item img {
+
     display: block;
+
     width: 100%;
+
     height: auto;
+
     opacity: 0;
+
     transition: opacity 0.6s ease, transform 0.6s ease;
+
     position: relative;
+
     z-index: 1;
+
   }
+
   .gallery-item img.loaded { opacity: 1; }
+
   .gallery-item:hover img { transform: scale(1.05); }
 
+
+
   /* Skeleton shimmer */
+
   .gallery-item .skeleton {
+
     position: absolute;
+
     inset: 0;
+
     z-index: 0;
+
     background: linear-gradient(90deg, #111 25%, #1a1a1a 50%, #111 75%);
+
     background-size: 200% 100%;
+
     animation: shimmer 1.5s ease infinite;
+
   }
+
   @keyframes shimmer {
+
     0% { background-position: 200% 0; }
+
     100% { background-position: -200% 0; }
+
   }
+
   .gallery-item img.loaded + .skeleton { opacity: 0; transition: opacity 0.3s; }
 
+
+
   /* Hover overlay */
+
   .gallery-item .overlay {
+
     position: absolute;
+
     inset: 0;
+
     z-index: 2;
+
     background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 50%);
+
     opacity: 0;
+
     transition: opacity 0.4s ease;
+
     display: flex;
+
     flex-direction: column;
+
     justify-content: flex-end;
+
     padding: 1rem;
+
   }
+
   .gallery-item:hover .overlay { opacity: 1; }
+
   .gallery-item .overlay .idx {
+
     font-size: 0.65rem;
+
     color: var(--gold);
+
     letter-spacing: 2px;
+
     font-weight: 300;
+
     margin-bottom: 4px;
+
+  }
+
+  .gallery-item .overlay .desc {
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 1px;
+    font-weight: 300;
+    margin-top: 4px;
+    line-height: 1.4;
   }
   .gallery-item .overlay .hint {
+
     font-size: 0.7rem;
+
     color: rgba(255,255,255,0.5);
+
     letter-spacing: 2px;
+
     font-weight: 200;
+
   }
+
+
 
   @keyframes cardIn {
+
     0% { opacity: 0; transform: translateY(24px) scale(0.98); }
+
     100% { opacity: 1; transform: translateY(0) scale(1); }
+
   }
+
+
 
   /* ===== LIGHTBOX ===== */
+
   .lb {
+
     display: none;
+
     position: fixed; z-index: 9999;
+
     top: 0; left: 0; width: 100%; height: 100%;
+
     background: rgba(0,0,0,0.93);
+
     justify-content: center; align-items: center;
+
     backdrop-filter: blur(30px);
+
     -webkit-backdrop-filter: blur(30px);
+
   }
+
   .lb.active { display: flex; }
+
   .lb-img-wrap {
+
     display: flex; flex-direction: column; align-items: center;
+
     max-width: 92vw; max-height: 90vh;
+
     animation: lbEntry 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
   }
+
   @keyframes lbEntry {
+
     from { opacity: 0; transform: scale(0.9); }
+
     to { opacity: 1; transform: scale(1); }
+
   }
+
   .lb-img-wrap img {
+
     max-width: 100%; max-height: 82vh;
+
     object-fit: contain;
+
     border-radius: var(--radius-sm);
+
     box-shadow: 0 0 80px rgba(0,0,0,0.6);
+
     transition: opacity 0.25s ease;
+
   }
+
   .lb-img-wrap img[src=""] { opacity: 0; }
+
   .lb-counter {
+
     margin-top: 0.8rem;
+
     font-size: 0.72rem;
+
     color: var(--text3);
+
     letter-spacing: 2px;
+
     font-weight: 300;
+
   }
+
+
 
   .lb-close {
+
     position: fixed; top: 24px; right: 28px;
+
     width: 40px; height: 40px;
+
     border-radius: 50%;
+
     border: 1px solid rgba(255,255,255,0.08);
+
     color: #fff; font-size: 1.2rem;
+
     cursor: pointer; background: rgba(0,0,0,0.3);
+
     backdrop-filter: blur(8px);
+
     -webkit-backdrop-filter: blur(8px);
+
     z-index: 10000;
+
     display: flex; align-items: center; justify-content: center;
+
     transition: all 0.25s;
+
     line-height: 1;
+
   }
+
   .lb-close:hover { background: rgba(255,255,255,0.1); transform: rotate(90deg); }
 
+
+
   .lb-nav {
+
     position: fixed; top: 50%; transform: translateY(-50%);
+
     width: 44px; height: 44px;
+
     border-radius: 50%;
+
     border: 1px solid rgba(255,255,255,0.06);
+
     color: #fff; font-size: 1.3rem;
+
     cursor: pointer; background: rgba(0,0,0,0.2);
+
     backdrop-filter: blur(8px);
+
     -webkit-backdrop-filter: blur(8px);
+
     z-index: 10000;
+
     display: flex; align-items: center; justify-content: center;
+
     transition: all 0.25s;
+
     opacity: 0.3;
+
     user-select: none;
+
   }
+
   .lb-nav:hover { opacity: 0.9; background: rgba(255,255,255,0.08); transform: translateY(-50%) scale(1.08); }
+
   .lb-prev { left: 20px; }
+
   .lb-next { right: 20px; }
+
   .lb-nav:active { transform: translateY(-50%) scale(0.95); }
 
+
+
   /* ===== BACK TO TOP ===== */
+
   .back-top {
+
     position: fixed; bottom: 28px; left: 28px;
+
     width: 40px; height: 40px;
+
     border-radius: 50%;
+
     border: 1px solid var(--border);
+
     background: var(--card);
+
     color: var(--text3);
+
     cursor: pointer; font-size: 1rem;
+
     z-index: 100;
+
     opacity: 0; transition: all 0.35s ease;
+
     display: flex; align-items: center; justify-content: center;
+
   }
+
   .back-top.show { opacity: 0.5; }
+
   .back-top.show:hover { opacity: 1; background: var(--gold); color: #111; border-color: var(--gold); transform: scale(1.1); }
 
+
+
   /* ===== FOOTER ===== */
+
   footer {
+
     text-align: center; padding: 3rem 2rem;
+
     color: var(--text3); font-size: 0.72rem;
+
     letter-spacing: 3px;
+
     font-weight: 200;
+
     border-top: 1px solid var(--border);
+
     position: relative;
+
   }
+
   footer::before {
+
     content: '';
+
     display: block;
+
     width: 20px; height: 1px;
+
     background: var(--gold);
+
     margin: 0 auto 1.2rem;
+
     opacity: 0.3;
+
   }
+
+
 
   /* ===== RESPONSIVE ===== */
+
   @media (max-width: 1200px) { .gallery { column-count: 3; } }
+
   @media (max-width: 800px) {
+
     .gallery { column-count: 2; column-gap: 10px; }
+
     .gallery-item { margin-bottom: 10px; }
+
     .gallery-wrap { padding: 1.5rem 10px 3rem; }
+
     .hero { --hero-h: 80vh; }
+
     .hero-title { letter-spacing: 8px; }
+
     .lb-nav { width: 36px; height: 36px; font-size: 1rem; }
+
     .lb-prev { left: 10px; }
+
     .lb-next { right: 10px; }
+
     .lb-close { top: 16px; right: 16px; width: 36px; height: 36px; }
+
   }
+
   @media (max-width: 500px) {
+
     .gallery { column-count: 1; }
+
     .hero { --hero-h: 70vh; }
+
     .hero-title { letter-spacing: 4px; }
+
   }
+
+
 
   /* ===== HOVER ENHANCEMENTS ===== */
+
   .gallery-item:hover {
+
     box-shadow: 0 0 30px rgba(212,168,83,0.3), 0 20px 60px rgba(0,0,0,0.5) !important;
+
     outline: 1px solid rgba(212,168,83,0.15);
+
     outline-offset: -1px;
+
   }
+
   .gallery-item .overlay {
+
     background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 70%);
+
     opacity: 0;
+
     transition: opacity 0.35s ease;
+
   }
+
   .gallery-item:hover .overlay { opacity: 1; }
+
   
+
   /* ===== SKELETON RAINBOW ===== */
+
   .gallery-item .skeleton {
+
     background: linear-gradient(90deg, #1a1a1a, #2a2a2a 20%, #d4a853 40%, #2a2a2a 60%, #1a1a1a);
+
     background-size: 300% 100%;
+
     animation: rainbowShimmer 2s ease infinite;
+
   }
+
   @keyframes rainbowShimmer {
+
     0% { background-position: 300% 0; }
+
     100% { background-position: -300% 0; }
+
   }
+
   
+
   /* ===== FILTER BUTTON UNDERLINE ===== */
+
   .filter-btn {
+
     position: relative;
+
     overflow: hidden;
+
   }
+
   .filter-btn::after {
+
     content: '';
+
     position: absolute;
+
     bottom: 0;
+
     left: 50%;
+
     width: 0;
+
     height: 1.5px;
+
     background: var(--gold);
+
     transition: all 0.3s ease;
+
     transform: translateX(-50%);
+
   }
+
   .filter-btn.active::after { width: 60%; }
+
   .filter-btn:hover::after { width: 40%; }
+
   
+
   /* ===== BACK TO TOP ===== */
+
   .back-top { width: 44px; height: 44px; }
+
   .back-top.show:hover { transform: scale(1.1) rotate(-90deg); }
 
+
+
 </style>
+
 </head>
+
 <body>
 
+
+
 <!-- HERO -->
+
 <section class="hero" id="hero">
+
   <div class="hero-bg" id="heroBg"></div>
+
   <div class="hero-overlay"></div>
+
   <div class="hero-content">
+
     <h1 class="hero-title">镜头之下</h1>
+
     <p class="hero-sub"><span id="totalPhotos">0</span> 张作品 · 光影之间</p>
+
   </div>
+
   <div class="hero-scroll">
+
     <span>Scroll</span>
+
     <div class="hero-scroll-line"></div>
+
   </div>
+
 </section>
 
+
+
 <!-- FILTER TABS -->
+
 <div class="filter-wrap">
+
   <div class="filter-tabs" id="filterTabs">
+
     <button class="filter-btn active" data-filter="all">全部</button>
+
     <button class="filter-btn" data-filter="china-gt">China GT</button>
+
     <button class="filter-btn" data-filter="daily">日常</button>
+
     <button class="filter-btn" data-filter="mountain">山</button>
+
   </div>
+
   <div class="filter-sub" id="filterSub"></div>
+
 </div>
+
+
 
 <!-- ABOUT -->
+
 <div class="about">
+
   <div class="photographers" id="photographers">
+
     <div class="photographer-card" data-photographer="brian" onclick="filterByPhotographer('brian')">
+
       <div class="avatar">
+
         <div class="avatar-inner">
+
           <img src="avatar.jpg" alt="Brian" onerror="this.parentElement.textContent='📷';this.style.display='none'">
+
         </div>
+
       </div>
+
       <p class="cn">Brian</p>
+
       <p>一位热爱摄影的大学生 · 用镜头记录身边的风景与故事</p>
+
     </div>
+
     <div class="photographer-card" id="scHamCard" data-photographer="scham" onclick="filterByPhotographer('scham')">
+
       <div class="avatar">
+
         <div class="avatar-inner">
+
           <img src="sc-ham-avatar.jpg" alt="SC-HAM" onerror="this.parentElement.textContent='📸';this.parentElement.style.fontSize='1.4rem'">
+
         </div>
+
       </div>
+
       <p class="cn">SC-HAM</p>
+
       <p>China GT 赛道摄影师 · 捕捉速度与激情</p>
+
     </div>
+
   </div>
+
 </div>
 
+
+
 <!-- GALLERY -->
+
 <div class="gallery-wrap">
+
   <div class="gallery" id="gallery"></div>
+
 </div>
+
+
 
 <button class="back-top" id="backTop">↑</button>
 
+
+
 <footer>&copy; 2026 Brian · 镜头之下</footer>
 
+
+
 <!-- LIGHTBOX -->
+
 <div class="lb" id="lb">
+
   <button class="lb-close" id="lbClose">✕</button>
+
   <button class="lb-nav lb-prev" id="lbPrev">‹</button>
+
   <button class="lb-nav lb-next" id="lbNext">›</button>
+
   <div class="lb-img-wrap">
+
     <img id="lbImg" src="" alt="">
+
     <div class="lb-counter" id="lbCounter"></div>
+
   </div>
+
 </div>
 
+
+
 <script>
+
 (function() {
+
   var ALL_PHOTOS = [
+
     // === 日常 ===
+
     { file: "微信图片_20260720105037_335_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105152_336_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105259_337_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105336_338_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105341_339_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105421_340_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105451_341_3(1).jpg", cat: "daily" },
+
     { file: "微信图片_20260720105456_342_3(1).jpg", cat: "daily" },
+
     { file: "微信图片_20260720105531_343_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105616_344_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105623_345_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105627_346_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105629_347_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105737_348_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105815_349_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105834_350_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105915_351_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720105941_352_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720110018_353_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720110125_355_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184633_357_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184718_358_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184719_359_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184720_360_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184721_361_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184722_362_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184723_363_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184724_364_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184725_365_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184726_366_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184727_367_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184728_368_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184729_369_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184730_370_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184731_371_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184732_372_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720184733_373_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213816_374_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213819_375_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213824_376_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213826_377_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213828_378_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213832_379_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213835_380_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213838_381_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213841_382_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213845_383_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213846_384_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213849_385_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213923_386_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213925_387_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213931_388_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213932_389_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213933_390_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213934_391_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213936_392_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213939_393_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213941_394_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213943_395_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213945_396_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213948_397_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213950_398_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213952_399_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213954_400_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213955_401_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720213958_402_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720214011_403_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720214012_404_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720214013_405_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720214015_406_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720214017_407_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720214021_408_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720214022_409_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260720214023_410_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260722184303_501_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260722184310_502_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260722184317_503_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260722184324_504_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260722184331_505_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260722184337_506_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260722184341_507_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260722184350_508_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260722184357_509_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260722184407_510_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260722184412_511_3.jpg", cat: "daily" },
+
     { file: "微信图片_20260722184422_512_3.jpg", cat: "daily" },
 
+
+
     { file: "微信图片_20260724184521_514_3.jpg", cat: "mountain" },
+
     { file: "微信图片_20260724184526_515_3.jpg", cat: "mountain" },
+
     { file: "微信图片_20260724184536_516_3.jpg", cat: "mountain" },
+
     { file: "微信图片_20260724184537_517_3.jpg", cat: "mountain" },
+
     { file: "微信图片_20260724184538_518_3.jpg", cat: "mountain" },
+
     { file: "微信图片_20260724184539_519_3.jpg", cat: "mountain" },
+
     { file: "微信图片_20260724184540_520_3.jpg", cat: "mountain" },
+
     { file: "微信图片_20260724184542_521_3.jpg", cat: "mountain" },
+
     { file: "微信图片_20260724184543_522_3.jpg", cat: "mountain" },
+
     // === China GT === 摄影: SC-HAM
+
     { file: "微信图片_20260721230024_459_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230036_460_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230048_461_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230103_462_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230111_463_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230118_464_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230123_465_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230129_466_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230141_467_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230150_468_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230159_469_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230207_470_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230214_471_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230220_472_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230229_473_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225437_431_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225449_432_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225501_433_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225506_434_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225532_435_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225540_436_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225545_437_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225549_438_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225554_439_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225602_440_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225612_441_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225619_442_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225626_443_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225630_444_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225706_445_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225711_446_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225719_447_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225729_448_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225736_449_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225745_450_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225755_451_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225805_452_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225813_453_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225845_454_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225855_455_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721225931_456_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230004_457_3.jpg", cat: "china-gt" },
+
     { file: "微信图片_20260721230012_458_3.jpg", cat: "china-gt" },
+
   ];
 
+
+
   var currentFilter = 'all';
+
   var PHOTOS = []; // currently displayed
+
 // currently displayed
 
+
+
   function shuffleArray(arr) {
+
     for (var i = arr.length - 1; i > 0; i--) {
+
       var j = Math.floor(Math.random() * (i + 1));
+
       var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+
     }
+
     return arr;
+
   }
+
+
 
   function getFilteredPhotos(filter) {
+
     if (filter === 'all') return shuffleArray(ALL_PHOTOS.slice());
+
     return shuffleArray(ALL_PHOTOS.filter(function(p) { return p.cat === filter; }));
+
   }
+
+
 
   function updatePhotoCount() {
+
     document.getElementById('totalPhotos').textContent = PHOTOS.length;
+
   }
+
+
 
   function updateFilterSubtitle() {
+
     var el = document.getElementById('filterSub');
+
     var scHamCard = document.getElementById('scHamCard');
+
     var chinaCount = ALL_PHOTOS.filter(function(p) { return p.cat === 'china-gt'; }).length;
+
     var dailyCount = ALL_PHOTOS.filter(function(p) { return p.cat === 'daily'; }).length;
+
     var mountainCount = ALL_PHOTOS.filter(function(p) { return p.cat === 'mountain'; }).length;
+
     if (currentFilter === 'china-gt') {
+
       el.innerHTML = 'China GT <span class="highlight">' + chinaCount + '</span> 张';
+
       scHamCard.style.display = 'block';
+
     } else if (currentFilter === 'daily') {
+
       el.innerHTML = '日常 <span class="highlight">' + dailyCount + '</span> 张';
+
       scHamCard.style.display = 'none';
+
     } else if (currentFilter === 'mountain') {
+
       el.innerHTML = '山 <span class="highlight">' + mountainCount + '</span> 张';
+
       scHamCard.style.display = 'none';
+
     } else {
+
       el.innerHTML = '共 <span class="highlight">' + ALL_PHOTOS.length + '</span> 张 · 日常 ' + dailyCount + ' 张 · China GT ' + chinaCount + ' 张 · 山 ' + mountainCount + ' 张';
+
       scHamCard.style.display = 'block';
+
     }
+
   }
+
+
 
   PHOTOS = getFilteredPhotos('all');
+
   updatePhotoCount();
+
   updateFilterSubtitle();
 
+
+
   var CDN = 'https://brian-photos.oss-cn-beijing.aliyuncs.com/';
+
   var FALLBACK = 'https://cdn.jsdelivr.net/gh/brian070613/page@main/photos/';
 
+
+
   function imgUrl(f) { return CDN + encodeURIComponent(f); }
+
   function fallback(el, f) { el.onerror = null; el.src = FALLBACK + encodeURIComponent(f); }
 
+
+
   // ===== HERO BACKGROUND =====
+
   (function initHero() {
+
     var heroBg = document.getElementById('heroBg');
+
     // Pick the first shuffled photo for hero
+
     var heroFile = PHOTOS[0].file;
+
     var heroImg = new Image();
+
     heroImg.onload = function() {
+
       heroBg.style.backgroundImage = 'url(' + heroImg.src + ')';
+
       heroBg.classList.add('loaded');
+
     };
+
     heroImg.onerror = function() {
+
       heroImg.src = FALLBACK + encodeURIComponent(heroFile);
+
     };
+
     heroImg.src = imgUrl(heroFile);
 
+
+
     // Parallax on scroll
+
     window.addEventListener('scroll', function() {
+
       var scrollY = window.scrollY;
+
       var hero = document.getElementById('hero');
+
       var maxTranslate = hero.offsetHeight * 0.35;
+
       if (scrollY <= hero.offsetHeight) {
+
         heroBg.style.transform = 'translateY(' + (scrollY * 0.3) + 'px)';
+
         hero.querySelector('.hero-content').style.transform = 'translateY(' + (-scrollY * 0.15) + 'px)';
+
         hero.querySelector('.hero-content').style.opacity = Math.max(0, 1 - scrollY / (hero.offsetHeight * 0.6));
+
       }
+
     }, { passive: true });
+
   })();
 
+
+
   // ===== GALLERY RENDER =====
+
   var gallery = document.getElementById('gallery');
+
   var lb = document.getElementById('lb');
+
   var lbImg = document.getElementById('lbImg');
+
   var currentIdx = 0;
 
+
+
   function renderGallery() {
+
     gallery.innerHTML = '';
+
     PHOTOS.forEach(function(photo, index) {
+
       var file = photo.file;
+
       var item = document.createElement('div');
+
       item.className = 'gallery-item';
 
+
+
       var img = document.createElement('img');
+
       img.dataset.src = imgUrl(file);
+
       img.dataset.fallback = file;
 
+
+
       var skeleton = document.createElement('div');
+
       skeleton.className = 'skeleton';
 
-      var hint = (photo.cat === 'china-gt') ? 'China GT' : (photo.cat === 'mountain') ? '山' : '';
+
+
+      var hint = (photo.cat === 'china-gt') ? 'China GT' : (photo.cat === 'mountain') ? '山' : (photo.cat === 'featured' && photo.desc) ? photo.desc : '';
+
       var overlay = document.createElement('div');
+
       overlay.className = 'overlay';
-      overlay.innerHTML = '<div class="idx">#' + (index + 1) + '</div><div class="hint">' + hint + '</div>';
+
+      var descEl = (photo.cat === 'featured' && photo.desc) ? ('<div class="desc">' + photo.desc + '</div>') : '';
+      overlay.innerHTML = '<div class="idx">#' + (index + 1) + '</div><div class="hint">' + hint + '</div>' + descEl;
+
+
 
       // Lazy load
+
       var obs = new IntersectionObserver(function(entries) {
+
         entries.forEach(function(e) {
+
           if (e.isIntersecting) {
+
             img.src = img.dataset.src;
+
             img.onload = function() {
+
               img.classList.add('loaded');
+
             };
+
             img.onerror = function() {
+
               img.classList.add('loaded');
+
               fallback(this, this.dataset.fallback);
+
             };
+
             obs.unobserve(img);
+
           }
+
         });
+
       }, { rootMargin: '300px' });
+
       obs.observe(img);
 
+
+
       item.appendChild(img);
+
       item.appendChild(skeleton);
+
       item.appendChild(overlay);
 
+
+
       // Staggered entrance
+
       var delay = 100 + Math.random() * 300;
+
       setTimeout(function() { item.classList.add('show'); }, delay);
 
+
+
       item.addEventListener('click', function() { openLb(index); });
+
       gallery.appendChild(item);
+
     });
+
   }
+
+
 
   renderGallery();
 
+
+
   // ===== LIGHTBOX =====
+
   function openLb(idx) {
+
     currentIdx = idx;
+
     updateLb();
+
     lb.classList.add('active');
+
     document.body.style.overflow = 'hidden';
+
   }
+
+
 
   function updateLb() {
+
     var photo = PHOTOS[currentIdx];
+
     var file = photo.file;
+
     lbImg.style.opacity = '0';
+
     lbImg.dataset.fallback = file;
+
     lbImg.onerror = function() { fallback(this, this.dataset.fallback); };
+
     setTimeout(function() {
+
       lbImg.src = imgUrl(file);
+
       lbImg.style.opacity = '1';
+
     }, 50);
+
     document.getElementById('lbCounter').textContent = (currentIdx + 1) + ' / ' + PHOTOS.length;
+
     history.replaceState(null, '', '#p-' + (currentIdx + 1));
+
   }
+
+
 
   document.getElementById('lbClose').addEventListener('click', closeLb);
+
   document.getElementById('lbPrev').addEventListener('click', function(e) {
+
     e.stopPropagation();
+
     currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length;
+
     updateLb();
+
   });
+
   document.getElementById('lbNext').addEventListener('click', function(e) {
+
     e.stopPropagation();
+
     currentIdx = (currentIdx + 1) % PHOTOS.length;
+
     updateLb();
+
   });
+
+
 
   function closeLb() {
+
     lb.classList.remove('active');
+
     document.body.style.overflow = '';
+
     history.replaceState(null, '', window.location.pathname);
+
   }
 
+
+
   lb.addEventListener('click', function(e) {
+
     if (e.target === lb) closeLb();
+
   });
+
+
 
   document.addEventListener('keydown', function(e) {
+
     if (!lb.classList.contains('active')) return;
+
     if (e.key === 'Escape') { closeLb(); return; }
+
     if (e.key === 'ArrowLeft') { currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length; updateLb(); }
+
     if (e.key === 'ArrowRight') { currentIdx = (currentIdx + 1) % PHOTOS.length; updateLb(); }
+
   });
+
+
 
   // Touch swipe
+
   var tx = 0;
+
   lbImg.addEventListener('touchstart', function(e) { tx = e.changedTouches[0].screenX; }, { passive: true });
+
   lbImg.addEventListener('touchend', function(e) {
+
     var d = e.changedTouches[0].screenX - tx;
+
     if (Math.abs(d) > 50) {
+
       d > 0 ? (currentIdx = (currentIdx - 1 + PHOTOS.length) % PHOTOS.length) : (currentIdx = (currentIdx + 1) % PHOTOS.length);
+
       updateLb();
+
     }
+
   }, { passive: true });
+
+
 
   // ===== BACK TO TOP =====
+
   var backTop = document.getElementById('backTop');
+
   window.addEventListener('scroll', function() {
+
     backTop.classList.toggle('show', window.scrollY > window.innerHeight * 0.6);
+
   }, { passive: true });
+
   backTop.addEventListener('click', function() {
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
   });
 
+
+
   // ===== PHOTOGRAPHER CLICK =====
+
   var activePhotographer = null;
+
+
 
   window.filterByPhotographer = filterByPhotographer;
 
+
+
   function filterByPhotographer(name) {
+
     // Toggle: click same again = unselect
+
     if (activePhotographer === name) {
+
       activePhotographer = null;
+
       // Switch back to 'all'
+
       filterBtns.forEach(function(b) {
+
         b.classList.remove('active');
+
         if (b.dataset.filter === 'all') b.classList.add('active');
+
       });
+
       currentFilter = 'all';
+
     } else {
+
       activePhotographer = name;
+
       var cat = (name === 'scham') ? 'china-gt' : 'daily';
+
       filterBtns.forEach(function(b) {
+
         b.classList.remove('active');
+
         if (b.dataset.filter === cat) b.classList.add('active');
+
       });
+
       currentFilter = cat;
+
     }
+
     // Update photographer card states
+
     var cards = document.querySelectorAll('.photographer-card');
+
     cards.forEach(function(c) {
+
       c.classList.remove('active', 'dimmed');
+
       if (activePhotographer) {
+
         if (c.dataset.photographer === activePhotographer) {
+
           c.classList.add('active');
+
         } else {
+
           c.classList.add('dimmed');
+
         }
+
       }
+
     });
+
     PHOTOS = getFilteredPhotos(currentFilter);
+
     updatePhotoCount();
+
     updateFilterSubtitle();
+
     renderGallery();
+
     currentIdx = 0;
+
     // Smooth scroll to gallery
+
     setTimeout(function() {
+
       document.querySelector('.gallery-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
     }, 100);
+
   }
+
+
 
   // ===== FILTER TABS =====
+
   var filterBtns = document.querySelectorAll('.filter-btn');
+
   filterBtns.forEach(function(btn) {
+
     btn.addEventListener('click', function() {
+
       // Clear photographer selection when using tabs
+
       activePhotographer = null;
+
       var cards = document.querySelectorAll('.photographer-card');
+
       cards.forEach(function(c) { c.classList.remove('active', 'dimmed'); });
 
+
+
       filterBtns.forEach(function(b) { b.classList.remove('active'); });
+
       btn.classList.add('active');
+
       currentFilter = btn.dataset.filter;
+
       PHOTOS = getFilteredPhotos(currentFilter);
+
       updatePhotoCount();
+
       updateFilterSubtitle();
+
       renderGallery()
+
   // Load additional photos from photos.json
+
   fetch('photos.json').then(function(r){return r.json()}).then(function(data){
+
     if(data&&data.length){
+
       var existing={};PHOTOS.forEach(function(p){existing[p.file]=1});
+
       data.forEach(function(p){if(!existing[p.file])ALL_PHOTOS.push(p)});
+
       PHOTOS=getFilteredPhotos(currentFilter);
+
       updatePhotoCount();
+
       renderGallery()
+
     }
+
   }).catch(function(){});
+
       // Also re-init lightbox with new array
+
       currentIdx = 0;
+
     });
+
   });
 
+
+
   // ===== HASH NAV =====
+
   if (window.location.hash) {
+
     var m = window.location.hash.match(/p-(\d+)/);
+
     if (m) {
+
       var n = parseInt(m[1]) - 1;
+
       if (n >= 0 && n < PHOTOS.length) {
+
         setTimeout(function() { openLb(n); }, 600);
+
       }
+
     }
+
   }
+
 })();
+
 </script>
+
 </body>
+
 </html>
+
+
+
+
 
 
 
