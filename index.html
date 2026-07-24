@@ -750,6 +750,28 @@
 
   .lb-img-wrap img[src=""] { opacity: 0; }
 
+  .lb-desc {
+
+    margin-top: 0.6rem;
+
+    padding: 0 1rem;
+
+    font-size: 0.78rem;
+
+    color: var(--gold);
+
+    letter-spacing: 1px;
+
+    font-weight: 300;
+
+    line-height: 1.6;
+
+    text-align: center;
+
+    max-width: 600px;
+
+  }
+
   .lb-counter {
 
     margin-top: 0.8rem;
@@ -1178,6 +1200,7 @@
     <img id="lbImg" src="" alt="">
 
     <div class="lb-counter" id="lbCounter"></div>
+    <div class="lb-desc" id="lbDesc"></div>
 
   </div>
 
@@ -1795,6 +1818,14 @@
     }, 50);
 
     document.getElementById('lbCounter').textContent = (currentIdx + 1) + ' / ' + PHOTOS.length;
+
+    var descEl = document.getElementById('lbDesc');
+    if (photo.desc) {
+      descEl.textContent = photo.desc;
+      descEl.style.display = 'block';
+    } else {
+      descEl.style.display = 'none';
+    }
 
     history.replaceState(null, '', '#p-' + (currentIdx + 1));
 
