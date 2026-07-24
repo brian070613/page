@@ -662,6 +662,14 @@
     margin-top: 4px;
     line-height: 1.4;
   }
+  .gallery-item .overlay .desc {
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 1px;
+    font-weight: 300;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
   .gallery-item .overlay .hint {
 
     font-size: 0.7rem;
@@ -1080,6 +1088,7 @@
 
     <button class="filter-btn" data-filter="mountain">山</button>
 
+    <button class="filter-btn" data-filter="featured">精选照片</button>
   </div>
 
   <div class="filter-sub" id="filterSub"></div>
@@ -1521,6 +1530,7 @@
     var dailyCount = ALL_PHOTOS.filter(function(p) { return p.cat === 'daily'; }).length;
 
     var mountainCount = ALL_PHOTOS.filter(function(p) { return p.cat === 'mountain'; }).length;
+    var featuredCount = ALL_PHOTOS.filter(function(p) { return p.cat === 'featured'; }).length;
 
     if (currentFilter === 'china-gt') {
 
@@ -1535,6 +1545,9 @@
       scHamCard.style.display = 'none';
 
     } else if (currentFilter === 'mountain') {
+      el.innerHTML = '山 <span class="highlight">' + mountainCount + '</span> 张';
+      scHamCard.style.display = 'none';
+    } else if (currentFilter === 'featured') {
 
       el.innerHTML = '山 <span class="highlight">' + mountainCount + '</span> 张';
 
@@ -1542,7 +1555,7 @@
 
     } else {
 
-      el.innerHTML = '共 <span class="highlight">' + ALL_PHOTOS.length + '</span> 张 · 日常 ' + dailyCount + ' 张 · China GT ' + chinaCount + ' 张 · 山 ' + mountainCount + ' 张';
+      el.innerHTML = '共 <span class="highlight">' + ALL_PHOTOS.length + '</span> 张 · 日常 ' + dailyCount + ' 张 · China GT ' + chinaCount + ' 张 · 山 ' + mountainCount + ' 张 · 精选 ' + featuredCount + ' 张';
 
       scHamCard.style.display = 'block';
 
